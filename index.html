@@ -159,6 +159,10 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .repo-detail{display:none;font-size:12.5px;color:var(--text);line-height:1.85;
   margin-top:8px;padding-top:9px;border-top:1px dashed var(--border);white-space:pre-wrap}
 .card.open .repo-detail{display:block;animation:fade .25s ease}
+/* 详情里的可点击代表作：醒目链接色 */
+.author-work-link{color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.author-work-link:active{opacity:.7}
+.author-name-inline{color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px dashed var(--accent)}
 .rating{color:var(--star);font-weight:600}
 .fav-count{margin-left:auto}
 /* 页头渐变标题 */
@@ -645,6 +649,51 @@ const AUTHORS = {
   "libretro":{t:"org",b:"Libretro 团队，维护 RetroArch 复古游戏模拟器前端。"},
   "felixrieseberg":{t:"user",b:"Node.js 和 Electron 核心贡献者之一，Windows 95 模拟器项目作者。"}
 };
+/* ================= 精选项目中文名（作者代表作等场景显示中文，小白友好） ================= */
+const REPO_ZH = {
+  "huggingface/transformers":"HuggingFace 模型库","ollama/ollama":"Ollama 本地大模型",
+  "AUTOMATIC1111/stable-diffusion-webui":"AI 绘画 WebUI","langchain-ai/langchain":"LangChain AI 开发框架",
+  "openai/whisper":"Whisper 语音转文字","pytorch/pytorch":"PyTorch 深度学习",
+  "tensorflow/tensorflow":"TensorFlow 机器学习","ggerganov/llama.cpp":"Llama.cpp 本地大模型",
+  "keras-team/keras":"Keras 深度学习","vllm-project/vllm":"vLLM 推理加速",
+  "comfyanonymous/ComfyUI":"ComfyUI 绘画工作流","meta-llama/llama":"Meta Llama 大模型",
+  "Sanster/IOPaint":"IOPaint AI 修图","RVC-Project/Retrieval-based-Voice-Conversion-WebUI":"RVC AI 变声",
+  "facebook/react":"React 界面框架","vuejs/core":"Vue.js 界面框架","vitejs/vite":"Vite 构建工具",
+  "twbs/bootstrap":"Bootstrap 样式框架","tailwindlabs/tailwindcss":"Tailwind CSS","axios/axios":"Axios 请求库",
+  "ant-design/ant-design":"Ant Design 组件库","angular/angular":"Angular 界面框架",
+  "sveltejs/svelte":"Svelte 界面框架","mui/material-ui":"MUI 组件库",
+  "vercel/next.js":"Next.js 全栈框架","mrdoob/three.js":"Three.js 3D 图形","d3/d3":"D3 数据图表",
+  "spring-projects/spring-boot":"Spring Boot 框架","nodejs/node":"Node.js 运行环境",
+  "expressjs/express":"Express 框架","gin-gonic/gin":"Gin 框架","django/django":"Django 框架",
+  "pallets/flask":"Flask 框架","fastapi/fastapi":"FastAPI 框架","nestjs/nest":"NestJS 框架",
+  "go-kratos/kratos":"Kratos 微服务","kubernetes/kubernetes":"Kubernetes 容器编排",
+  "prometheus/prometheus":"Prometheus 监控","apache/kafka":"Kafka 消息队列",
+  "microsoft/vscode":"VS Code 编辑器","yt-dlp/yt-dlp":"yt-dlp 视频下载",
+  "ohmyzsh/ohmyzsh":"Oh My Zsh 终端美化","localsend/localsend":"LocalSend 局域网传文件",
+  "neovim/neovim":"Neovim 编辑器","jesseduffield/lazygit":"Lazygit 可视化 Git",
+  "BurntSushi/ripgrep":"ripgrep 搜索工具","sharkdp/bat":"bat 文件查看","jgm/pandoc":"Pandoc 文档转换",
+  "ShareX/ShareX":"ShareX 截图录屏","RustDesk/RustDesk":"RustDesk 远程桌面",
+  "alist-org/alist":"AList 网盘聚合","qBittorrent/qBittorrent":"qBittorrent 下载器","aria2/aria2":"aria2 下载工具",
+  "godotengine/godot":"Godot 游戏引擎","luanti-org/luanti":"Luanti 沙盒游戏",
+  "gabrielecirulli/2048":"2048 小游戏","chrislgarry/Apollo-11":"阿波罗登月源码",
+  "libretro/RetroArch":"RetroArch 模拟器","0ad/0ad":"0 A.D. 即时战略",
+  "SuperTuxKart/stk-code":"SuperTuxKart 卡丁车","playcanvas/engine":"PlayCanvas 3D 引擎",
+  "felixrieseberg/windows95":"Windows 95 模拟","RPCS3/rpcs3":"RPCS3 模拟器",
+  "flutter/flutter":"Flutter 跨平台","facebook/react-native":"React Native",
+  "Genymobile/scrcpy":"scrcpy 投屏控制","termux/termux-app":"Termux 手机终端",
+  "expo/expo":"Expo App 开发","kivy/kivy":"Kivy 手机应用","ionic-team/capacitor":"Capacitor 打包",
+  "signalapp/Signal-Android":"Signal 加密聊天","immich-app/immich":"Immich 照片备份",
+  "TeamNewPipe/NewPipe":"NewPipe 视频应用",
+  "freeCodeCamp/freeCodeCamp":"freeCodeCamp 编程学习","EbookFoundation/free-programming-books":"免费编程书大全",
+  "kamranahmedse/developer-roadmap":"程序员路线图","jwasham/coding-interview-university":"面试自学计划",
+  "trekhleb/javascript-algorithms":"JS 算法教程","donnemartin/system-design-primer":"系统设计指南",
+  "jackfrued/Python-100-Days":"Python 100 天","CyC2018/CS-Notes":"CS 面试笔记",
+  "justjavac/free-programming-books-zh_CN":"中文编程书索引","PKUFlyingPig/cs-self-learning":"CS 自学指南",
+  "TheAlgorithms/Python":"Python 算法集","ossu/computer-science":"计算机科学自学",
+  "practical-tutorials/project-based-learning":"项目实战教程"
+};
+/* 代表作显示名：优先中文名，否则回退英文短名 */
+function repoZh(n){ return REPO_ZH[n] || n.split("/")[1]; }
 /* 作者简介：有手写用手写，没有用模板 */
 function authorInfo(owner){
   const a = AUTHORS[owner];
@@ -784,6 +833,21 @@ function toggleFav(name, el){
   renderFavs();
 }
 
+/* 把简介里提到的该作者精选项目短名替换为可点击链接（全项目通用，未来收录自动生效） */
+function linkAuthorWorks(owner, text){
+  const works = _ownerRepos[owner]||[];
+  const used = new Set();
+  let out = esc(text);
+  works.forEach(x=>{
+    const short = x.n.split("/")[1];
+    if(used.has(short) || !out.includes(short)) return;
+    used.add(short);
+    const link = `<a class="author-work-link" href="https://github.com/${esc(x.n)}" target="_blank" rel="noopener" title="${esc(REPO_ZH[x.n]||"")}">${esc(short)}</a>`;
+    out = out.split(short).join(link);
+  });
+  return out;
+}
+
 /* 卡片渲染 */
 function cardHTML(r, src, rank){
   const on = favs.has(r.n) ? " on" : "";
@@ -793,16 +857,17 @@ function cardHTML(r, src, rank){
   if(!ownerType){ const ai = authorInfo(owner); ownerType = ai.t; }
   const typeLabel = ownerType==="org" ? "组织" : "个人";
   // 作者名显示策略：作者名 = 项目名前缀时简化（如 ollama/ollama → 作者 ollama 已在项目名里了，也正常显示）
-  // 小白版详情：命中 DETAIL 用中文详情；英文项目无详情时显示占位提示；末尾自动追加作者信息段
-  let det = DETAIL[r.n] ?? (r.en ? "暂无中文详情，可点击项目名到 GitHub 主页查看原文介绍。" : null);
-  if(det && owner){
+  // 小白版详情：命中 DETAIL 用中文详情；英文项目无详情时显示占位提示；末尾自动追加作者信息段（代表作自动变可点击链接）
+  let detHTML = DETAIL[r.n] ? esc(DETAIL[r.n]) : (r.en ? esc("暂无中文详情，可点击项目名到 GitHub 主页查看原文介绍。") : null);
+  if(detHTML && owner){
     const ai = authorInfo(owner);
     const otherWorks = ownedReposTop3(owner).filter(x=>x.n!==r.n).slice(0,2);
-    let suffix = `\n\n—— 这个项目由 ${owner}（${typeLabel}）维护。${ai.b}`;
+    const ownerEsc = esc(owner), tEsc = esc(typeLabel);
+    let suffix = `\n\n—— 这个项目由 <a class="author-name-inline" href="https://github.com/${ownerEsc}" target="_blank" rel="noopener">${ownerEsc}</a>（${tEsc}）维护。${linkAuthorWorks(owner, ai.b)}`;
     if(otherWorks.length){
-      suffix += ` 该${typeLabel==="org"?"组织":"开发者"}还做过 ${otherWorks.map(x=>x.n.split("/")[1]).join("、")} 等知名项目。`;
+      suffix += ` 该${typeLabel==="org"?"组织":"开发者"}还做过 ${otherWorks.map(x=>`<a class="author-work-link" href="https://github.com/${esc(x.n)}" target="_blank" rel="noopener" title="${esc(REPO_ZH[x.n]||"")}">${esc(x.n.split("/")[1])}</a>（${esc(x.d)}）`).join("、")} 等知名项目。`;
     }
-    det = det + suffix;
+    detHTML += suffix;
   }
   // 图标：实时数据用 owner 头像；精选库用项目名首字母 + 分类配色圆标
   const letter = (r.n.split("/")[1]||r.n).charAt(0).toUpperCase();
@@ -833,7 +898,7 @@ function cardHTML(r, src, rank){
       ${src?`<span class="tag src">${src}</span>`:""}
       <span class="meta-item fav-count" data-favcount="${esc(r.n)}" title="收藏：有多少人在这个应用里收藏了它">🔖 <span class="lbl">收藏</span> ${fmt(favCountOf(r.n))}</span>
     </div>
-    ${det?`<div class="expand-hint">了解详情 <span class="arr">▾</span></div><div class="repo-detail">${esc(det)}</div>`:""}
+    ${detHTML?`<div class="expand-hint">了解详情 <span class="arr">▾</span></div><div class="repo-detail">${detHTML}</div>`:""}
   </div>`;
 }
 function renderList(el, list, src){
@@ -907,7 +972,7 @@ function renderAuthorBody(owner, ownerType){
   if(curatedRepos.length){
     worksHTML = `<div class="author-works-title">精选库内的代表作</div>
       <div class="author-repos">${curatedRepos.map(r=>`<a class="author-repo" href="https://github.com/${esc(r.n)}" target="_blank" rel="noopener">
-        <span class="n">${esc(r.n.split("/")[1])}</span>
+        <span class="n">${esc(repoZh(r.n))}</span>
         <span class="s">★ ${fmt(r.s)}</span>
       </a>`).join("")}</div>`;
   } else {
@@ -937,7 +1002,7 @@ async function fetchAuthorFromAPI(owner, ownerType){
     const reposHTML = data.length
       ? `<div class="author-works-title">GitHub 上 Star 最高的项目</div>
          <div class="author-repos">${data.map(r=>`<a class="author-repo" href="https://github.com/${esc(r.full_name)}" target="_blank" rel="noopener">
-            <span class="n">${esc(r.full_name.split("/")[1])}</span>
+            <span class="n">${esc(repoZh(r.full_name))}</span>
             <span class="s">★ ${fmt(r.stargazers_count)}</span>
          </a>`).join("")}</div>`
       : `<div style="font-size:12px;color:var(--text2)">该作者暂无公开仓库。</div>`;
