@@ -955,7 +955,7 @@ const DETAIL = {
 "nestjs/nest":"🎯应用场景：企业级 Node.js 后端框架，代码结构规范。\n✨主要功能：依赖注入、模块化、TypeScript 强类型。\n💻适用平台：Windows / Mac / Linux，需要 Node.js。\n🛠怎么用起来：npm i -g @nestjs/cli 安装脚手架，nest new 创建项目；适合团队规范化的大型后端项目。",
 "go-kratos/kratos":"🎯应用场景：B 站开源的 Go 微服务框架，大厂生产验证。\n✨主要功能：配置、日志、服务注册微服务全套能力。\n💻适用平台：Windows / Mac / Linux，需要 Go 环境。\n🛠怎么用起来：按官方文档安装脚手架并创建服务；适合进阶的 Go 后端开发者。",
 "microsoft/vscode":"🎯应用场景：写代码的编辑器，全球程序员最常用。\n✨主要功能：插件市场、调试、Git 集成、智能代码提示。\n💻适用平台：Windows / Mac / Linux。\n🛠怎么用起来：官网下载安装，装个中文语言包即用；想学编程先装它。",
-"yt-dlp/yt-dlp":"🎯应用场景：下载 B 站、YouTube 等上千个网站的视频。\n✨主要功能：批量下载、选择清晰度、提取字幕和音频。\n💻适用平台：Windows / Mac / Linux，命令行操作。\n🛠怎么用起来：装好 Python 后 pip install yt-dlp，命令行输入 yt-dlp 视频链接 即可；注意遵守网站规则和版权。",
+"yt-dlp/yt-dlp":"🎯应用场景：下载 B 站、YouTube 等上千个网站的视频，功能比浏览器自带下载强大得多。\n✨主要功能：批量下载、选择清晰度、提取字幕和音频，全站都能下。\n💻适用平台：Windows / Mac / Linux，需要在【命令行】里操作（就是电脑上黑色的文字窗口）。\n🛠怎么用起来：① 去 Python 官网（python.org）下载安装 Python，安装时勾选 Add to PATH；② 打开命令行，输入 pip install yt-dlp 按回车；③ 输入 yt-dlp 空格+视频网址 按回车，视频就存进电脑了。觉得麻烦的话，日常用浏览器/App 自带的下载就够了。注意：只能下载自己有权观看的内容，要遵守网站规则和版权。",
 "ohmyzsh/ohmyzsh":"🎯应用场景：让终端命令行好用又好看。\n✨主要功能：主题皮肤、命令提示、快捷键简化。\n💻适用平台：Mac / Linux（Windows 可配合 WSL 使用）。\n🛠怎么用起来：终端执行官方一键安装脚本即可；折腾党福音，新手可以以后再说。",
 "localsend/localsend":"🎯应用场景：局域网内免流量跨设备传文件，手机电脑互通。\n✨主要功能：苹果、安卓、电脑全平台互通，速度快，数据不经过服务器。\n💻适用平台：Android / iOS / Windows / Mac / Linux。\n🛠怎么用起来：各平台商店或官网下载安装，连同一个 Wi-Fi 自动发现设备，点选即传。",
 "neovim/neovim":"🎯应用场景：极致高效的文本编辑器，程序员效率神器。\n✨主要功能：极速启动、插件生态、纯键盘操作。\n💻适用平台：Windows / Mac / Linux。\n🛠怎么用起来：官网下载或包管理器安装，再配一套插件配置；学习曲线较陡，适合进阶用户。",
@@ -1134,6 +1134,11 @@ function cardHTML(r, src, rank){
       suffix += ` 该${typeLabel==="org"?"组织":"开发者"}还做过 ${otherWorks.map(x=>`<a class="author-work-link" href="https://github.com/${esc(x.n)}" target="_blank" rel="noopener" title="${esc(REPO_ZH[x.n]||"")}">${esc(x.n.split("/")[1])}</a>（${esc(x.d)}）`).join("、")} 等知名项目。`;
     }
     detHTML += suffix;
+  }
+  // 命令行小白提示：详情涉及命令行操作时，自动追加大白话安抚（对所有项目生效，不用逐条维护）
+  const CLI_MARKS = ["pip install","npm install","npm create","npx ","yarn ","命令行","终端","docker","git clone","brew install","apt install","node.js","python 环境","敲 ollama","运行命令"];
+  if(detHTML && CLI_MARKS.some(m=>detHTML.toLowerCase().includes(m))){
+    detHTML += `\n\n<div class="detail-tip">👀 小白提示：这段涉及【命令行】操作，是给爱折腾的玩家准备的。看不懂没关系——先看🎯应用场景了解它是干嘛的；想体验同类功能，网上通常有更简单的图形版或网页版。</div>`;
   }
   // 统一提示：搭建/安装命令有时效性，避免过时误导小白（对所有项目生效，不用逐条维护）
   if(detHTML) detHTML += `\n\n<div class="detail-tip">💡 提示：安装或搭建命令可能随版本更新而变化，具体以官方文档为准。</div>`;
