@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="GitHub发现器">
+<meta name="theme-color" content="#0d1117">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>GitHub 中文发现器</title>
+<style>
+:root{
+  --bg:#0d1117; --card:#161b22; --card2:#1c2330; --border:#2d333b;
+  --text:#e6edf3; --text2:#9da7b3; --accent:#58a6ff; --accent2:#f78166;
+  --star:#e3b341; --nav:rgba(13,17,23,.92); --chip:#21262d; --shadow:rgba(0,0,0,.4);
+  --bright:#ffffff;
+  --name1:#4be1ec; --name2:#58a6ff;
+}
+html[data-theme="light"]{
+  --bg:#f6f8fa; --card:#ffffff; --card2:#f0f3f6; --border:#d8dee4;
+  --text:#1f2328; --text2:#59636e; --accent:#0969da; --accent2:#cf5240;
+  --star:#9a6700; --nav:rgba(255,255,255,.92); --chip:#eaeef2; --shadow:rgba(140,150,160,.25);
+  --bright:#0a0c10;
+  --name1:#0e9bb8; --name2:#2563eb;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  max-width:520px;margin:0 auto;min-height:100vh;
+  padding-bottom:calc(64px + env(safe-area-inset-bottom));
+  transition:background .25s,color .25s;
+}
+/* 顶部 */
+header{
+  position:sticky;top:0;z-index:20;background:var(--nav);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.logo{font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px}
+.logo svg{width:22px;height:22px;fill:var(--text)}
+#themeBtn{background:var(--chip);border:1px solid var(--border);color:var(--text);
+  width:36px;height:36px;border-radius:10px;font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center}
+/* 分类标签 */
+.cats{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex:0 0 auto;padding:7px 14px;border-radius:999px;background:var(--chip);
+  color:var(--text2);font-size:13px;cursor:pointer;border:1px solid transparent;
+  white-space:nowrap;transition:all .2s}
+.cat.active{background:var(--accent);color:#fff;font-weight:600}
+/* 页面 */
+main{padding:14px 16px}
+.page{display:none;animation:fade .25s ease}
+.page.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* 卡片 */
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:9px 12px;margin-bottom:7px;box-shadow:0 2px 6px var(--shadow);
+  transition:transform .15s;
+}
+.card:active{transform:scale(.985)}
+.card-top{display:flex;align-items:center;gap:8px}
+.repo-icon{width:28px;height:28px;border-radius:50%;flex:0 0 auto;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:11px;box-shadow:0 2px 6px var(--shadow)}
+img.repo-icon{object-fit:cover;background:var(--chip)}
+.repo-name{flex:1;font-size:14.5px;font-weight:700;word-break:break-all;
+  text-decoration:none;line-height:1.3;color:var(--text);letter-spacing:.1px}
+.repo-name:active{opacity:.7}
+/* 作者信息行 */
+.author-line{display:flex;align-items:center;gap:5px;margin:2px 0 0;font-size:10.5px;color:var(--text2)}
+.author-name{cursor:pointer;color:var(--accent);font-weight:600;text-decoration:none;transition:opacity .2s}
+.author-name:active{opacity:.7}
+.author-type{background:var(--chip);border:1px solid var(--border);padding:1px 6px;border-radius:4px;font-size:10px;color:var(--text2)}
+.author-type.org{background:rgba(163,113,247,.12);color:#a371f7;border-color:rgba(163,113,247,.3)}
+.author-type.user{background:rgba(88,166,255,.12);color:var(--accent);border-color:rgba(88,166,255,.3)}
+/* 作者弹窗内元素 */
+.author-hero{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.author-hero .avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#a371f7);
+  display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;font-weight:800;flex:0 0 auto;overflow:hidden}
+.author-hero .avatar img{width:100%;height:100%;object-fit:cover}
+.author-hero .info{flex:1}
+.author-hero .name{font-size:16px;font-weight:700;color:var(--text);word-break:break-all}
+.author-bio{font-size:13px;color:var(--text);line-height:1.8;margin-bottom:14px;padding:10px 12px;background:var(--card2);border:1px solid var(--border);border-radius:10px}
+.author-works-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.author-works-title::before{content:"★";color:var(--star);font-size:12px}
+.author-repos{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.author-repo{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--card2);border:1px solid var(--border);border-radius:8px;cursor:pointer;text-decoration:none;color:var(--text);font-size:12.5px}
+.author-repo:active{transform:scale(.98);opacity:.8}
+.author-repo .n{flex:1;word-break:break-all;font-weight:600}
+.author-repo .s{color:var(--star);font-size:11px;white-space:nowrap}
+.fav-btn{flex:0 0 auto;background:none;border:none;font-size:16px;cursor:pointer;
+  color:var(--text2);padding:2px;transition:transform .2s,color .2s;line-height:1}
+.fav-btn.on{color:#f85149;transform:scale(1.15)}
+.repo-desc{font-size:11.5px;color:var(--text2);line-height:1.5;margin:4px 0 5px}
+.repo-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:10.5px;color:var(--text2)}
+.repo-meta .lbl{opacity:.8;color:var(--text2)}
+.meta-item{display:flex;align-items:center;gap:4px}
+.lang-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.tag{background:var(--card2);border:1px solid var(--border);padding:2px 8px;border-radius:6px;font-size:11px}
+.tag.src{background:rgba(88,166,255,.12);color:var(--accent);border-color:rgba(88,166,255,.3)}
+.tag.en{background:rgba(247,129,102,.12);color:var(--accent2);border-color:rgba(247,129,102,.35)}
+.rank-tabs{padding:0 0 12px}
+/* 首页横幅 */
+.banner{background:linear-gradient(135deg,rgba(88,166,255,.14),rgba(163,113,247,.14));
+  border:1px solid var(--border);border-radius:14px;padding:13px 15px;margin-bottom:10px;
+  display:flex;align-items:center;gap:11px}
+.banner .b-icon{font-size:26px;flex:0 0 auto}
+.banner .b-text{flex:1;min-width:0}
+.banner .b-title{font-size:14.5px;font-weight:700;color:var(--text)}
+.banner .b-sub{font-size:11.5px;color:var(--text2);margin-top:2px;line-height:1.5}
+/* 今日推荐 */
+.daily-pick{background:var(--card2);border:1px solid var(--border);border-radius:12px;
+  padding:11px 14px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
+.daily-pick:active{border-color:var(--accent)}
+.daily-pick .dp-head{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
+  color:var(--accent);margin-bottom:5px}
+.daily-pick .dp-name{font-size:14px;font-weight:700;color:var(--text)}
+.daily-pick .dp-desc{font-size:11.5px;color:var(--text2);margin-top:3px;line-height:1.5}
+/* 排序切换 */
+.sort-tabs{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;scrollbar-width:none}
+.sort-tabs::-webkit-scrollbar{display:none}
+.sort-tab{flex:0 0 auto;padding:4px 11px;border-radius:999px;background:var(--chip);
+  color:var(--text2);font-size:11.5px;cursor:pointer;border:1px solid transparent;
+  white-space:nowrap;transition:all .2s}
+.sort-tab.active{background:var(--accent);color:#fff;font-weight:600}
+/* 分享 */
+.share-btn{flex:0 0 auto;background:var(--chip);border:1px solid var(--border);font-size:11px;
+  color:var(--text2);padding:4px 8px;border-radius:8px;cursor:pointer;line-height:1;
+  display:inline-flex;align-items:center;gap:3px;transition:transform .2s,color .2s,border-color .2s}
+.share-btn:active{transform:scale(1.08);color:var(--accent);border-color:var(--accent)}
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;
+  display:none;align-items:flex-end;justify-content:center}
+.modal-mask.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-bottom:none;
+  border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));
+  width:100%;max-width:520px;animation:fade .25s ease}
+.modal-title{font-size:15px;font-weight:700;margin-bottom:12px}
+.share-text{white-space:pre-wrap;word-break:break-all;background:var(--card2);
+  border:1px solid var(--border);border-radius:10px;padding:12px;
+  font-size:13px;line-height:1.8;color:var(--text);font-family:inherit;margin-bottom:14px}
+.modal-btns{display:flex;gap:10px}
+.modal-btns button{flex:1;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:600;cursor:pointer}
+#copyBtn{background:var(--accent);color:#fff}
+#closeModal{background:var(--chip);color:var(--text)}
+.app-share-btn{width:100%;margin-top:12px;background:var(--chip);border:1px solid var(--border);
+  color:var(--accent);border-radius:12px;padding:12px;font-size:14px;font-weight:600;cursor:pointer}
+/* 小白版详情展开区 */
+.card{cursor:pointer}
+.expand-hint{text-align:center;font-size:11.5px;color:var(--accent);margin-top:6px;user-select:none}
+.expand-hint .arr{display:inline-block;transition:transform .2s}
+.card.open .expand-hint .arr{transform:rotate(180deg)}
+.repo-detail{display:none;font-size:12.5px;color:var(--text);line-height:1.85;
+  margin-top:8px;padding-top:9px;border-top:1px dashed var(--border);white-space:pre-wrap}
+.card.open .repo-detail{display:block;animation:fade .25s ease}
+.rating{color:var(--star);font-weight:600}
+.fav-count{margin-left:auto}
+/* 页头渐变标题 */
+.logo-text{background:linear-gradient(120deg,#58a6ff,#a371f7 55%,#f778ba);
+  -webkit-background-clip:text;background-clip:text;color:transparent;font-size:18px;font-weight:800}
+/* 榜单排名角标 */
+.card{position:relative}
+.rank-badge{position:absolute;top:-9px;left:12px;z-index:2;background:var(--chip);
+  border:1px solid var(--border);color:var(--text2);font-size:11px;font-weight:700;
+  padding:2px 10px;border-radius:999px}
+.rank-badge.top{background:linear-gradient(135deg,#f7b733,#fc4a1a);color:#fff;border-color:transparent;
+  box-shadow:0 2px 6px rgba(252,74,26,.4)}
+.rank-list{padding-top:8px}
+/* 搜索 */
+.search-wrap{display:flex;gap:8px;margin-bottom:14px}
+#searchInput{
+  flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:12px 14px;font-size:15px;color:var(--text);outline:none;
+}
+#searchInput:focus{border-color:var(--accent)}
+#searchBtn{background:var(--accent);color:#fff;border:none;border-radius:12px;
+  padding:0 18px;font-size:15px;font-weight:600;cursor:pointer}
+.notice{font-size:12.5px;color:var(--text2);background:var(--card2);
+  border:1px solid var(--border);border-radius:10px;padding:9px 12px;margin-bottom:12px;line-height:1.5}
+.notice.warn{color:var(--accent2);border-color:rgba(247,129,102,.35)}
+.empty{text-align:center;color:var(--text2);padding:48px 16px;font-size:14px;line-height:1.8}
+.empty .big{font-size:38px;display:block;margin-bottom:10px}
+.loading{text-align:center;color:var(--text2);padding:24px;font-size:13px}
+.spin{display:inline-block;width:18px;height:18px;border:2px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;animation:rot .7s linear infinite;
+  vertical-align:-4px;margin-right:8px}
+@keyframes rot{to{transform:rotate(360deg)}}
+/* 我的 */
+.profile{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:20px 16px;text-align:center;margin-bottom:16px}
+.profile .avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#a371f7);
+  display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 10px}
+.profile h2{font-size:16px}
+.profile p{font-size:12.5px;color:var(--text2);margin-top:4px}
+.sec-title{font-size:14px;font-weight:700;margin:18px 0 10px;display:flex;justify-content:space-between;align-items:center}
+.sec-title .count{font-size:12px;color:var(--text2);font-weight:400}
+.about-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;font-size:13.5px;line-height:1.9;color:var(--text)}
+.about-box b{color:var(--accent)}
+/* 底部导航 */
+nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:30;
+  max-width:520px;margin:0 auto;background:var(--nav);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);
+  display:flex;padding-bottom:env(safe-area-inset-bottom);
+}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:9px 0 8px;color:var(--text2);font-size:11px;cursor:pointer;transition:color .2s}
+.nav-item.active{color:var(--accent)}
+.nav-item svg{width:22px;height:22px;fill:currentColor}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg viewBox="0 0 16 16"><path d="M8 0c4.42 0 8 3.58 8 8a8.01 8.01 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+      <span class="logo-text">GitHub 中文发现器</span>
+    </div>
+    <button id="themeBtn" title="切换主题">☀️</button>
+  </div>
+  <div class="cats" id="catBar"></div>
+</header>
+
+<main>
+  <!-- 发现页 -->
+  <section class="page show" id="page-home">
+    <div class="banner">
+      <span class="b-icon">🧭</span>
+      <div class="b-text">
+        <div class="b-title">GitHub 中文发现器</div>
+        <div class="b-sub">不懂英文也能轻松逛 GitHub，每日为你挑一个好项目</div>
+      </div>
+    </div>
+    <div id="dailyPick"></div>
+    <div class="sort-tabs" id="sortTabs">
+      <div class="sort-tab active" data-sort="star">⭐ 热门</div>
+      <div class="sort-tab" data-sort="rating">★ 高分</div>
+      <div class="sort-tab" data-sort="fav">🔖 收藏多</div>
+    </div>
+    <div id="homeList"></div>
+  </section>
+
+  <!-- 搜索页 -->
+  <section class="page" id="page-search">
+    <div class="search-wrap">
+      <input id="searchInput" type="search" placeholder="输入中文或英文关键词，如：AI、画图、Vue" autocomplete="off">
+      <button id="searchBtn">搜索</button>
+    </div>
+    <div id="searchResult">
+      <div class="empty"><span class="big">🔍</span>输入关键词发现好项目<br>支持中文，如「人工智能」「漫画」「教程」</div>
+    </div>
+  </section>
+
+  <!-- 榜单页 -->
+  <section class="page" id="page-rank">
+    <div class="cats rank-tabs" id="rankTabs">
+      <div class="cat" data-range="day">今日</div>
+      <div class="cat" data-range="week">本周</div>
+      <div class="cat" data-range="month">本月</div>
+      <div class="cat" data-range="year">今年</div>
+      <div class="cat active" data-range="all">全部</div>
+    </div>
+    <div id="rankList" class="rank-list">
+      <div class="empty"><span class="big">🏆</span>点击进入榜单查看 Top 20</div>
+    </div>
+  </section>
+
+  <!-- 我的页 -->
+  <section class="page" id="page-me">
+    <div class="profile">
+      <div class="avatar">🧭</div>
+      <h2>GitHub 中文发现器</h2>
+      <p>不懂英文，也能轻松逛 GitHub</p>
+    </div>
+    <div class="sec-title">⭐ 我的收藏 <span class="count" id="favCount"></span></div>
+    <div id="favList"></div>
+    <div class="sec-title">ℹ️ 关于</div>
+    <div class="about-box">
+      <b>GitHub 中文发现器</b> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
+      · 内置 <b>精选项目库</b>，每条都有人工撰写的中文简介<br>
+      · 搜索时会同时查询 <b>GitHub 官方接口</b>，网络不通时自动只展示本地精选<br>
+      · 收藏保存在你的浏览器本地，不上传任何数据
+    </div>
+    <button class="app-share-btn" id="appShareBtn">📤 分享这个应用</button>
+  </section>
+</main>
+
+<!-- 分享弹窗 -->
+<div class="modal-mask" id="shareModal">
+  <div class="modal">
+    <div class="modal-title">📤 分享项目</div>
+    <pre class="share-text" id="shareText"></pre>
+    <div class="modal-btns">
+      <button id="copyBtn">一键复制</button>
+      <button id="closeModal">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 作者详情弹窗 -->
+<div class="modal-mask" id="authorModal">
+  <div class="modal">
+    <div class="modal-title" id="authorModalTitle">👤 作者详情</div>
+    <div id="authorModalBody">
+      <div class="loading"><span class="spin"></span>正在加载作者信息…</div>
+    </div>
+    <div class="modal-btns">
+      <button id="authorVisitBtn" style="background:var(--chip);color:var(--text)">去 GitHub 主页</button>
+      <button id="authorCloseBtn" style="background:var(--accent);color:#fff">关闭</button>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-item active" data-page="home">
+    <svg viewBox="0 0 16 16"><path d="M8.543 2.295a.75.75 0 0 0-1.086 0l-5.25 5.53a.75.75 0 0 0 .543 1.26h.5v5.165c0 .552.448 1 1 1h3.5v-3.5a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 .75.75v3.5h3.5a1 1 0 0 0 1-1V9.085h.5a.75.75 0 0 0 .543-1.26l-5.25-5.53Z"/></svg>
+    发现
+  </div>
+  <div class="nav-item" data-page="rank">
+    <svg viewBox="0 0 16 16"><path d="M2 13V8h2.4v5H2Zm4.8 0V3.5h2.4V13H6.8Zm4.8 0V6h2.4v7h-2.4ZM1 15.6h14v-1.5H1v1.5Z"/></svg>
+    榜单
+  </div>
+  <div class="nav-item" data-page="search">
+    <svg viewBox="0 0 16 16"><path d="M10.68 11.74a6 6 0 1 1 1.06-1.06l3.93 3.93-1.06 1.06-3.93-3.93ZM11.5 7a4.5 4.5 0 1 0-9 0 4.5 4.5 0 0 0 9 0Z"/></svg>
+    搜索
+  </div>
+  <div class="nav-item" data-page="me">
+    <svg viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm3-3a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v1H2v-1Z"/></svg>
+    我的
+  </div>
+</nav>
+
+<script>
+/* ================= 精选项目数据（约 60 个，人工撰写中文简介） ================= */
+const CATS = ["全部","AI 人工智能","实用工具","手机 App","学编程","游戏娱乐","网页界面","后台服务"];
+const REPOS = [
+// AI 人工智能
+{n:"huggingface/transformers",d:"最大的开源 AI 模型库，数万种预训练模型直接调用",s:150000,l:"Python",c:"AI 人工智能"},
+{n:"ollama/ollama",d:"在自己电脑上一条命令运行大语言模型的神器",s:150000,l:"Go",c:"AI 人工智能"},
+{n:"AUTOMATIC1111/stable-diffusion-webui",d:"最流行的 AI 绘画工具，输入文字就能生成图片",s:155000,l:"Python",c:"AI 人工智能"},
+{n:"langchain-ai/langchain",d:"用大语言模型开发应用的框架，轻松做智能问答和机器人",s:115000,l:"Python",c:"AI 人工智能"},
+{n:"openai/whisper",d:"OpenAI 开源的语音识别模型，把语音准确转成文字",s:85000,l:"Python",c:"AI 人工智能"},
+{n:"pytorch/pytorch",d:"Meta 开源的深度学习框架，AI 研究和开发的主流工具",s:93000,l:"Python",c:"AI 人工智能"},
+{n:"tensorflow/tensorflow",d:"Google 开源的机器学习框架，工业界应用广泛",s:191000,l:"C++",c:"AI 人工智能"},
+{n:"ggerganov/llama.cpp",d:"用纯 C++ 在普通电脑上高效运行大语言模型",s:84000,l:"C++",c:"AI 人工智能"},
+{n:"keras-team/keras",d:"简单易学的深度学习框架，几行代码搭建神经网络",s:63000,l:"Python",c:"AI 人工智能"},
+{n:"vllm-project/vllm",d:"大模型高速推理引擎，让 AI 服务更快更省显存",s:55000,l:"Python",c:"AI 人工智能"},
+// 前端
+{n:"facebook/react",d:"Meta 开源的界面构建库，全球使用最广的前端框架",s:237000,l:"JavaScript",c:"网页界面"},
+{n:"vuejs/core",d:"尤雨溪开发的渐进式框架，国内最流行的前端框架",s:51000,l:"TypeScript",c:"网页界面"},
+{n:"vitejs/vite",d:"下一代前端构建工具，启动和热更新速度快到飞起",s:75000,l:"TypeScript",c:"网页界面"},
+{n:"twbs/bootstrap",d:"最流行的 CSS 框架，快速做出好看的响应式网页",s:173000,l:"JavaScript",c:"网页界面"},
+{n:"tailwindlabs/tailwindcss",d:"实用至上的 CSS 框架，用类名直接拼出界面",s:90000,l:"CSS",c:"网页界面"},
+{n:"axios/axios",d:"简单易用的网络请求库，前端发请求的标配",s:107000,l:"JavaScript",c:"网页界面"},
+{n:"ant-design/ant-design",d:"蚂蚁集团开源的企业级 React 组件库",s:95000,l:"TypeScript",c:"网页界面"},
+{n:"angular/angular",d:"Google 开发的企业级前端框架",s:98000,l:"TypeScript",c:"网页界面"},
+{n:"sveltejs/svelte",d:"编译时前端框架，代码更少运行更快",s:83000,l:"JavaScript",c:"网页界面"},
+{n:"mui/material-ui",d:"谷歌风格的 React 组件库，开箱即用的精美界面",s:96000,l:"JavaScript",c:"网页界面"},
+// 后端
+{n:"spring-projects/spring-boot",d:"Java 后端的事实标准框架，快速搭建企业级应用",s:78000,l:"Java",c:"后台服务"},
+{n:"nodejs/node",d:"让 JavaScript 跑在服务器上的运行环境",s:112000,l:"JavaScript",c:"后台服务"},
+{n:"expressjs/express",d:"Node.js 最经典的 Web 框架，简洁灵活",s:67000,l:"JavaScript",c:"后台服务"},
+{n:"gin-gonic/gin",d:"Go 语言最快的 Web 框架，写接口简单高效",s:84000,l:"Go",c:"后台服务"},
+{n:"django/django",d:"Python 最完善的全栈框架，自带后台管理系统",s:85000,l:"Python",c:"后台服务"},
+{n:"pallets/flask",d:"Python 轻量级 Web 框架，简单易学适合入门",s:70000,l:"Python",c:"后台服务"},
+{n:"fastapi/fastapi",d:"Python 现代高性能接口框架，自动生成接口文档",s:87000,l:"Python",c:"后台服务"},
+{n:"nestjs/nest",d:"企业级 Node.js 框架，构建可扩展的服务端应用",s:72000,l:"TypeScript",c:"后台服务"},
+{n:"go-kratos/kratos",d:"B 站开源的 Go 微服务框架，大厂生产验证",s:24000,l:"Go",c:"后台服务"},
+// 工具
+{n:"microsoft/vscode",d:"微软开源的代码编辑器，全球程序员最常用",s:174000,l:"TypeScript",c:"实用工具"},
+{n:"yt-dlp/yt-dlp",d:"强大的视频下载工具，支持上千个网站",s:124000,l:"Python",c:"实用工具"},
+{n:"ohmyzsh/ohmyzsh",d:"让命令行终端好用又好看的配置框架",s:180000,l:"Shell",c:"实用工具"},
+{n:"localsend/localsend",d:"局域网免流量跨设备传文件，苹果安卓电脑互通",s:68000,l:"Dart",c:"实用工具"},
+{n:"neovim/neovim",d:"现代化的 Vim 编辑器，极致高效的文本编辑",s:93000,l:"C",c:"实用工具"},
+{n:"jesseduffield/lazygit",d:"终端里的 Git 可视化工具，告别背命令",s:64000,l:"Go",c:"实用工具"},
+{n:"BurntSushi/ripgrep",d:"超快的文本搜索工具，比传统 grep 快一个量级",s:55000,l:"Rust",c:"实用工具"},
+{n:"sharkdp/bat",d:"cat 命令增强版，自带语法高亮和 Git 提示",s:54000,l:"Rust",c:"实用工具"},
+{n:"jgm/pandoc",d:"万能文档转换器，Markdown、Word、PDF 互转",s:39000,l:"Haskell",c:"实用工具"},
+{n:"ShareX/ShareX",d:"Windows 最强的截图与屏幕录制分享工具",s:32000,l:"C#",c:"实用工具"},
+// 游戏
+{n:"godotengine/godot",d:"免费开源的游戏引擎，2D 和 3D 游戏都能做",s:100000,l:"C++",c:"游戏娱乐"},
+{n:"luanti-org/luanti",d:"开源《我的世界》风格的沙盒游戏引擎",s:12000,l:"C++",c:"游戏娱乐"},
+{n:"gabrielecirulli/2048",d:"经典数字合成小游戏 2048 的网页版开源实现",s:12000,l:"JavaScript",c:"游戏娱乐"},
+{n:"chrislgarry/Apollo-11",d:"阿波罗 11 号登月飞船的原始源代码，历史性项目",s:62000,l:"汇编",c:"游戏娱乐"},
+{n:"libretro/RetroArch",d:"全能复古游戏模拟器，一个应用玩遍经典老游戏",s:12000,l:"C",c:"游戏娱乐"},
+{n:"0ad/0ad",d:"开源帝国时代风格的即时战略游戏，画面精美",s:5000,l:"C++",c:"游戏娱乐"},
+{n:"SuperTuxKart/stk-code",d:"开源卡丁车竞速游戏，好玩且完全免费",s:4000,l:"C++",c:"游戏娱乐"},
+{n:"playcanvas/engine",d:"网页 3D 游戏引擎，浏览器里跑高质量游戏画面",s:11000,l:"JavaScript",c:"游戏娱乐"},
+{n:"felixrieseberg/windows95",d:"把 Windows 95 整个装进一个应用里运行的趣味项目",s:47000,l:"JavaScript",c:"游戏娱乐"},
+// 手机应用
+{n:"flutter/flutter",d:"Google 跨平台框架，一套代码跑遍手机电脑网页",s:172000,l:"Dart",c:"手机 App"},
+{n:"facebook/react-native",d:"用 JavaScript 一次开发，同时生成苹果和安卓应用",s:123000,l:"C++",c:"手机 App"},
+{n:"Genymobile/scrcpy",d:"电脑免费投屏控制安卓手机的神器，零延迟",s:128000,l:"C",c:"手机 App"},
+{n:"termux/termux-app",d:"在安卓手机上运行完整的 Linux 终端环境",s:45000,l:"Java",c:"手机 App"},
+{n:"expo/expo",d:"让 React Native 手机应用开发变简单的工具链",s:42000,l:"TypeScript",c:"手机 App"},
+{n:"kivy/kivy",d:"用 Python 开发跨平台手机应用的框架",s:19000,l:"Python",c:"手机 App"},
+{n:"ionic-team/capacitor",d:"把网页应用直接打包成原生手机应用",s:14000,l:"Java",c:"手机 App"},
+{n:"signalapp/Signal-Android",d:"注重隐私的加密聊天软件 Signal 的安卓客户端",s:27000,l:"Kotlin",c:"手机 App"},
+// 学习资源
+{n:"freeCodeCamp/freeCodeCamp",d:"全球最大的免费编程学习平台，GitHub 星标第一",s:425000,l:"TypeScript",c:"学编程"},
+{n:"EbookFoundation/free-programming-books",d:"各种语言的免费编程书籍大全，含大量中文书",s:367000,l:"文档",c:"学编程"},
+{n:"kamranahmedse/developer-roadmap",d:"程序员成长路线图，告诉你每一步该学什么",s:333000,l:"TypeScript",c:"学编程"},
+{n:"jwasham/coding-interview-university",d:"从零基础到通过大厂算法面试的完整自学计划",s:321000,l:"文档",c:"学编程"},
+{n:"trekhleb/javascript-algorithms",d:"JavaScript 算法与数据结构教程，带中文讲解",s:192000,l:"JavaScript",c:"学编程"},
+{n:"donnemartin/system-design-primer",d:"系统设计面试学习指南，有中文翻译版本",s:315000,l:"Python",c:"学编程"},
+{n:"jackfrued/Python-100-Days",d:"Python 100 天从新手到大师，优质中文教程",s:170000,l:"Python",c:"学编程"},
+{n:"CyC2018/CS-Notes",d:"中文技术面试必备：计算机基础与算法笔记",s:180000,l:"文档",c:"学编程"},
+{n:"justjavac/free-programming-books-zh_CN",d:"免费的中文编程书籍索引，持续更新",s:115000,l:"文档",c:"学编程"},
+{n:"PKUFlyingPig/cs-self-learning",d:"北大出品的计算机科学自学指南",s:68000,l:"文档",c:"学编程"},
+// AI 人工智能（扩充）
+{n:"comfyanonymous/ComfyUI",d:"AI 绘画工作流神器，节点式操作火遍全网",s:90000,l:"Python",c:"AI 人工智能"},
+{n:"meta-llama/llama",d:"Meta 开源的大模型家族，ChatGPT 的最强开源对手",s:62000,l:"Python",c:"AI 人工智能"},
+{n:"Sanster/IOPaint",d:"AI 修图工具，一键抹除照片里不需要的人和物",s:24000,l:"Python",c:"AI 人工智能"},
+{n:"RVC-Project/Retrieval-based-Voice-Conversion-WebUI",d:"AI 变声工具，声音克隆效果惊艳",s:32000,l:"Python",c:"AI 人工智能"},
+// 实用工具（扩充）
+{n:"RustDesk/RustDesk",d:"国产开源远程桌面，TeamViewer 的免费替代",s:90000,l:"Rust",c:"实用工具"},
+{n:"alist-org/alist",d:"把阿里云盘百度网盘挂载成一个网盘，网页直接看",s:55000,l:"Go",c:"实用工具"},
+{n:"qBittorrent/qBittorrent",d:"功能强大的开源 BT 下载工具，干净无广告",s:33000,l:"C++",c:"实用工具"},
+{n:"aria2/aria2",d:"命令行高速下载神器，多线程断点续传",s:38000,l:"C++",c:"实用工具"},
+// 学编程（扩充）
+{n:"TheAlgorithms/Python",d:"用 Python 实现各种算法的教学仓库，入门首选",s:200000,l:"Python",c:"学编程"},
+{n:"ossu/computer-science",d:"免费的计算机科学完整自学课程计划",s:180000,l:"文档",c:"学编程"},
+{n:"practical-tutorials/project-based-learning",d:"边做项目边学编程的教程合集，动手派最爱",s:190000,l:"文档",c:"学编程"},
+// 网页界面（扩充）
+{n:"vercel/next.js",d:"React 全栈框架，全球最流行的 Web 开发框架",s:140000,l:"JavaScript",c:"网页界面"},
+{n:"mrdoob/three.js",d:"浏览器 3D 图形库，网页 3D 效果都靠它",s:110000,l:"JavaScript",c:"网页界面"},
+{n:"d3/d3",d:"数据可视化图表库，做出专业级图表",s:110000,l:"JavaScript",c:"网页界面"},
+// 后台服务（扩充）
+{n:"kubernetes/kubernetes",d:"谷歌开源容器编排系统，云时代的操作系统",s:120000,l:"Go",c:"后台服务"},
+{n:"prometheus/prometheus",d:"开源监控告警系统，服务器运维必备",s:60000,l:"Go",c:"后台服务"},
+{n:"apache/kafka",d:"高吞吐消息队列，大数据时代的基础设施",s:30000,l:"Java",c:"后台服务"},
+// 手机 App（扩充）
+{n:"immich-app/immich",d:"自托管照片备份，手机照片存到自己服务器",s:60000,l:"TypeScript",c:"手机 App"},
+{n:"TeamNewPipe/NewPipe",d:"去广告的看视频应用，隐私友好",s:32000,l:"Java",c:"手机 App"},
+// 游戏娱乐（扩充）
+{n:"RPCS3/rpcs3",d:"在电脑上玩 PS3 游戏的模拟器，怀旧玩家福音",s:17000,l:"C++",c:"游戏娱乐"}
+];
+
+const LANG_COLORS = {"JavaScript":"#f1e05a","TypeScript":"#3178c6","Python":"#3572A5","Go":"#00ADD8","Java":"#b07219","C++":"#f34b7d","C":"#555","C#":"#178600","Rust":"#dea584","Dart":"#00B4AB","Kotlin":"#A97BFF","Shell":"#89e051","Haskell":"#5e5086","CSS":"#563d7c","汇编":"#6E4C13","文档":"#888"};
+
+/* ================= 精选库评分（0-5，综合星标/知名度/活跃度） ================= */
+const RATING = {
+"huggingface/transformers":4.9,"ollama/ollama":4.9,"AUTOMATIC1111/stable-diffusion-webui":4.8,"langchain-ai/langchain":4.8,"openai/whisper":4.7,
+"pytorch/pytorch":4.9,"tensorflow/tensorflow":4.8,"ggerganov/llama.cpp":4.8,"keras-team/keras":4.6,"vllm-project/vllm":4.6,
+"facebook/react":4.9,"vuejs/core":4.8,"vitejs/vite":4.8,"twbs/bootstrap":4.7,"tailwindlabs/tailwindcss":4.8,
+"axios/axios":4.7,"ant-design/ant-design":4.6,"angular/angular":4.5,"sveltejs/svelte":4.6,"mui/material-ui":4.6,
+"spring-projects/spring-boot":4.8,"nodejs/node":4.8,"expressjs/express":4.6,"gin-gonic/gin":4.6,"django/django":4.7,
+"pallets/flask":4.6,"fastapi/fastapi":4.7,"nestjs/nest":4.6,"go-kratos/kratos":4.3,
+"microsoft/vscode":4.9,"yt-dlp/yt-dlp":4.7,"ohmyzsh/ohmyzsh":4.6,"localsend/localsend":4.7,"neovim/neovim":4.7,
+"jesseduffield/lazygit":4.6,"BurntSushi/ripgrep":4.6,"sharkdp/bat":4.5,"jgm/pandoc":4.5,"ShareX/ShareX":4.5,
+"godotengine/godot":4.8,"luanti-org/luanti":4.2,"gabrielecirulli/2048":4.3,"chrislgarry/Apollo-11":4.5,"libretro/RetroArch":4.5,
+"0ad/0ad":4.3,"SuperTuxKart/stk-code":4.2,"playcanvas/engine":4.4,"felixrieseberg/windows95":4.4,
+"flutter/flutter":4.8,"facebook/react-native":4.7,"Genymobile/scrcpy":4.8,"termux/termux-app":4.6,"expo/expo":4.5,
+"kivy/kivy":4.3,"ionic-team/capacitor":4.3,"signalapp/Signal-Android":4.5,
+"freeCodeCamp/freeCodeCamp":4.9,"EbookFoundation/free-programming-books":4.9,"kamranahmedse/developer-roadmap":4.8,"jwasham/coding-interview-university":4.8,"trekhleb/javascript-algorithms":4.7,
+"donnemartin/system-design-primer":4.8,"jackfrued/Python-100-Days":4.7,"CyC2018/CS-Notes":4.7,"justjavac/free-programming-books-zh_CN":4.6,"PKUFlyingPig/cs-self-learning":4.6,
+"comfyanonymous/ComfyUI":4.8,"meta-llama/llama":4.8,"Sanster/IOPaint":4.5,"RVC-Project/Retrieval-based-Voice-Conversion-WebUI":4.4,
+"RustDesk/RustDesk":4.7,"alist-org/alist":4.8,"qBittorrent/qBittorrent":4.6,"aria2/aria2":4.6,
+"TheAlgorithms/Python":4.8,"ossu/computer-science":4.8,"practical-tutorials/project-based-learning":4.7,
+"vercel/next.js":4.8,"mrdoob/three.js":4.6,"d3/d3":4.7,
+"kubernetes/kubernetes":4.8,"prometheus/prometheus":4.7,"apache/kafka":4.6,
+"immich-app/immich":4.8,"TeamNewPipe/NewPipe":4.5,"RPCS3/rpcs3":4.4
+};
+/* ================= 精选库初始收藏数（按人气设定） ================= */
+const FAV_BASE = {
+"huggingface/transformers":32800,"ollama/ollama":29600,"AUTOMATIC1111/stable-diffusion-webui":28500,"langchain-ai/langchain":24100,"openai/whisper":19800,
+"pytorch/pytorch":30200,"tensorflow/tensorflow":27600,"ggerganov/llama.cpp":21300,"keras-team/keras":15600,"vllm-project/vllm":12400,
+"facebook/react":35600,"vuejs/core":22400,"vitejs/vite":20300,"twbs/bootstrap":18900,"tailwindlabs/tailwindcss":21500,
+"axios/axios":17800,"ant-design/ant-design":19600,"angular/angular":14200,"sveltejs/svelte":13800,"mui/material-ui":15200,
+"spring-projects/spring-boot":21800,"nodejs/node":23400,"expressjs/express":13500,"gin-gonic/gin":12800,"django/django":16900,
+"pallets/flask":13100,"fastapi/fastapi":18200,"nestjs/nest":12600,"go-kratos/kratos":5600,
+"microsoft/vscode":31200,"yt-dlp/yt-dlp":17600,"ohmyzsh/ohmyzsh":15400,"localsend/localsend":16800,"neovim/neovim":14700,
+"jesseduffield/lazygit":11900,"BurntSushi/ripgrep":9800,"sharkdp/bat":8600,"jgm/pandoc":7200,"ShareX/ShareX":6800,
+"godotengine/godot":22600,"luanti-org/luanti":3800,"gabrielecirulli/2048":4600,"chrislgarry/Apollo-11":8900,"libretro/RetroArch":5200,
+"0ad/0ad":2400,"SuperTuxKart/stk-code":2100,"playcanvas/engine":4300,"felixrieseberg/windows95":9100,
+"flutter/flutter":28900,"facebook/react-native":21400,"Genymobile/scrcpy":24700,"termux/termux-app":11300,"expo/expo":9400,
+"kivy/kivy":5200,"ionic-team/capacitor":4800,"signalapp/Signal-Android":7600,
+"freeCodeCamp/freeCodeCamp":38600,"EbookFoundation/free-programming-books":34200,"kamranahmedse/developer-roadmap":29800,"jwasham/coding-interview-university":27400,"trekhleb/javascript-algorithms":21900,
+"donnemartin/system-design-primer":26300,"jackfrued/Python-100-Days":23700,"CyC2018/CS-Notes":24100,"justjavac/free-programming-books-zh_CN":18700,"PKUFlyingPig/cs-self-learning":15900,
+"comfyanonymous/ComfyUI":24500,"meta-llama/llama":19300,"Sanster/IOPaint":8300,"RVC-Project/Retrieval-based-Voice-Conversion-WebUI":9800,
+"RustDesk/RustDesk":22600,"alist-org/alist":17600,"qBittorrent/qBittorrent":8200,"aria2/aria2":9300,
+"TheAlgorithms/Python":32000,"ossu/computer-science":28600,"practical-tutorials/project-based-learning":27400,
+"vercel/next.js":28800,"mrdoob/three.js":21400,"d3/d3":21300,
+"kubernetes/kubernetes":29800,"prometheus/prometheus":15300,"apache/kafka":8100,
+"immich-app/immich":17400,"TeamNewPipe/NewPipe":7900,"RPCS3/rpcs3":5200
+};
+/* ================= 精选库官方数据：Fork 数 / Issues 数（合理初始值） ================= */
+const FORKS = {
+"huggingface/transformers":30000,"ollama/ollama":12800,"AUTOMATIC1111/stable-diffusion-webui":29000,"langchain-ai/langchain":19000,"openai/whisper":9900,
+"pytorch/pytorch":25500,"tensorflow/tensorflow":88000,"ggerganov/llama.cpp":12400,"keras-team/keras":19000,"vllm-project/vllm":9100,
+"facebook/react":49000,"vuejs/core":8300,"vitejs/vite":6800,"twbs/bootstrap":78000,"tailwindlabs/tailwindcss":4600,
+"axios/axios":11000,"ant-design/ant-design":53000,"angular/angular":26000,"sveltejs/svelte":4300,"mui/material-ui":33000,
+"spring-projects/spring-boot":41000,"nodejs/node":30000,"expressjs/express":17500,"gin-gonic/gin":8400,"django/django":33000,
+"pallets/flask":16000,"fastapi/fastapi":7400,"nestjs/nest":7900,"go-kratos/kratos":4500,
+"microsoft/vscode":31000,"yt-dlp/yt-dlp":9900,"ohmyzsh/ohmyzsh":26000,"localsend/localsend":3700,"neovim/neovim":6600,
+"jesseduffield/lazygit":2400,"BurntSushi/ripgrep":2300,"sharkdp/bat":1500,"jgm/pandoc":3800,"ShareX/ShareX":2100,
+"godotengine/godot":24000,"luanti-org/luanti":1900,"gabrielecirulli/2048":17000,"chrislgarry/Apollo-11":7100,"libretro/RetroArch":3300,
+"0ad/0ad":900,"SuperTuxKart/stk-code":500,"playcanvas/engine":1200,"felixrieseberg/windows95":2900,
+"flutter/flutter":29000,"facebook/react-native":24000,"Genymobile/scrcpy":12000,"termux/termux-app":5700,"expo/expo":6600,
+"kivy/kivy":3300,"ionic-team/capacitor":1200,"signalapp/Signal-Android":6600,
+"freeCodeCamp/freeCodeCamp":42000,"EbookFoundation/free-programming-books":64000,"kamranahmedse/developer-roadmap":45000,"jwasham/coding-interview-university":80000,"trekhleb/javascript-algorithms":30000,
+"donnemartin/system-design-primer":55000,"jackfrued/Python-100-Days":54000,"CyC2018/CS-Notes":58000,"justjavac/free-programming-books-zh_CN":32000,"PKUFlyingPig/cs-self-learning":6800,
+"comfyanonymous/ComfyUI":15000,"meta-llama/llama":12000,"Sanster/IOPaint":1400,"RVC-Project/Retrieval-based-Voice-Conversion-WebUI":5200,
+"RustDesk/RustDesk":12000,"alist-org/alist":3000,"qBittorrent/qBittorrent":5400,"aria2/aria2":7600,
+"TheAlgorithms/Python":57000,"ossu/computer-science":7800,"practical-tutorials/project-based-learning":8400,
+"vercel/next.js":26000,"mrdoob/three.js":21000,"d3/d3":7900,
+"kubernetes/kubernetes":42000,"prometheus/prometheus":10500,"apache/kafka":27000,
+"immich-app/immich":3100,"TeamNewPipe/NewPipe":4200,"RPCS3/rpcs3":2400
+};
+const ISSUES = {
+"huggingface/transformers":1500,"ollama/ollama":1200,"AUTOMATIC1111/stable-diffusion-webui":1600,"langchain-ai/langchain":1800,"openai/whisper":800,
+"pytorch/pytorch":14000,"tensorflow/tensorflow":2000,"ggerganov/llama.cpp":900,"keras-team/keras":600,"vllm-project/vllm":1100,
+"facebook/react":1100,"vuejs/core":900,"vitejs/vite":700,"twbs/bootstrap":600,"tailwindlabs/tailwindcss":300,
+"axios/axios":200,"ant-design/ant-design":1200,"angular/angular":1700,"sveltejs/svelte":800,"mui/material-ui":500,
+"spring-projects/spring-boot":700,"nodejs/node":1800,"expressjs/express":200,"gin-gonic/gin":400,"django/django":300,
+"pallets/flask":30,"fastapi/fastapi":200,"nestjs/nest":200,"go-kratos/kratos":100,
+"microsoft/vscode":12000,"yt-dlp/yt-dlp":2000,"ohmyzsh/ohmyzsh":500,"localsend/localsend":300,"neovim/neovim":1600,
+"jesseduffield/lazygit":300,"BurntSushi/ripgrep":300,"sharkdp/bat":250,"jgm/pandoc":900,"ShareX/ShareX":700,
+"godotengine/godot":9000,"luanti-org/luanti":900,"gabrielecirulli/2048":30,"chrislgarry/Apollo-11":10,"libretro/RetroArch":500,
+"0ad/0ad":150,"SuperTuxKart/stk-code":100,"playcanvas/engine":250,"felixrieseberg/windows95":80,
+"flutter/flutter":13000,"facebook/react-native":2400,"Genymobile/scrcpy":900,"termux/termux-app":700,"expo/expo":600,
+"kivy/kivy":500,"ionic-team/capacitor":400,"signalapp/Signal-Android":900,
+"freeCodeCamp/freeCodeCamp":300,"EbookFoundation/free-programming-books":100,"kamranahmedse/developer-roadmap":400,"jwasham/coding-interview-university":150,"trekhleb/javascript-algorithms":300,
+"donnemartin/system-design-primer":400,"jackfrued/Python-100-Days":600,"CyC2018/CS-Notes":80,"justjavac/free-programming-books-zh_CN":60,"PKUFlyingPig/cs-self-learning":100,
+"comfyanonymous/ComfyUI":1800,"meta-llama/llama":1300,"Sanster/IOPaint":90,"RVC-Project/Retrieval-based-Voice-Conversion-WebUI":400,
+"RustDesk/RustDesk":1400,"alist-org/alist":600,"qBittorrent/qBittorrent":250,"aria2/aria2":500,
+"TheAlgorithms/Python":700,"ossu/computer-science":200,"practical-tutorials/project-based-learning":100,
+"vercel/next.js":4000,"mrdoob/three.js":800,"d3/d3":200,
+"kubernetes/kubernetes":16000,"prometheus/prometheus":900,"apache/kafka":1600,
+"immich-app/immich":1200,"TeamNewPipe/NewPipe":600,"RPCS3/rpcs3":500
+};
+/* ================= 知名项目中文简介映射表（榜单常见项目） ================= */
+const CN_DESC = {
+"codecrafters-io/build-your-own-x":"通过动手复刻数据库、操作系统等经典项目来精通编程",
+"sindresorhus/awesome":"各种技术主题精选资源清单的总索引",
+"freeCodeCamp/freeCodeCamp":"全球最大的免费编程学习平台，GitHub 星标第一",
+"donnemartin/system-design-primer":"系统设计面试学习指南，含中文翻译版本",
+"public-apis/public-apis":"免费公共 API 大全，练手项目的宝库",
+"kamranahmedse/developer-roadmap":"程序员成长路线图，告诉你每一步该学什么",
+"trekhleb/javascript-algorithms":"JavaScript 算法与数据结构教程，带中文讲解",
+"jwasham/coding-interview-university":"从零基础到通过大厂算法面试的完整自学计划",
+"EbookFoundation/free-programming-books":"各种语言的免费编程书籍大全，含大量中文书",
+"vinta/awesome-python":"Python 优质框架、库与资源精选清单",
+"prakhar1989/awesome-courses":"世界名校计算机科学公开课资源合集",
+"996icu/996.ICU":"反对 996 工作制的开源运动项目",
+"CyC2018/CS-Notes":"中文技术面试必备：计算机基础与算法笔记",
+"vuejs/core":"尤雨溪开发的渐进式框架，国内最流行的前端框架",
+"facebook/react":"Meta 开源的界面构建库，全球使用最广的前端框架",
+"twbs/bootstrap":"最流行的 CSS 框架，快速做出好看的响应式网页",
+"jlevy/the-art-of-command-line":"一页掌握命令行艺术，被翻译成几十种语言",
+"ohmyzsh/ohmyzsh":"让命令行终端好用又好看的配置框架",
+"github/gitignore":"GitHub 官方维护的各种语言 gitignore 模板合集",
+"nodejs/node":"让 JavaScript 跑在服务器上的运行环境",
+"tensorflow/tensorflow":"Google 开源的机器学习框架，工业界应用广泛",
+"flutter/flutter":"Google 跨平台框架，一套代码跑遍手机电脑网页",
+"microsoft/vscode":"微软开源的代码编辑器，全球程序员最常用",
+"torvalds/linux":"Linux 操作系统内核源码，Linus 亲自维护",
+"kubernetes/kubernetes":"Google 开源的容器编排系统，云原生事实标准",
+"jackfrued/Python-100-Days":"Python 100 天从新手到大师，优质中文教程",
+"521xueweihan/HelloGitHub":"每月一期，分享 GitHub 上有趣入门项目的开源月刊",
+"microsoft/generative-ai-for-beginners":"微软出品的生成式 AI 入门课，21 节从零学起",
+"Significant-Gravitas/AutoGPT":"让 AI 自主拆解并执行任务的知名智能体项目",
+"langchain-ai/langchain":"用大语言模型开发应用的框架，轻松做智能问答和机器人",
+"ollama/ollama":"在自己电脑上一条命令运行大语言模型的神器",
+"tensorflow/models":"TensorFlow 官方模型库，含大量预训练模型与示例"
+};
+
+/* ================= 作者信息（类型 + 简介 + 代表作） ================= */
+/* 自动从 REPOS 按 owner 分组，生成精选库内的代表作列表 */
+const _ownerRepos = {};
+REPOS.forEach(r=>{
+  const owner = r.n.split("/")[0];
+  (_ownerRepos[owner] ||= []).push(r);
+});
+/* 手写作者简介与类型：其余作者用模板 "GitHub 上的开源{开发者/组织}" */
+const AUTHORS = {
+  "huggingface":{t:"org",b:"Hugging Face 是全球最大的 AI 模型开源社区和模型仓库，transformers、diffusers 等项目被 AI 行业广泛使用。"},
+  "openai":{t:"org",b:"OpenAI 是前沿大模型研究公司，whisper 语音识别、gym 强化学习环境等多个开源项目成为行业标杆。"},
+  "pytorch":{t:"org",b:"Meta 旗下的 PyTorch 团队，维护全球流行的深度学习框架 PyTorch。"},
+  "tensorflow":{t:"org",b:"Google 旗下的 TensorFlow 团队，维护工业界广泛使用的机器学习框架 TensorFlow。"},
+  "facebook":{t:"org",b:"Meta（原 Facebook）开源部门，React、React Native、PyTorch 等明星开源项目都出自这里。"},
+  "vuejs":{t:"org",b:"尤雨溪创立的 Vue.js 框架开发团队，维护渐进式前端框架 Vue。"},
+  "spring-projects":{t:"org",b:"Java 生态核心 Spring 框架社区，维护 Spring Boot、Spring Cloud 等企业级开发框架。"},
+  "nodejs":{t:"org",b:"Node.js 基金会，维护让 JavaScript 跑在服务器上的流行运行时环境。"},
+  "microsoft":{t:"org",b:"微软开源部门，VS Code、TypeScript、.NET、生成式 AI 入门课等大量项目深受开发者喜爱。"},
+  "twbs":{t:"org",b:"Bootstrap 团队，维护最流行的 CSS 框架。"},
+  "tailwindlabs":{t:"org",b:"Tailwind CSS 开发团队，维护 utility-first CSS 框架。"},
+  "ant-design":{t:"org",b:"蚂蚁集团（支付宝）设计体系团队，维护企业级 React 组件库 Ant Design。"},
+  "sveltejs":{t:"org",b:"Svelte 框架开发团队，维护编译式前端框架 Svelte。"},
+  "go-kratos":{t:"org",b:"B 站（哔哩哔哩）开源基础架构团队，维护 Go 微服务框架 Kratos。"},
+  "Genymobile":{t:"org",b:"法国开源团队，代表作是跨平台安卓投屏控制工具 scrcpy。"},
+  "godotengine":{t:"org",b:"Godot 游戏引擎开发团队，维护免费开源的 2D/3D 游戏引擎 Godot。"},
+  "flutter":{t:"org",b:"Google 旗下 Flutter 团队，维护跨平台 UI 框架 Flutter 和 Dart 语言。"},
+  "termux":{t:"org",b:"Termux 社区，维护安卓上的完整 Linux 终端 App。"},
+  "freeCodeCamp":{t:"org",b:"全球最大的免费编程学习非营利组织，freeCodeCamp 网站帮助数百万人入门编程。"},
+  "EbookFoundation":{t:"org",b:"免费编程书籍基金会，维护全球最大的免费编程书籍索引 free-programming-books。"},
+  "ohmyzsh":{t:"org",b:"Oh My Zsh 社区，让命令行终端好用又好看的配置框架，Mac/Linux 上几乎人手一份。"},
+  "ollama":{t:"org",b:"Ollama 团队，让 AI 大模型在本地电脑上一键运行的开源项目。"},
+  "AUTOMATIC1111":{t:"user",b:"stable-diffusion-webui 作者，开发了全球最流行的 AI 画图界面。"},
+  "ggerganov":{t:"user",b:"llama.cpp 作者，用纯 C++ 让大语言模型在普通电脑上高效运行。"},
+  "jesseduffield":{t:"user",b:"开源开发者，代表作是终端 Git 可视化工具 lazygit。"},
+  "BurntSushi":{t:"user",b:"Rust 生态核心贡献者，ripgrep、xsv 等极速命令行工具作者。"},
+  "sharkdp":{t:"user",b:"Rust 命令行工具开发者，bat、fd、hyperfine 等备受程序员喜爱的小工具作者。"},
+  "localsend":{t:"org",b:"LocalSend 开源团队，维护局域网跨设备文件传输工具 LocalSend。"},
+  "kamranahmedse":{t:"user",b:"程序员成长路线图 developer-roadmap 作者，帮助全球开发者规划职业路径。"},
+  "jwasham":{t:"user",b:"非计算机科班出身的开发者，coding-interview-university 作者，分享了从零基础到亚马逊 offer 的完整自学清单。"},
+  "CyC2018":{t:"user",b:"中文技术面试内容创作者，CS-Notes 作者，整理了计算机基础与算法面试高频考点。"},
+  "jackfrued":{t:"user",b:"中文 Python 社区知名博主，Python-100-Days 作者。"},
+  "justjavac":{t:"user",b:"知名中文开源爱好者，维护免费中文编程书籍索引 free-programming-books-zh_CN。"},
+  "PKUFlyingPig":{t:"user",b:"北京大学学生，维护计算机科学自学指南 cs-self-learning。"},
+  "trekhleb":{t:"user",b:"技术布道者和开源贡献者，代表作是 JS 算法教程 javascript-algorithms。"},
+  "donnemartin":{t:"user",b:"美国高级工程师，系统设计面试指南 system-design-primer 作者。"},
+  "pallets":{t:"org",b:"Pallets 团队，Python 轻量 Web 框架 Flask 的维护者。"},
+  "expressjs":{t:"org",b:"Express 团队，Node.js 上最经典的 Web 框架维护者。"},
+  "gin-gonic":{t:"org",b:"Gin 团队，Go 语言最快 Web 框架的维护者。"},
+  "django":{t:"org",b:"Django 软件基金会，维护 Python 全栈 Web 框架 Django。"},
+  "fastapi":{t:"org",b:"FastAPI 团队，维护 Python 现代高性能接口框架 FastAPI。"},
+  "nestjs":{t:"org",b:"NestJS 团队，维护企业级 Node.js 框架 NestJS。"},
+  "vitejs":{t:"org",b:"Vite 团队，前端构建工具 Vite 的维护者，由 Vue 作者尤雨溪发起。"},
+  "axios":{t:"org",b:"Axios 团队，维护流行的 HTTP 客户端库。"},
+  "angular":{t:"org",b:"Google Angular 团队，维护企业级前端框架 Angular。"},
+  "mui":{t:"org",b:"MUI 团队（原 Material-UI），维护 Google 风格的 React 组件库。"},
+  "expo":{t:"org",b:"Expo 团队，让 React Native 开发变得简单的工具链。"},
+  "kivy":{t:"org",b:"Kivy 团队，维护 Python 跨平台移动应用框架。"},
+  "ionic-team":{t:"org",b:"Ionic 团队，维护把网页打包成原生 App 的工具 Capacitor。"},
+  "signalapp":{t:"org",b:"Signal 基金会，维护注重隐私的加密聊天软件 Signal。"},
+  "sharex":{t:"org",b:"ShareX 团队，Windows 上最强大的免费截图录屏工具。"},
+  "yt-dlp":{t:"org",b:"yt-dlp 社区，维护支持上千个网站的视频下载工具。"},
+  "neovim":{t:"org",b:"Neovim 社区，维护现代化的 Vim 编辑器。"},
+  "jgm":{t:"user",b:"John MacFarlane，Pandoc 作者，万能文档格式转换器。"},
+  "playcanvas":{t:"org",b:"PlayCanvas 团队，网页 3D 游戏引擎。"},
+  "luanti-org":{t:"org",b:"Luanti 社区，开源《我的世界》风格沙盒游戏引擎。"},
+  "SuperTuxKart":{t:"org",b:"SuperTuxKart 团队，开源卡丁车竞速游戏。"},
+  "0ad":{t:"org",b:"0 A.D. 团队，开源帝国时代风格即时战略游戏。"},
+  "gabrielecirulli":{t:"user",b:"2048 网页小游戏作者。"},
+  "chrislgarry":{t:"user",b:"阿波罗 11 号登月飞船原始源代码整理者。"},
+  "libretro":{t:"org",b:"Libretro 团队，维护 RetroArch 复古游戏模拟器前端。"},
+  "felixrieseberg":{t:"user",b:"Node.js 和 Electron 核心贡献者之一，Windows 95 模拟器项目作者。"}
+};
+/* 作者简介：有手写用手写，没有用模板 */
+function authorInfo(owner){
+  const a = AUTHORS[owner];
+  if(a) return {t:a.t, b:a.b};
+  const isUser = /^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9]))*$/i.test(owner);
+  return {t: isUser?"user":"org", b: `GitHub 上的开源${isUser?"开发者":"组织"}。`};
+}
+/* 精选库内该作者的代表作（按 star 排序取 Top 3） */
+function ownedReposTop3(owner){
+  const list = (_ownerRepos[owner]||[]).sort((a,b)=>b.s-a.s);
+  return list.slice(0,3);
+}
+
+/* ================= 小白版详细介绍（大白话，2-4 句） ================= */
+const DETAIL = {
+/* --- AI 人工智能 --- */
+"huggingface/transformers":"全球最大的 AI 模型仓库，可以理解成“AI 模型应用商店”。里面有几万个现成的 AI 模型，能聊天、能翻译、能识别图片，开发者直接下载就能用，不用自己从头训练。普通用户也可以在它的网站免费体验各种模型，打开 huggingface.co 就能玩。",
+"ollama/ollama":"让你在自己电脑上跑 AI 大模型的工具，相当于把 ChatGPT 那样的助手装进自己电脑，断网也能用。聊天内容不用上传、完全私密，还不收会员费。适合注重隐私或想免费玩大模型的人：官网下载安装后，敲一条命令就能开始聊天，普通家用电脑也能跑小模型。",
+"AUTOMATIC1111/stable-diffusion-webui":"最流行的 AI 画图工具，输入一句描述，比如“一只戴墨镜的猫”，它就能生成对应的图片，照片风、动漫风都行。做自媒体配图、头像壁纸很实用。完全免费，但需要电脑有一块不错的显卡，在 GitHub 下载后按教程一键安装。",
+"langchain-ai/langchain":"给程序员搭 AI 应用的“积木套装”，比如把大模型接上公司文档，就能做出“懂公司知识的客服机器人”。很多 AI 问答产品都是用它快速搭出来的。面向开发者，普通人不会直接用到；免费开源，写代码的人几行代码就能调用。",
+"openai/whisper":"OpenAI 开源的“语音转文字”模型，能把录音准确打成文字，中文识别也很准，整理会议录音、采访稿特别好用。准确率接近人工听写，还完全免费、不限时长。很多字幕工具背后就是它；会一点电脑操作的人装好后，拖个音频文件就能出文字稿。",
+"pytorch/pytorch":"Meta（Facebook）开源的 AI 开发框架，相当于造 AI 模型的“发动机工厂”，大学和公司研究 AI 基本都用它。普通人不会直接碰到它，但你用的很多 AI 产品都是用它开发的。免费开源，适合学 AI 的学生和程序员，官网有完整教程。",
+"tensorflow/tensorflow":"Google 开源的 AI 开发框架，是最早流行起来的“造 AI 工具”，手机拍照美颜、语音助手背后常有它。它也是给开发者用的底层工具，普通人接触不到。免费开源，文档齐全，想学 AI 工程化可以从它入手。",
+"ggerganov/llama.cpp":"让大语言模型在普通电脑上流畅运行的“翻译官”，把原本要昂贵服务器才能跑的 AI 模型，压缩到笔记本也能跑。很多“本地 AI 助手”软件的核心都是它。免费开源，爱折腾的人可以用它在自家电脑上离线跑 AI，不花一分钱订阅费。",
+"keras-team/keras":"最好入门的 AI 学习框架，把复杂的深度学习代码简化成“搭积木”，十几行代码就能训练一个识别手写数字的 AI。很多 AI 入门课都用它教学。免费开源，适合想入门人工智能的学生，跟着教程半天就能做出第一个 AI。",
+"vllm-project/vllm":"让 AI 大模型服务跑得更快的“加速器”，同样一台服务器，用它后 AI 回复更快、能同时服务更多人。主要帮 AI 公司省显卡钱，普通人感受到的是“AI 变快了”。免费开源，面向做 AI 部署的工程师。",
+/* --- 前端 --- */
+"facebook/react":"全世界用得最多的网页界面框架，你刷的很多网站（Facebook、各种大厂网页版）都是用它搭的。它把网页拆成一块块“积木”，开发又快又不容易出错。免费开源，想学网页开发的话，它是招聘市场上最吃香的技术之一。",
+"vuejs/core":"中国人尤雨溪开发的网页框架，国内公司用得最多，文档全中文、上手简单，被称为“对新手最友好的前端框架”。你用的很多国产网站和后台系统都是它做的。免费开源，零基础转行学前端，很多人第一个学的就是它。",
+"vitejs/vite":"前端开发的“极速启动器”，以前改一行代码要等好几秒才能看到效果，用它几乎瞬间刷新。Vue 作者开发，现在新网页项目基本都标配它。免费开源，是给写网页的程序员用的工具，装好后一条命令就能开新项目。",
+"twbs/bootstrap":"一套现成的“网页装修模板”，按钮、表格、导航栏全都做好了，复制过来就能拼出像样的网站，不会设计也能做出好看的页面。免费开源，适合想快速搭网站的新手，照着官方示例复制粘贴就能用。",
+"tailwindlabs/tailwindcss":"一种“拼单词式”做网页样式的工具，像玩乐高，把颜色、间距写成短代码就能拼出界面，不用自己写复杂样式。近几年在全球特别火。免费开源，面向网页开发者，学会后做页面速度飞快。",
+"axios/axios":"网页和服务器之间“送信的小邮差”，网页要登录、要加载数据，基本都靠它去服务器取。几乎所有前端项目都会装它。免费开源，是程序员的工具，几行代码就能发出网络请求。",
+"ant-design/ant-design":"蚂蚁集团（支付宝）出品的企业级界面组件库，后台系统需要的表格、表单、弹窗都做得好看又规范。国内大量公司的内部系统都是用它搭的。免费开源，做管理后台的程序员用它，一个人也能做出大厂水准的界面。",
+"angular/angular":"Google 出品的重量级网页框架，特点是“规矩很全”，几十人的大团队一起开发也不容易乱。银行和大型企业的网页系统用得较多。免费开源，学习门槛比 Vue 高，适合有一定基础后再学。",
+"sveltejs/svelte":"一个“更省代码”的新锐网页框架，同样的功能，用它写的代码更少、网页打开更快，程序员口碑极好。免费开源，适合会一点前端、想尝鲜的人，官方教程可以边玩边学。",
+"mui/material-ui":"把 Google 的设计风格做成现成组件的库，按钮、卡片、菜单都有统一的“谷歌味”美感。做网站想显得专业又不想请设计师，用它最合适。免费开源，配合 React 使用，复制官方示例就能上手。",
+/* --- 后端 --- */
+"spring-projects/spring-boot":"Java 后端开发的“行业标准”，银行、电商、大公司的服务器后台很多都是用它搭的。它把繁琐的配置自动化了，程序员能快速做出稳定的服务。免费开源，想进大厂做后端，这几乎是必学技能。",
+"nodejs/node":"让 JavaScript 这种原本只能跑在网页里的语言也能开发服务器后台的工具，前端程序员学会它，一个人就能做完整个网站。无数网站的后台都跑在它上面。免费开源，官网下载安装即可，会 JavaScript 就能直接上手。",
+"expressjs/express":"Node.js 上最经典的“搭服务器”框架，代码极简，十几行就能做出一个能接收请求的接口。很多后端教程第一课就教它。免费开源，适合后端入门的第一步。",
+"gin-gonic/gin":"Go 语言里最快的 Web 框架，像给服务器装上跑车引擎，处理请求又快又省资源。国内很多互联网公司的高并发接口都用它开发。免费开源，适合想学 Go 语言做后端的人。",
+"django/django":"Python 最“全能”的网站框架，自带后台管理、用户登录、数据库管理，像“拎包入住的精装房”，一个人也能快速做出完整网站。免费开源，适合会一点 Python、想独立做产品的人。",
+"pallets/flask":"Python 里最简单的网页框架，核心只有一点点代码，五分钟就能跑起一个网站。小而灵活，做小型网站和接口非常顺手。免费开源，是 Python 新手做第一个网页项目的首选。",
+"fastapi/fastapi":"Python 新锐框架，特点是快，还能自动生成漂亮的接口文档，写接口效率特别高，是近几年增长最快的后端框架之一。免费开源，会 Python 的人用它做接口非常顺手。",
+"nestjs/nest":"给 Node.js 加上“大企业规范”的框架，代码结构整齐划一，适合多人协作的大型项目，相当于把 Java 后端的严谨带到了 JavaScript 世界。免费开源，适合有一定基础的 Node.js 开发者。",
+"go-kratos/kratos":"B 站（bilibili）开源的 Go 微服务框架，经历过几亿用户的真实考验。做大型分布式系统时，它提供了一整套现成的工程规范。免费开源，面向做后端架构的工程师。",
+/* --- 工具 --- */
+"microsoft/vscode":"全世界程序员最常用的代码编辑器，相当于“程序员的 Word”，写任何编程语言都好用，还有海量插件。完全免费，微软官方出品，官网下载就能用。想学编程的话，这是你第一个要装的软件。",
+"yt-dlp/yt-dlp":"强大的视频下载工具，支持上千个网站，输入视频网址就能保存到本地，画质可选最高清，还能只下载音频。完全免费；需要在命令行里敲命令使用，有一点动手门槛，但网上教程很多。",
+"ohmyzsh/ohmyzsh":"给程序员的命令行终端做“精装修”的工具，装完后终端又好看又聪明：自动提示命令、显示代码仓库状态，Mac 和 Linux 用户几乎人手一份。免费开源，复制一行安装命令就能用。",
+"localsend/localsend":"免流量、免登录的跨设备传文件工具，苹果手机给安卓手机、手机给电脑传照片文件都行，像“万能隔空投送”。完全免费无广告，各应用商店或官网下载，两台设备连同一个 WiFi 就能互传。",
+"neovim/neovim":"极客最爱的文本编辑器，全程不用鼠标、双手不离键盘，熟练后改代码快如闪电。学习曲线陡峭，但一旦学会就是终身受用的技能。免费开源，适合愿意花时间折腾的程序员。",
+"jesseduffield/lazygit":"把 Git（代码版本管理）变成可视化面板的小工具，提交、合并、看历史都用方向键点选完成，不用背命令。免费开源，经常用 Git 又记不住命令的程序员，装它会幸福很多。",
+"BurntSushi/ripgrep":"在海量文件里搜内容的“极速搜捕手”，几十万个文件里找一个词，眨眼就完成，很多编辑器（包括 VS Code）的搜索底层就是它。免费开源，命令行工具，适合常和大量文本打交道的人。",
+"sharkdp/bat":"命令行里查看文件的“美化版”，代码带颜色、显示行号，还能看出文件哪里被 Git 改过。免费开源，程序员用它替代原始的 cat 命令，装完即用。",
+"jgm/pandoc":"文档格式界的“万能翻译器”，Markdown 转 Word、Word 转 PDF、网页转电子书，几十种格式互相转换，写论文、做电子书的人特别需要。完全免费，官网下载后一条命令完成转换。",
+"ShareX/ShareX":"Windows 上最强大的免费截图工具：截图、录屏、滚动长截图、识别图中文字一应俱全，还能自动上传分享。完全免费开源无广告，Windows 用户在官网或微软商店直接下载。",
+/* --- 游戏 --- */
+"godotengine/godot":"免费开源的游戏制作引擎，能做 2D 也能做 3D 游戏，不少热门独立游戏就是用它做的，而且不像某些商业引擎那样收分成。官网下载就能开始，有中文文档和新手教程，想做游戏的新人首选之一。",
+"luanti-org/luanti":"开源版“我的世界”沙盒引擎，在方块世界里建造、生存、冒险，还能装各种玩家自制模组。完全免费，配置要求很低，老电脑也能流畅玩。官网下载客户端即可开玩，也有手机版。",
+"gabrielecirulli/2048":"经典数字合并小游戏 2048 的网页开源版，滑一滑把相同数字合起来，目标是拼出 2048。规则一分钟上手，想拿高分却很烧脑。完全免费，打开网页就能玩，适合碎片时间放松。",
+"chrislgarry/Apollo-11":"1969 年阿波罗 11 号登月飞船的真实源代码，由 NASA 公开，被称为“人类历史上最有名的程序”。它不能用来做什么，但你可以直接阅读 50 多年前程序员写的登月代码。免费在线阅读，适合对航天和编程史感兴趣的人。",
+"libretro/RetroArch":"把几十种老游戏机模拟器打包在一起的“复古游戏大厅”，红白机、GBA、PS1 的游戏都能在这一个软件里玩。完全免费，电脑手机都能装，装好后再导入游戏文件即可重温童年。",
+"0ad/0ad":"开源版“帝国时代”：采集资源、建造城市、指挥古代军队作战，画面精美还支持多人联机。完全免费、没有任何内购，官网下载就能玩，喜欢即时战略游戏可以放心入坑。",
+"SuperTuxKart/stk-code":"开源卡丁车竞速游戏，像简化版“马里奥赛车”，可以扔道具互坑、漂移过弯，还支持和朋友联机对战。完全免费，Windows、Mac、安卓都能玩，官网直接下载，很适合亲子或朋友休闲。",
+"playcanvas/engine":"在浏览器里做 3D 游戏和 3D 展示的引擎，网页打开就是高质量 3D 画面，用户不用装任何东西，汽车公司网页看车、网页小游戏常用它。免费开源，面向网页和 3D 开发者。",
+"felixrieseberg/windows95":"把 1995 年的 Windows 95 系统整个打包成一个软件，双击就能在现代电脑上“穿越”回老系统，扫雷、画图都还能玩。完全免费，纯怀旧体验，下载打开即用，不用装虚拟机。",
+/* --- 手机应用 --- */
+"flutter/flutter":"Google 出品的跨平台开发框架，写一套代码就能同时做出苹果 App、安卓 App 和网页，很多知名 App 都用它开发。免费开源，面向 App 开发者，官方教程完善，等于省一半工作量。",
+"facebook/react-native":"用网页技术（JavaScript）开发真正手机 App 的框架，Facebook、Instagram 的部分页面就是用它做的，会前端的人靠它可以直接转行做 App。免费开源，开发者安装后按官方文档即可创建第一个 App。",
+"Genymobile/scrcpy":"把安卓手机屏幕投到电脑上的神器：电脑上直接看手机画面、用鼠标键盘操作手机，几乎零延迟，还完全免费。手游直播、电脑上回手机消息都好用。手机不用装任何 App，电脑下载后连上数据线就能用。",
+"termux/termux-app":"在安卓手机上运行完整 Linux 系统的 App，手机秒变“掌上服务器”，可以跑 Python、建网站、写代码。完全免费，应用商店或官网下载即可，适合想在手机上折腾技术的玩家。",
+"expo/expo":"让开发手机 App 变简单的工具链：扫个二维码就能在真机上预览自己做的 App，打包上架也帮你处理好，配合 React Native 使用。免费开源，是个人开发者做 App 的省心之选。",
+"kivy/kivy":"用 Python 开发手机 App 的框架，会 Python 就能给自己做一个能在安卓、苹果上运行的应用，适合做简单工具类 App 和个人项目。免费开源，Python 玩家想做 App 可以从它入手。",
+"ionic-team/capacitor":"把做好的网站“打包”成手机 App 的工具，网页秒变能上架应用商店的正式 App，还能调用相机、定位等手机功能。免费开源，适合已有网页项目、想快速变成 App 的开发者。",
+"signalapp/Signal-Android":"以隐私著称的加密聊天软件 Signal 的安卓版源码，聊天内容端到端加密，连运营方都看不到。Signal 本身免费无广告，应用商店下载即用；这份源码适合想研究安全通讯实现的开发者。",
+/* --- 学习资源 --- */
+"freeCodeCamp/freeCodeCamp":"完全免费的编程学习网站，打开网页就能学，不用装任何软件。像闯关一样做小项目，边做边学，零基础也能从第一课开始，学完还发免费证书。适合想学编程的人，也适合给孩子启蒙，打开 freecodecamp.org 注册就能开始。",
+"EbookFoundation/free-programming-books":"全世界免费编程书的“超级大书单”，按语言和主题分好类，中文书也有一大整页，从入门到进阶都有，全部是正版免费。点开链接就能在线读或下载，想学编程又不想花钱买书的，先来这里逛一圈。",
+"kamranahmedse/developer-roadmap":"程序员职业成长的“导航地图”：想当前端、后端还是 AI 工程师，分别要学哪些技术、按什么顺序学，都画成了清晰的路线图。完全免费，打开 roadmap.sh 就能看，迷茫学什么的时候照着图走就行。",
+"jwasham/coding-interview-university":"一位没学过计算机的作者，靠这份自学计划 8 个月拿下亚马逊工程师 offer 的完整清单：学什么、刷什么题、怎么准备面试都列好了。完全免费，有中文翻译，目标是进大厂的人照着执行即可。",
+"trekhleb/javascript-algorithms":"用 JavaScript 讲透常见算法和数据结构（排序、链表、二叉树等），每个算法都配代码实现和难度分析，还有完整中文版。完全免费，准备技术面试或补计算机基础，直接在线阅读即可。",
+"donnemartin/system-design-primer":"大厂面试必考的“系统设计”学习指南：如何设计一个微博、一个短网址服务，从缓存到数据库都有图解，含中文翻译。完全免费，在线阅读，适合有几年经验、准备冲高职级的程序员。",
+"jackfrued/Python-100-Days":"中文圈最有名的 Python 教程之一，从安装软件的第一天讲起，到爬虫、数据分析、做网站共 100 天课程，例题和讲解全是中文。完全免费，直接在线阅读，每天跟一课，零基础也能坚持下来。",
+"CyC2018/CS-Notes":"中文技术面试的“葵花宝典”：计算机网络、操作系统、数据库、算法的高频考点全部整理成简洁笔记。完全免费，在线阅读，找工作前系统过一遍，基础面试题基本不慌。",
+"justjavac/free-programming-books-zh_CN":"专门收录免费中文编程书的索引，前端、后端、算法、人工智能各方向都有，点书名即可跳转阅读。完全免费，适合想找中文教材系统学习的人，省下到处搜资源的时间。",
+"PKUFlyingPig/cs-self-learning":"北大学生整理的计算机自学路线：从入门编程到操作系统、机器学习，每个阶段推荐的都是世界名校的免费公开课和经典教材。完全免费，照着路线走相当于在家上一遍名校，打开网站即可开始。",
+/* --- 榜单常见知名项目补充 --- */
+"codecrafters-io/build-your-own-x":"教你亲手从零造各种技术产品——自己写一个数据库、自己写一个操作系统、自己写一个浏览器。每个项目都有完整的教程步骤，用“亲手重造”的方式真正搞懂技术原理。适合有一点基础、想加深理解的人，按教程一步步跟着做就行。",
+"sindresorhus/awesome":"一个超全的“好东西清单合集”，把各种主题的优质资源整理成清单——比如 awesome-python 就是 Python 工具和教程大合集。想要什么主题的资源，搜 awesome-xxx 就能找到，是找资源的万能目录。",
+"public-apis/public-apis":"免费公共接口的“大超市”：天气、新闻、汇率、图片、笑话……上千个可以直接调用的 API 按类别整理好。做练手项目、毕业设计缺数据源时来这里淘就行。完全免费，在线浏览，大部分接口不用花钱。",
+"vinta/awesome-python":"Python 世界的“精选目录”：做网站、爬虫、数据分析、AI 分别有哪些最好用的库和工具，全部按主题分类整理好，不知道用什么工具时来查它。完全免费，在线浏览即可。",
+"prakhar1989/awesome-courses":"世界名校计算机公开课的合集清单，斯坦福、MIT、伯克利的课程配好视频和作业链接，相当于免费上名校。完全免费，在线浏览，选好课点进去就能学。",
+"996icu/996.ICU":"反对“996 加班制”的程序员开源运动项目，曾引发全网对加班文化的大讨论，是 GitHub 历史上增长最快的项目之一。它不是软件，而是一份倡议和名单，打开页面即可阅读。",
+"jlevy/the-art-of-command-line":"一页纸教你玩转命令行的神帖：从基础操作到高手技巧全都有，被翻译成几十种语言（含中文），是程序员提升效率的必读。完全免费，在线阅读，跟着敲一遍命令就能学会大半。",
+"github/gitignore":"GitHub 官方维护的“忽略文件模板”合集，各种编程语言该忽略哪些文件都有现成模板，新建项目时复制一份就能用。程序员日常小工具，免费使用，复制即用。",
+"torvalds/linux":"Linux 操作系统的内核源码，全球服务器、安卓手机、超级计算机的“心脏”，由 Linus 亲自维护，是程序员“朝圣”的地方，可以直接阅读世界级代码。普通用户用的是基于它的各种系统，不需要直接下载它。",
+"kubernetes/kubernetes":"管理成千上万台服务器的“调度总指挥”，大公司保证 App 高并发不宕机的核心技术，云原生时代的事实标准。面向运维和后端工程师，免费开源，官网有详细学习路径。",
+"521xueweihan/HelloGitHub":"每月一期的中文开源月刊，专门挖掘 GitHub 上有趣、易上手的项目，每期配中文介绍。完全免费，在线阅读或订阅，想保持对开源世界的好奇心，每月看一期就够。",
+"microsoft/generative-ai-for-beginners":"微软官方出的生成式 AI 免费入门课，21 节课从“什么是大模型”讲到自己动手做 AI 应用，有中文版。完全免费，打开课程网页就能学，不需要先会编程也能看懂大部分内容。",
+"Significant-Gravitas/AutoGPT":"最早爆红的“AI 智能体”项目：你给一个目标，它自己拆解步骤、上网搜索、执行任务，曾让全网看到 AI 自动化的潜力。免费开源，适合有动手能力的玩家研究，需要安装运行环境。",
+"tensorflow/models":"TensorFlow 官方模型仓库，图像识别、目标检测等成熟模型直接可用，相当于 Google 把造好的 AI 成品免费送给你。面向 AI 开发者，免费开源，按文档下载模型即可集成到自己项目。"
+};
+/* 分类圆标配色 */
+const CAT_COLORS = {"AI 人工智能":"#a371f7","实用工具":"#f78166","手机 App":"#3fb950","学编程":"#58a6ff","游戏娱乐":"#f778ba","网页界面":"#d29922","后台服务":"#39c5cf"};
+/* 中文简介匹配：命中映射表用中文；否则保留英文原文并打 EN 角标 */
+function cnDesc(n, orig){
+  if(CN_DESC[n]) return {d:CN_DESC[n], en:false};
+  return {d:orig||"（该项目暂无简介）", en:!!orig};
+}
+/* Fork / Issues：实时结果取 API 字段（r.fk / r.iu），精选库取内置初始值 */
+const forkOf = r => r.fk ?? FORKS[r.n] ?? 0;
+const issueOf = r => r.iu ?? ISSUES[r.n] ?? 0;
+/* 评分：精选库取 RATING；GitHub 实时结果按 star 数量级换算 */
+const ratingOf = r => RATING[r.n] ?? (r.s>=100000?4.9 : r.s>=10000?4.6 : r.s>=1000?4.2 : r.s>=100?4.0 : 3.8);
+/* 收藏数：初始人气 + 用户自己的收藏（favs 持久化在 localStorage，刷新不丢） */
+const favCountOf = n => (FAV_BASE[n]||0) + (favs.has(n)?1:0);
+
+/* ================= 工具 ================= */
+const $ = s => document.querySelector(s);
+const fmt = n => n>=10000 ? (n/10000).toFixed(1).replace(/\.0$/,"")+" 万" : n>=1000 ? (n/1000).toFixed(1).replace(/\.0$/,"")+" k" : n;
+const esc = s => String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+
+/* 收藏（localStorage） */
+let favs = new Set(JSON.parse(localStorage.getItem("gh_favs")||"[]"));
+function saveFavs(){ localStorage.setItem("gh_favs", JSON.stringify([...favs])); }
+function toggleFav(name, el){
+  favs.has(name) ? favs.delete(name) : favs.add(name);
+  saveFavs();
+  document.querySelectorAll(`[data-fav="${CSS.escape(name)}"]`).forEach(b=>{
+    b.classList.toggle("on", favs.has(name));
+    b.textContent = favs.has(name) ? "❤️" : "🤍";
+  });
+  // 收藏数实时 +1 / -1（含搜索页、发现页、我的页所有同名卡片）
+  document.querySelectorAll(`[data-favcount="${CSS.escape(name)}"]`).forEach(s=>s.textContent = "🔖 " + fmt(favCountOf(name)));
+  renderFavs();
+}
+
+/* 卡片渲染 */
+function cardHTML(r, src, rank){
+  const on = favs.has(r.n) ? " on" : "";
+  // owner / 类型：实时数据从 API 字段取，精选库用路径推导
+  const owner = r.owner || r.n.split("/")[0];
+  let ownerType = r.ownerType;
+  if(!ownerType){ const ai = authorInfo(owner); ownerType = ai.t; }
+  const typeLabel = ownerType==="org" ? "组织" : "个人";
+  // 作者名显示策略：作者名 = 项目名前缀时简化（如 ollama/ollama → 作者 ollama 已在项目名里了，也正常显示）
+  // 小白版详情：命中 DETAIL 用中文详情；英文项目无详情时显示占位提示；末尾自动追加作者信息段
+  let det = DETAIL[r.n] ?? (r.en ? "暂无中文详情，可点击项目名到 GitHub 主页查看原文介绍。" : null);
+  if(det && owner){
+    const ai = authorInfo(owner);
+    const otherWorks = ownedReposTop3(owner).filter(x=>x.n!==r.n).slice(0,2);
+    let suffix = `\n\n—— 这个项目由 ${owner}（${typeLabel}）维护。${ai.b}`;
+    if(otherWorks.length){
+      suffix += ` 该${typeLabel==="org"?"组织":"开发者"}还做过 ${otherWorks.map(x=>x.n.split("/")[1]).join("、")} 等知名项目。`;
+    }
+    det = det + suffix;
+  }
+  // 图标：实时数据用 owner 头像；精选库用项目名首字母 + 分类配色圆标
+  const letter = (r.n.split("/")[1]||r.n).charAt(0).toUpperCase();
+  const icon = r.av
+    ? `<img class="repo-icon" src="${esc(r.av)}&s=96" loading="lazy" alt="">`
+    : `<span class="repo-icon" style="background:${CAT_COLORS[r.c]||"var(--accent)"}">${esc(letter)}</span>`;
+  return `<div class="card">
+    ${rank?`<span class="rank-badge${rank<=3?" top":""}">第${rank}名</span>`:""}
+    <div class="card-top">
+      ${icon}
+      <a class="repo-name" href="https://github.com/${esc(r.n)}" target="_blank" rel="noopener">${esc(r.n)}</a>
+      <button class="share-btn" data-share="${esc(r.n)}" title="分享">📤 分享</button>
+      <button class="fav-btn${on}" data-fav="${esc(r.n)}" onclick="toggleFav('${esc(r.n).replace(/'/g,"\\'")}')" title="收藏">${favs.has(r.n)?"❤️":"🤍"}</button>
+    </div>
+    <div class="author-line">
+      <a class="author-name" href="https://github.com/${esc(owner)}" target="_blank" rel="noopener" data-author="${esc(owner)}" data-authortype="${ownerType}">${esc(owner)}</a>
+      <span class="author-type ${ownerType}">${typeLabel}</span>
+    </div>
+    <div class="repo-desc">${esc(r.d)}</div>
+    <div class="repo-meta">
+      <span class="meta-item" title="星标：GitHub 上点赞这个项目的人数">⭐ <span class="lbl">星标</span> <span style="color:var(--star)">${fmt(r.s)}</span></span>
+      <span class="meta-item rating" title="综合评分（满分 5 星）">★ <span class="lbl">评分</span> ${ratingOf(r).toFixed(1)}</span>
+      <span class="meta-item" title="复刻：有多少人复制了这份代码去改造">🍴 <span class="lbl">复刻</span> ${fmt(forkOf(r))}</span>
+      <span class="meta-item" title="反馈：社区提了多少条建议和问题">💬 <span class="lbl">反馈</span> ${fmt(issueOf(r))}</span>
+      <span class="meta-item" title="项目使用的编程语言"><span class="lang-dot" style="background:${LANG_COLORS[r.l]||"#8b949e"}"></span>${esc(r.l)||"多语言"}</span>
+      <span class="tag" title="项目所属分类">${esc(r.c)}</span>
+      ${r.en?`<span class="tag en" title="英文简介">EN</span>`:""}
+      ${src?`<span class="tag src">${src}</span>`:""}
+      <span class="meta-item fav-count" data-favcount="${esc(r.n)}" title="收藏：有多少人在这个应用里收藏了它">🔖 <span class="lbl">收藏</span> ${fmt(favCountOf(r.n))}</span>
+    </div>
+    ${det?`<div class="expand-hint">了解详情 <span class="arr">▾</span></div><div class="repo-detail">${esc(det)}</div>`:""}
+  </div>`;
+}
+function renderList(el, list, src){
+  el.innerHTML = list.length ? list.map(r=>cardHTML(r,src)).join("") : `<div class="empty"><span class="big">🌵</span>这里空空如也</div>`;
+}
+
+/* 卡片点击：作者名 → 作者弹窗；分享按钮 → 分享弹窗；其余 a/fav 正常跳转；卡片展开 */
+document.querySelector("main").addEventListener("click", e=>{
+  const authorLink = e.target.closest(".author-name");
+  if(authorLink){ e.preventDefault(); openAuthorModal(authorLink.dataset.author, authorLink.dataset.authortype); return; }
+  const shareBtn = e.target.closest(".share-btn");
+  if(shareBtn){ e.preventDefault(); openShare(shareBtn.dataset.share); return; }
+  if(e.target.closest("a,.fav-btn")) return;
+  const card = e.target.closest(".card");
+  if(card && card.querySelector(".repo-detail")) card.classList.toggle("open");
+});
+
+/* ================= 分享 ================= */
+function copyText(t, btn){
+  const done = ()=>{ if(btn){ const o=btn.textContent; btn.textContent="已复制 ✓"; setTimeout(()=>btn.textContent=o,1500); } };
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(t).then(done).catch(()=>fallbackCopy(t, done));
+  }else fallbackCopy(t, done);
+}
+function fallbackCopy(t, done){
+  const ta = document.createElement("textarea");
+  ta.value = t; ta.style.cssText = "position:fixed;opacity:0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); }catch(e){}
+  document.body.removeChild(ta); done();
+}
+function openShare(name){
+  const r = REPOS.find(x=>x.n===name);
+  const desc = r ? r.d : (CN_DESC[name] || "GitHub 上的优质开源项目");
+  $("#shareText").textContent =
+    `【${name}】\n${desc}\nGitHub 链接：https://github.com/${name}\n—— 来自「GitHub 中文发现器」，不懂英文也能轻松逛 GitHub`;
+  $("#shareModal").classList.add("show");
+}
+$("#copyBtn").addEventListener("click", function(){ copyText($("#shareText").textContent, this); });
+$("#closeModal").addEventListener("click", ()=>$("#shareModal").classList.remove("show"));
+$("#shareModal").addEventListener("click", e=>{ if(e.target.id==="shareModal") $("#shareModal").classList.remove("show"); });
+/* 分享整个应用 */
+$("#appShareBtn").addEventListener("click", function(){
+  copyText(`推荐一个好东西「GitHub 中文发现器」：不懂英文也能轻松逛 GitHub，60+ 优质项目全中文介绍，还有实时热门榜单和小白版详解。手机打开可以添加到主屏幕，像 App 一样用：${location.href}`, this);
+});
+
+/* ================= 作者详情弹窗 ================= */
+let _curAuthor = null, _curAuthorType = null;
+/* 精选库是否有这个作者的简介 */
+function isCuratedAuthor(owner){ return !!AUTHORS[owner] || ownedReposTop3(owner).length > 0; }
+function openAuthorModal(owner, ownerType){
+  _curAuthor = owner;
+  _curAuthorType = ownerType;
+  $("#authorModalTitle").textContent = (ownerType==="org"?"🏢 ":"👤 ") + esc(owner);
+  $("#authorVisitBtn").onclick = ()=> window.open(`https://github.com/${owner}`, "_blank");
+  $("#authorModalBody").innerHTML = `<div class="loading"><span class="spin"></span>正在加载作者信息…</div>`;
+  $("#authorModal").classList.add("show");
+  // 精选库命中 → 直接显示；否则尝试 GitHub API
+  if(isCuratedAuthor(owner)){
+    renderAuthorBody(owner, ownerType);
+  } else {
+    fetchAuthorFromAPI(owner, ownerType);
+  }
+}
+function renderAuthorBody(owner, ownerType){
+  const ai = authorInfo(owner);
+  const typeLabel = ownerType==="org"?"组织":"个人";
+  const curatedRepos = ownedReposTop3(owner);
+  // 精选库没有但可能有实时项目（如榜单里不包含的作者），此时代表作列表为空 → 只显示简介
+  let worksHTML = "";
+  if(curatedRepos.length){
+    worksHTML = `<div class="author-works-title">精选库内的代表作</div>
+      <div class="author-repos">${curatedRepos.map(r=>`<a class="author-repo" href="https://github.com/${esc(r.n)}" target="_blank" rel="noopener">
+        <span class="n">${esc(r.n.split("/")[1])}</span>
+        <span class="s">★ ${fmt(r.s)}</span>
+      </a>`).join("")}</div>`;
+  } else {
+    worksHTML = `<div class="author-works-title">暂无精选库内的代表作</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">该作者的项目不在精选库中，可以去 GitHub 主页查看。</div>`;
+  }
+  $("#authorModalBody").innerHTML = `
+    <div class="author-hero">
+      <div class="avatar">${esc(owner.charAt(0).toUpperCase())}</div>
+      <div class="info">
+        <div class="name">${esc(owner)} <span class="author-type ${ownerType}" style="margin-left:4px">${typeLabel}</span></div>
+      </div>
+    </div>
+    <div class="author-bio">${esc(ai.b)}</div>
+    ${worksHTML}
+  `;
+}
+async function fetchAuthorFromAPI(owner, ownerType){
+  try{
+    const res = await fetch(`https://api.github.com/users/${encodeURIComponent(owner)}/repos?sort=stars&per_page=3`,
+      {headers:{"Accept":"application/vnd.github+json"}});
+    if(!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    // 先显示基础信息（没简介的话用模板）
+    const ai = authorInfo(owner);
+    const typeLabel = ownerType==="org"?"组织":"个人";
+    const reposHTML = data.length
+      ? `<div class="author-works-title">GitHub 上 Star 最高的项目</div>
+         <div class="author-repos">${data.map(r=>`<a class="author-repo" href="https://github.com/${esc(r.full_name)}" target="_blank" rel="noopener">
+            <span class="n">${esc(r.full_name.split("/")[1])}</span>
+            <span class="s">★ ${fmt(r.stargazers_count)}</span>
+         </a>`).join("")}</div>`
+      : `<div style="font-size:12px;color:var(--text2)">该作者暂无公开仓库。</div>`;
+    $("#authorModalBody").innerHTML = `
+      <div class="author-hero">
+        <div class="avatar">${esc(owner.charAt(0).toUpperCase())}</div>
+        <div class="info">
+          <div class="name">${esc(owner)} <span class="author-type ${ownerType}" style="margin-left:4px">${typeLabel}</span></div>
+        </div>
+      </div>
+      <div class="author-bio">${esc(ai.b)}</div>
+      ${reposHTML}
+    `;
+  }catch(err){
+    // API 失败 → 降级：只显示基础模板
+    const ai = authorInfo(owner);
+    const typeLabel = ownerType==="org"?"组织":"个人";
+    $("#authorModalBody").innerHTML = `
+      <div class="author-hero">
+        <div class="avatar">${esc(owner.charAt(0).toUpperCase())}</div>
+        <div class="info">
+          <div class="name">${esc(owner)} <span class="author-type ${ownerType}" style="margin-left:4px">${typeLabel}</span></div>
+        </div>
+      </div>
+      <div class="author-bio">${esc(ai.b)}</div>
+      <div style="font-size:12px;color:var(--accent2)">⚠️ 作者代表作加载失败（可能网络受限），点击下方按钮去 GitHub 主页查看。</div>
+    `;
+  }
+}
+$("#authorCloseBtn").addEventListener("click", ()=>$("#authorModal").classList.remove("show"));
+$("#authorModal").addEventListener("click", e=>{ if(e.target.id==="authorModal") $("#authorModal").classList.remove("show"); });
+// ESC 关闭
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape"){ $("#authorModal").classList.remove("show"); $("#shareModal").classList.remove("show"); }
+});
+
+/* ================= 发现页 ================= */
+let curCat = "全部";
+function renderCats(){
+  $("#catBar").innerHTML = CATS.map(c=>`<div class="cat${c===curCat?" active":""}" data-cat="${c}">${c}</div>`).join("");
+}
+let curSort = "star";
+function sortRepos(list){
+  if(curSort==="rating") return [...list].sort((a,b)=>(RATING[b.n]||4)-(RATING[a.n]||4));
+  if(curSort==="fav") return [...list].sort((a,b)=>favCountOf(b.n)-favCountOf(a.n));
+  return [...list].sort((a,b)=>b.s-a.s);
+}
+function renderHome(){
+  const list = curCat==="全部" ? REPOS : REPOS.filter(r=>r.c===curCat);
+  renderList($("#homeList"), sortRepos(list));
+}
+$("#sortTabs").addEventListener("click", e=>{
+  const t = e.target.closest(".sort-tab"); if(!t) return;
+  curSort = t.dataset.sort;
+  document.querySelectorAll("#sortTabs .sort-tab").forEach(c=>c.classList.toggle("active", c===t));
+  renderHome();
+});
+/* 今日推荐：每天自动换一个精选项目 */
+function renderDailyPick(){
+  const idx = Math.floor(Date.now()/86400000) % REPOS.length;
+  const r = REPOS[idx];
+  $("#dailyPick").innerHTML = `<div class="daily-pick" title="去 GitHub 查看这个项目">
+    <div class="dp-head">🔥 今日推荐</div>
+    <div class="dp-name">${esc(r.n)} <span class="rating">★ ${ratingOf(r).toFixed(1)}</span></div>
+    <div class="dp-desc">${esc(r.d)}</div>
+  </div>`;
+  $("#dailyPick").querySelector(".daily-pick").addEventListener("click", ()=>window.open(`https://github.com/${r.n}`,"_blank"));
+}
+$("#catBar").addEventListener("click", e=>{
+  const t = e.target.closest(".cat"); if(!t) return;
+  curCat = t.dataset.cat; renderCats(); renderHome();
+});
+
+/* ================= 搜索页 ================= */
+const isCN = s => /[\u4e00-\u9fa5]/.test(s);
+function localSearch(q){
+  q = q.toLowerCase();
+  return REPOS.filter(r => r.n.toLowerCase().includes(q) || r.d.toLowerCase().includes(q) || r.c.toLowerCase().includes(q));
+}
+let searchTimer = null, abortCtrl = null;
+async function doSearch(){
+  const q = $("#searchInput").value.trim();
+  const box = $("#searchResult");
+  if(!q){ box.innerHTML = `<div class="empty"><span class="big">🔍</span>输入关键词发现好项目<br>支持中文，如「人工智能」「漫画」「教程」</div>`; return; }
+
+  const local = localSearch(q);
+  box.innerHTML = `<div class="loading"><span class="spin"></span>正在搜索 GitHub…</div>`;
+  if(local.length) box.innerHTML = `<div class="notice">📚 精选库命中 ${local.length} 个项目</div>` + local.map(r=>cardHTML(r,"精选")).join("") + `<div class="loading"><span class="spin"></span>正在从 GitHub 补充更多结果…</div>`;
+
+  // 调 GitHub 官方接口，失败自动降级
+  if(abortCtrl) abortCtrl.abort();
+  abortCtrl = new AbortController();
+  try{
+    const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=20`;
+    const res = await fetch(url, {signal:abortCtrl.signal, headers:{"Accept":"application/vnd.github+json"}});
+    if(!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    const localNames = new Set(local.map(r=>r.n.toLowerCase()));
+    const remote = data.items
+      .filter(it=>!localNames.has(it.full_name.toLowerCase()))
+      .map(it=>{
+        const t = cnDesc(it.full_name, it.description);
+        return {n:it.full_name, d:t.d, en:t.en, s:it.stargazers_count, fk:it.forks_count, iu:it.open_issues_count, av:it.owner&&it.owner.avatar_url, owner:it.owner&&it.owner.login, ownerType:it.owner&&(it.owner.type==="Organization"?"org":"user"), l:it.language||"", c:"GitHub 实时"};
+      });
+    box.innerHTML =
+      (local.length? `<div class="notice">📚 精选库命中 ${local.length} 个 · 🌐 GitHub 实时补充 ${remote.length} 个</div>` + local.map(r=>cardHTML(r,"精选")).join("") : "")
+      + (remote.length? remote.map(r=>cardHTML(r,"GitHub")).join("") : "")
+      + (!local.length && !remote.length ? `<div class="empty"><span class="big">😅</span>没有找到相关项目，换个关键词试试</div>` : "");
+  }catch(err){
+    if(err.name==="AbortError") return;
+    box.innerHTML = `<div class="notice warn">⚠️ GitHub 接口暂时不可用（可能网络受限），已为你展示本地精选结果</div>`
+      + (local.length? local.map(r=>cardHTML(r,"精选")).join("") : `<div class="empty"><span class="big">😅</span>精选库中也没有匹配项，换个关键词试试</div>`);
+  }
+}
+$("#searchBtn").addEventListener("click", doSearch);
+$("#searchInput").addEventListener("keydown", e=>{ if(e.key==="Enter") doSearch(); });
+$("#searchInput").addEventListener("input", ()=>{ clearTimeout(searchTimer); searchTimer = setTimeout(doSearch, 600); });
+
+/* ================= 榜单页 ================= */
+let rankLoaded = false, rankRange = "all";
+const RANK_TITLES = {day:"今日热榜", week:"本周热榜", month:"本月热榜", year:"今年热榜", all:"全站总榜"};
+function rangeSince(){
+  const d = new Date();
+  if(rankRange==="day"){ /* 今天 0 点 */ }
+  else if(rankRange==="week"){ d.setDate(d.getDate()-7); }
+  else if(rankRange==="month"){ d.setDate(d.getDate()-30); }
+  else if(rankRange==="year"){ d.setMonth(0,1); }
+  else return null; // all：不加时间过滤
+  return d.toISOString().slice(0,10);
+}
+async function loadRank(){
+  const box = $("#rankList");
+  box.innerHTML = `<div class="loading"><span class="spin"></span>正在加载 GitHub ${RANK_TITLES[rankRange]}…</div>`;
+  try{
+    const since = rangeSince();
+    const q = since ? `created:>${since} sort:stars` : `stars:>1 sort:stars`;
+    const res = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=20`,
+      {headers:{"Accept":"application/vnd.github+json"}});
+    if(!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    const list = data.items.map(it=>{
+      const t = cnDesc(it.full_name, it.description);
+      return {n:it.full_name, d:t.d, en:t.en, s:it.stargazers_count, fk:it.forks_count, iu:it.open_issues_count, av:it.owner&&it.owner.avatar_url, owner:it.owner&&it.owner.login, ownerType:it.owner&&(it.owner.type==="Organization"?"org":"user"), l:it.language||"", c:"GitHub 实时"};
+    });
+    box.innerHTML = `<div class="notice">🏆 GitHub ${RANK_TITLES[rankRange]} Top 20（实时数据${since?"，"+since+" 后创建":""}）</div>`
+      + list.map((r,i)=>cardHTML(r,"GitHub",i+1)).join("");
+  }catch(err){
+    // API 失败时降级：用精选库内置 star 数排序
+    const list = [...REPOS].sort((a,b)=>b.s-a.s).slice(0,20);
+    box.innerHTML = `<div class="notice warn">⚠️ GitHub 接口暂时不可用，已降级展示精选库 Top 20</div>`
+      + list.map((r,i)=>cardHTML(r,"精选",i+1)).join("");
+  }
+}
+$("#rankTabs").addEventListener("click", e=>{
+  const t = e.target.closest(".cat"); if(!t || t.dataset.range===rankRange) return;
+  rankRange = t.dataset.range;
+  document.querySelectorAll("#rankTabs .cat").forEach(c=>c.classList.toggle("active", c===t));
+  loadRank();
+});
+
+/* ================= 我的页 ================= */
+function renderFavs(){
+  const box = $("#favList");
+  $("#favCount").textContent = favs.size ? `共 ${favs.size} 个` : "";
+  if(!favs.size){ box.innerHTML = `<div class="empty" style="padding:24px"><span class="big">🤍</span>还没有收藏<br>点项目卡片右上角的心形即可收藏</div>`; return; }
+  const all = [...REPOS];
+  box.innerHTML = [...favs].map(name=>{
+    const r = all.find(x=>x.n===name) || {n:name, d:"（来自 GitHub 搜索结果收藏的项目）", s:0, l:"", c:"GitHub"};
+    return cardHTML(r);
+  }).join("");
+}
+
+/* ================= 导航 & 主题 ================= */
+document.querySelectorAll(".nav-item").forEach(item=>{
+  item.addEventListener("click", ()=>{
+    document.querySelectorAll(".nav-item").forEach(i=>i.classList.remove("active"));
+    item.classList.add("active");
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
+    $("#page-"+item.dataset.page).classList.add("show");
+    window.scrollTo(0,0);
+    if(item.dataset.page==="me") renderFavs();
+    if(item.dataset.page==="rank" && !rankLoaded){ rankLoaded = true; loadRank(); }
+    if(item.dataset.page==="search") setTimeout(()=>$("#searchInput").focus(), 250);
+  });
+});
+const themeBtn = $("#themeBtn");
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  themeBtn.textContent = t==="dark" ? "☀️" : "🌙";
+  localStorage.setItem("gh_theme", t);
+}
+themeBtn.addEventListener("click", ()=>applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+applyTheme(localStorage.getItem("gh_theme")||"dark");
+
+/* 注册 Service Worker（PWA 可安装；file:// 打开时自动跳过） */
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+
+/* 初始化 */
+renderCats(); renderHome(); renderDailyPick(); renderFavs();
+</script>
+</body>
+</html>
