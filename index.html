@@ -49,6 +49,9 @@ header{
 /* 分类标签 */
 .cats{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;scrollbar-width:none}
 .cats::-webkit-scrollbar{display:none}
+.usage-cats{padding-top:2px;margin-top:-8px}
+.usage-cats .cat{font-size:12px;padding:5px 12px;border:1px dashed var(--border)}
+.usage-cats .cat.active{border:1px solid transparent}
 .cat{flex:0 0 auto;padding:7px 14px;border-radius:999px;background:var(--chip);
   color:var(--text2);font-size:13px;cursor:pointer;border:1px solid transparent;
   white-space:nowrap;transition:all .2s}
@@ -231,6 +234,7 @@ nav{
     <button id="themeBtn" title="切换主题">☀️</button>
   </div>
   <div class="cats" id="catBar"></div>
+  <div class="cats usage-cats" id="usageBar"></div>
 </header>
 
 <main>
@@ -345,6 +349,46 @@ nav{
 <script>
 /* ================= 精选项目数据（约 60 个，人工撰写中文简介） ================= */
 const CATS = ["全部","AI 人工智能","实用工具","手机 App","学编程","游戏娱乐","网页界面","后台服务"];
+
+/* ================= 人群/用途分类（小白视角，可多标签） ================= */
+const USAGES = ["全部","程序员","学编程","自媒体创作者","普通用户","游戏玩家"];
+const USAGE = {
+  "huggingface/transformers":["程序员"],"ollama/ollama":["普通用户","程序员"],
+  "AUTOMATIC1111/stable-diffusion-webui":["自媒体创作者","普通用户"],"langchain-ai/langchain":["程序员"],
+  "openai/whisper":["自媒体创作者","普通用户"],"pytorch/pytorch":["程序员"],"tensorflow/tensorflow":["程序员"],
+  "ggerganov/llama.cpp":["程序员","普通用户"],"keras-team/keras":["程序员","学编程"],"vllm-project/vllm":["程序员"],
+  "comfyanonymous/ComfyUI":["自媒体创作者"],"meta-llama/llama":["程序员"],"Sanster/IOPaint":["普通用户","自媒体创作者"],
+  "RVC-Project/Retrieval-based-Voice-Conversion-WebUI":["自媒体创作者"],
+  "facebook/react":["程序员"],"vuejs/core":["程序员"],"vitejs/vite":["程序员"],"twbs/bootstrap":["程序员"],
+  "tailwindlabs/tailwindcss":["程序员"],"axios/axios":["程序员"],"ant-design/ant-design":["程序员"],
+  "angular/angular":["程序员"],"sveltejs/svelte":["程序员"],"mui/material-ui":["程序员"],
+  "vercel/next.js":["程序员"],"mrdoob/three.js":["程序员"],"d3/d3":["程序员"],
+  "spring-projects/spring-boot":["程序员"],"nodejs/node":["程序员"],"expressjs/express":["程序员"],
+  "gin-gonic/gin":["程序员"],"django/django":["程序员"],"pallets/flask":["程序员"],"fastapi/fastapi":["程序员"],
+  "nestjs/nest":["程序员"],"go-kratos/kratos":["程序员"],"kubernetes/kubernetes":["程序员"],
+  "prometheus/prometheus":["程序员"],"apache/kafka":["程序员"],
+  "microsoft/vscode":["程序员"],"yt-dlp/yt-dlp":["自媒体创作者","普通用户"],"ohmyzsh/ohmyzsh":["程序员"],
+  "localsend/localsend":["普通用户"],"neovim/neovim":["程序员"],"jesseduffield/lazygit":["程序员"],
+  "BurntSushi/ripgrep":["程序员"],"sharkdp/bat":["程序员"],"jgm/pandoc":["学编程","普通用户"],
+  "ShareX/ShareX":["自媒体创作者","普通用户"],"RustDesk/RustDesk":["普通用户","程序员"],
+  "alist-org/alist":["普通用户"],"qBittorrent/qBittorrent":["普通用户"],"aria2/aria2":["普通用户"],
+  "godotengine/godot":["游戏玩家","程序员"],"luanti-org/luanti":["游戏玩家"],"gabrielecirulli/2048":["游戏玩家","普通用户"],
+  "chrislgarry/Apollo-11":["游戏玩家","学编程"],"libretro/RetroArch":["游戏玩家"],"0ad/0ad":["游戏玩家"],
+  "SuperTuxKart/stk-code":["游戏玩家"],"playcanvas/engine":["程序员"],"felixrieseberg/windows95":["游戏玩家","普通用户"],
+  "RPCS3/rpcs3":["游戏玩家"],
+  "flutter/flutter":["程序员"],"facebook/react-native":["程序员"],"Genymobile/scrcpy":["普通用户","自媒体创作者"],
+  "termux/termux-app":["程序员"],"expo/expo":["程序员"],"kivy/kivy":["程序员"],"ionic-team/capacitor":["程序员"],
+  "signalapp/Signal-Android":["普通用户"],"immich-app/immich":["普通用户"],"TeamNewPipe/NewPipe":["普通用户"],
+  "freeCodeCamp/freeCodeCamp":["学编程"],"EbookFoundation/free-programming-books":["学编程"],
+  "kamranahmedse/developer-roadmap":["学编程"],"jwasham/coding-interview-university":["学编程"],
+  "trekhleb/javascript-algorithms":["学编程"],"donnemartin/system-design-primer":["学编程"],
+  "jackfrued/Python-100-Days":["学编程"],"CyC2018/CS-Notes":["学编程"],
+  "justjavac/free-programming-books-zh_CN":["学编程"],"PKUFlyingPig/cs-self-learning":["学编程"],
+  "TheAlgorithms/Python":["学编程"],"ossu/computer-science":["学编程"],
+  "practical-tutorials/project-based-learning":["学编程"]
+};
+let curUsage = "全部";
+
 const REPOS = [
 // AI 人工智能
 {n:"huggingface/transformers",d:"最大的开源 AI 模型库，数万种预训练模型直接调用",s:150000,l:"Python",c:"AI 人工智能"},
@@ -574,7 +618,8 @@ const CN_DESC = {
 "Significant-Gravitas/AutoGPT":"让 AI 自主拆解并执行任务的知名智能体项目",
 "langchain-ai/langchain":"用大语言模型开发应用的框架，轻松做智能问答和机器人",
 "ollama/ollama":"在自己电脑上一条命令运行大语言模型的神器",
-"tensorflow/models":"TensorFlow 官方模型库，含大量预训练模型与示例"
+"tensorflow/models":"TensorFlow 官方模型库，含大量预训练模型与示例",
+"fighting41love/funNLP":"中文自然语言处理资源大合集：敏感词库、各领域词库、语料数据集、知识图谱、语音识别与文本生成工具等，一次收藏够用"
 };
 
 /* ================= 作者信息（类型 + 简介 + 代表作） ================= */
@@ -801,9 +846,25 @@ const DETAIL = {
 /* 分类圆标配色 */
 const CAT_COLORS = {"AI 人工智能":"#a371f7","实用工具":"#f78166","手机 App":"#3fb950","学编程":"#58a6ff","游戏娱乐":"#f778ba","网页界面":"#d29922","后台服务":"#39c5cf"};
 /* 中文简介匹配：命中映射表用中文；否则保留英文原文并打 EN 角标 */
+/* 简介清洗：HTML 实体解码 → 去乱码/控制字符 → 超长按标点截断成通顺短句 */
+function cleanDesc(s){
+  if(!s) return "";
+  let t = String(s)
+    .replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">")
+    .replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&nbsp;/g," ");
+  t = t.replace(/[\u0000-\u001F\u007F-\u009F\uFFFD]/g,"").replace(/\s+/g," ").trim();
+  if(t.length <= 60) return t;
+  const cut = 58;
+  const at = Math.max(
+    t.lastIndexOf("，",cut), t.lastIndexOf("。",cut), t.lastIndexOf("、",cut),
+    t.lastIndexOf(",",cut), t.lastIndexOf(".",cut), t.lastIndexOf(";",cut), t.lastIndexOf("；",cut)
+  );
+  return (at > 20 ? t.slice(0, at) : t.slice(0, cut)) + "…";
+}
 function cnDesc(n, orig){
   if(CN_DESC[n]) return {d:CN_DESC[n], en:false};
-  return {d:orig||"（该项目暂无简介）", en:!!orig};
+  const c = cleanDesc(orig);
+  return {d: c || "（该项目暂无中文简介，点项目名查看 GitHub 原文）", en: !!orig};
 }
 /* Fork / Issues：实时结果取 API 字段（r.fk / r.iu），精选库取内置初始值 */
 const forkOf = r => r.fk ?? FORKS[r.n] ?? 0;
@@ -1051,8 +1112,12 @@ function sortRepos(list){
   return [...list].sort((a,b)=>b.s-a.s);
 }
 function renderHome(){
-  const list = curCat==="全部" ? REPOS : REPOS.filter(r=>r.c===curCat);
+  let list = curCat==="全部" ? REPOS : REPOS.filter(r=>r.c===curCat);
+  if(curUsage!=="全部") list = list.filter(r=>(USAGE[r.n]||[]).includes(curUsage));
   renderList($("#homeList"), sortRepos(list));
+}
+function renderUsages(){
+  $("#usageBar").innerHTML = USAGES.map(u=>`<div class="cat${u===curUsage?" active":""}" data-usage="${u}">${u}</div>`).join("");
 }
 $("#sortTabs").addEventListener("click", e=>{
   const t = e.target.closest(".sort-tab"); if(!t) return;
@@ -1074,6 +1139,10 @@ function renderDailyPick(){
 $("#catBar").addEventListener("click", e=>{
   const t = e.target.closest(".cat"); if(!t) return;
   curCat = t.dataset.cat; renderCats(); renderHome();
+});
+$("#usageBar").addEventListener("click", e=>{
+  const t = e.target.closest(".cat"); if(!t) return;
+  curUsage = t.dataset.usage; renderUsages(); renderHome();
 });
 
 /* ================= 搜索页 ================= */
@@ -1203,7 +1272,7 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 }
 
 /* 初始化 */
-renderCats(); renderHome(); renderDailyPick(); renderFavs();
+renderCats(); renderUsages(); renderHome(); renderDailyPick(); renderFavs();
 </script>
 </body>
 </html>
