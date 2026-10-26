@@ -228,6 +228,18 @@ nav{
   padding:9px 0 8px;color:var(--text2);font-size:11px;cursor:pointer;transition:color .2s}
 .nav-item.active{color:var(--accent)}
 .nav-item svg{width:22px;height:22px;fill:currentColor}
+/* 人群筛选（折叠式，不常驻顶部） */
+.filter-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.usage-toggle{flex:0 0 auto;padding:5px 12px;border-radius:999px;background:var(--chip);
+  border:1px solid var(--border);color:var(--text);font-size:12.5px;cursor:pointer;
+  white-space:nowrap}
+.usage-toggle.active{background:var(--accent);color:#fff;border-color:transparent}
+.usage-panel{display:none;flex-wrap:wrap;gap:8px;margin:-2px 0 10px}
+.usage-panel.show{display:flex}
+.usage-panel .cat{font-size:12.5px;padding:5px 12px;border:1px dashed var(--border)}
+/* 今日新星 */
+.newstars{padding-top:10px}
+.newstars .ns-head{font-size:12.5px;font-weight:700;color:var(--text2);margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -241,7 +253,6 @@ nav{
     <button id="themeBtn" title="切换主题">☀️</button>
   </div>
   <div class="cats" id="catBar"></div>
-  <div class="cats usage-cats" id="usageBar"></div>
 </header>
 
 <main>
@@ -254,24 +265,21 @@ nav{
         <div class="b-sub">不懂英文也能轻松逛 GitHub，每日为你挑一个好项目</div>
       </div>
     </div>
-    <div id="dailyPick"></div>
-    <div class="sort-tabs" id="sortTabs">
-      <div class="sort-tab active" data-sort="star">⭐ 热门</div>
-      <div class="sort-tab" data-sort="rating">★ 高分</div>
-      <div class="sort-tab" data-sort="fav">🔖 收藏多</div>
-    </div>
-    <div id="homeList"></div>
-  </section>
-
-  <!-- 搜索页 -->
-  <section class="page" id="page-search">
     <div class="search-wrap">
       <input id="searchInput" type="search" placeholder="输入中文或英文关键词，如：AI、画图、Vue" autocomplete="off">
       <button id="searchBtn">搜索</button>
     </div>
-    <div id="searchResult">
-      <div class="empty"><span class="big">🔍</span>输入关键词发现好项目<br>支持中文，如「人工智能」「漫画」「教程」</div>
+    <div id="dailyPick"></div>
+    <div class="filter-row">
+      <div class="sort-tabs" id="sortTabs">
+        <div class="sort-tab active" data-sort="star">⭐ 热门</div>
+        <div class="sort-tab" data-sort="rating">★ 高分</div>
+        <div class="sort-tab" data-sort="fav">🔖 收藏多</div>
+      </div>
+      <div class="usage-toggle" id="usageToggle">👥 人群：<span id="usageLabel">全部</span></div>
     </div>
+    <div class="usage-panel" id="usagePanel"></div>
+    <div id="homeList"></div>
   </section>
 
   <!-- 榜单页 -->
@@ -283,6 +291,7 @@ nav{
       <div class="cat" data-range="year">今年</div>
       <div class="cat active" data-range="all">全部</div>
     </div>
+    <div class="newstars" id="newStars"></div>
     <div id="rankList" class="rank-list">
       <div class="empty"><span class="big">🏆</span>点击进入榜单查看 Top 20</div>
     </div>
@@ -348,10 +357,6 @@ nav{
   <div class="nav-item" data-page="rank">
     <svg viewBox="0 0 16 16"><path d="M2 13V8h2.4v5H2Zm4.8 0V3.5h2.4V13H6.8Zm4.8 0V6h2.4v7h-2.4ZM1 15.6h14v-1.5H1v1.5Z"/></svg>
     榜单
-  </div>
-  <div class="nav-item" data-page="search">
-    <svg viewBox="0 0 16 16"><path d="M10.68 11.74a6 6 0 1 1 1.06-1.06l3.93 3.93-1.06 1.06-3.93-3.93ZM11.5 7a4.5 4.5 0 1 0-9 0 4.5 4.5 0 0 0 9 0Z"/></svg>
-    搜索
   </div>
   <div class="nav-item" data-page="me">
     <svg viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm3-3a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v1H2v-1Z"/></svg>
@@ -1319,12 +1324,14 @@ function renderHome(){
   renderList($("#homeList"), sortRepos(list));
 }
 function renderUsages(){
-  $("#usageBar").innerHTML = USAGES.map(u=>`<div class="cat${u===curUsage?" active":""}" data-usage="${u}">${u}</div>`).join("");
+  $("#usagePanel").innerHTML = USAGES.map(u=>`<div class="cat${u===curUsage?" active":""}" data-usage="${u}">${u}</div>`).join("");
+  $("#usageLabel").textContent = curUsage;
 }
 $("#sortTabs").addEventListener("click", e=>{
   const t = e.target.closest(".sort-tab"); if(!t) return;
   curSort = t.dataset.sort;
   document.querySelectorAll("#sortTabs .sort-tab").forEach(c=>c.classList.toggle("active", c===t));
+  $("#searchInput").value = "";   // 排序时退出搜索状态，回到精选浏览
   renderHome();
 });
 /* 今日推荐：每天自动换一个精选项目 */
@@ -1340,14 +1347,26 @@ function renderDailyPick(){
 }
 $("#catBar").addEventListener("click", e=>{
   const t = e.target.closest(".cat"); if(!t) return;
-  curCat = t.dataset.cat; renderCats(); renderHome();
+  curCat = t.dataset.cat; renderCats();
+  $("#searchInput").value = "";   // 切分类时退出搜索状态
+  renderHome();
 });
-$("#usageBar").addEventListener("click", e=>{
+/* 人群筛选：点按钮展开/收起，选完自动收起 */
+$("#usageToggle").addEventListener("click", ()=>{
+  const p = $("#usagePanel");
+  p.classList.toggle("show");
+  $("#usageToggle").classList.toggle("active", p.classList.contains("show"));
+});
+$("#usagePanel").addEventListener("click", e=>{
   const t = e.target.closest(".cat"); if(!t) return;
-  curUsage = t.dataset.usage; renderUsages(); renderHome();
+  curUsage = t.dataset.usage; renderUsages();
+  $("#searchInput").value = "";
+  renderHome();
+  $("#usagePanel").classList.remove("show");
+  $("#usageToggle").classList.remove("active");
 });
 
-/* ================= 搜索页 ================= */
+/* ================= 搜索（内嵌于发现页） ================= */
 const isCN = s => /[\u4e00-\u9fa5]/.test(s);
 function localSearch(q){
   q = q.toLowerCase();
@@ -1356,8 +1375,8 @@ function localSearch(q){
 let searchTimer = null, abortCtrl = null;
 async function doSearch(){
   const q = $("#searchInput").value.trim();
-  const box = $("#searchResult");
-  if(!q){ box.innerHTML = `<div class="empty"><span class="big">🔍</span>输入关键词发现好项目<br>支持中文，如「人工智能」「漫画」「教程」</div>`; return; }
+  const box = $("#homeList");
+  if(!q){ renderHome(); return; }   // 清空搜索框 → 恢复精选列表
 
   const local = localSearch(q);
   box.innerHTML = `<div class="loading"><span class="spin"></span>正在搜索 GitHub…</div>`;
@@ -1434,6 +1453,27 @@ $("#rankTabs").addEventListener("click", e=>{
   loadRank();
 });
 
+/* 今日新星：今天新创建、人气上升最快的黑马项目 */
+async function loadNewStars(){
+  const box = $("#newStars");
+  try{
+    const today = new Date().toISOString().slice(0,10);
+    const res = await fetch(`https://api.github.com/search/repositories?q=created:>${today}&sort=stars&order=desc&per_page=3`,
+      {headers:{"Accept":"application/vnd.github+json"}});
+    if(!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    if(!data.items || !data.items.length){ box.innerHTML=""; return; }
+    const list = data.items.map(it=>{
+      const t = cnDesc(it.full_name, it.description);
+      return {n:it.full_name, d:t.d, en:t.en, s:it.stargazers_count, fk:it.forks_count, iu:it.open_issues_count, av:it.owner&&it.owner.avatar_url, owner:it.owner&&it.owner.login, ownerType:it.owner&&(it.owner.type==="Organization"?"org":"user"), l:it.language||"", c:"GitHub 实时"};
+    });
+    box.innerHTML = `<div class="ns-head">🆕 今日新星 · 今天刚诞生的黑马项目</div>`
+      + list.map((r,i)=>cardHTML(r,"GitHub",i+1)).join("");
+  }catch(err){
+    box.innerHTML = "";   // 接口不可用时静默隐藏，不打扰榜单
+  }
+}
+
 /* ================= 我的页 ================= */
 function renderFavs(){
   const box = $("#favList");
@@ -1482,8 +1522,7 @@ document.querySelectorAll(".nav-item").forEach(item=>{
     $("#page-"+item.dataset.page).classList.add("show");
     window.scrollTo(0,0);
     if(item.dataset.page==="me") renderFavs();
-    if(item.dataset.page==="rank" && !rankLoaded){ rankLoaded = true; loadRank(); }
-    if(item.dataset.page==="search") setTimeout(()=>$("#searchInput").focus(), 250);
+    if(item.dataset.page==="rank" && !rankLoaded){ rankLoaded = true; loadRank(); loadNewStars(); }
   });
 });
 const themeBtn = $("#themeBtn");
