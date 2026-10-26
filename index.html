@@ -209,6 +209,7 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .sec-title .count{font-size:12px;color:var(--text2);font-weight:400}
 .about-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;font-size:13.5px;line-height:1.9;color:var(--text)}
 .about-box b{color:var(--accent)}
+.about-box .contact-mail{cursor:pointer;color:var(--accent);border-bottom:1px dashed var(--accent);padding-bottom:1px}
 /* 底部导航 */
 nav{
   position:fixed;bottom:0;left:0;right:0;z-index:30;
@@ -295,7 +296,8 @@ nav{
       <b>GitHub 中文发现器</b> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
       · 内置 <b>精选项目库</b>，每条都有人工撰写的中文简介<br>
       · 搜索时会同时查询 <b>GitHub 官方接口</b>，网络不通时自动只展示本地精选<br>
-      · 收藏保存在你的浏览器本地，不上传任何数据
+      · 收藏保存在你的浏览器本地，不上传任何数据<br>
+      · 📮 联系/合作：<b class="contact-mail" id="contactMail">11589839@qq.com</b>（点一下复制）
     </div>
     <button class="app-share-btn" id="appShareBtn">📤 分享这个应用</button>
   </section>
@@ -1243,6 +1245,14 @@ function renderFavs(){
     return cardHTML(r);
   }).join("");
 }
+
+/* 联系邮箱：点一下复制 */
+$("#contactMail").addEventListener("click", ()=>{
+  const t = $("#contactMail");
+  (navigator.clipboard ? navigator.clipboard.writeText("11589839@qq.com") : Promise.reject())
+    .then(()=>{ t.textContent = "✅ 已复制"; setTimeout(()=>{ t.textContent = "11589839@qq.com"; }, 1800); })
+    .catch(()=>{});
+});
 
 /* ================= 导航 & 主题 ================= */
 document.querySelectorAll(".nav-item").forEach(item=>{
