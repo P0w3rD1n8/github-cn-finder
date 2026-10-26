@@ -152,6 +152,9 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .modal-btns button{flex:1;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:600;cursor:pointer}
 #copyBtn{background:var(--accent);color:#fff}
 #closeModal{background:var(--chip);color:var(--text)}
+.copy-fav-btn{margin-left:8px;font-size:12px;padding:4px 10px;background:var(--chip);border:1px solid var(--border);border-radius:10px;color:var(--accent);cursor:pointer;vertical-align:middle}
+.copy-fav-btn:active{transform:scale(.96)}
+.about-box .repo-link{color:var(--accent);text-decoration:underline}
 .app-share-btn{width:100%;margin-top:12px;background:var(--chip);border:1px solid var(--border);
   color:var(--accent);border-radius:12px;padding:12px;font-size:14px;font-weight:600;cursor:pointer}
 /* 小白版详情展开区 */
@@ -289,7 +292,7 @@ nav{
       <h2>GitHub 中文发现器</h2>
       <p>不懂英文，也能轻松逛 GitHub</p>
     </div>
-    <div class="sec-title">⭐ 我的收藏 <span class="count" id="favCount"></span></div>
+    <div class="sec-title">⭐ 我的收藏 <span class="count" id="favCount"></span><button class="copy-fav-btn" id="copyFavBtn">📋 复制清单</button></div>
     <div id="favList"></div>
     <div class="sec-title">ℹ️ 关于</div>
     <div class="about-box">
@@ -297,7 +300,12 @@ nav{
       · 内置 <b>精选项目库</b>，每条都有人工撰写的中文简介<br>
       · 搜索时会同时查询 <b>GitHub 官方接口</b>，网络不通时自动只展示本地精选<br>
       · 收藏保存在你的浏览器本地，不上传任何数据<br>
-      · 📮 联系/合作：<b class="contact-mail" id="contactMail">11589839@qq.com</b>（点一下复制）
+      · 📮 联系/合作：<b class="contact-mail" id="contactMail">11589839@qq.com</b>（点一下复制）<br>
+      · 🌐 项目主页：<a class="repo-link" href="https://github.com/P0w3rD1n8/github-cn-finder" target="_blank" rel="noopener">GitHub 仓库</a>（点⭐支持 / 反馈问题）<br>
+      <br>
+      项目还在成长中，我知道它还不够好：精选项目数量有限、部分中文介绍可能不够准确、功能也在不断完善中。<br>
+      如果你有<b>好项目推荐、翻译修正或功能建议</b>，欢迎随时告诉我 📮，每一条建议我都会认真看。<br>
+      <b>后续计划</b>：持续扩充精选库 · 一键生成项目海报 · 实时新星推荐 · 更多人群分类。
     </div>
     <button class="app-share-btn" id="appShareBtn">📤 分享这个应用</button>
   </section>
@@ -1245,6 +1253,25 @@ function renderFavs(){
     return cardHTML(r);
   }).join("");
 }
+
+/* 收藏清单一键复制 */
+$("#copyFavBtn").addEventListener("click", ()=>{
+  const btn = $("#copyFavBtn");
+  if(!favs.size){
+    btn.textContent = "🤍 还没有收藏";
+    setTimeout(()=>{ btn.textContent = "📋 复制清单"; }, 1500);
+    return;
+  }
+  const all = [...REPOS];
+  const lines = [...favs].map(name=>{
+    const r = all.find(x=>x.n===name);
+    return `· ${name}${r ? ` — ${r.d}` : ""}`;
+  });
+  const text = `我的 GitHub 中文发现器收藏（共 ${favs.size} 个）：\n` + lines.join("\n");
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+    .then(()=>{ btn.textContent = "✅ 已复制"; setTimeout(()=>{ btn.textContent = "📋 复制清单"; }, 1800); })
+    .catch(()=>{ btn.textContent = "复制失败"; setTimeout(()=>{ btn.textContent = "📋 复制清单"; }, 1800); });
+});
 
 /* 联系邮箱：点一下复制 */
 $("#contactMail").addEventListener("click", ()=>{
