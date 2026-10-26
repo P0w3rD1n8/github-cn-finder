@@ -1,5 +1,5 @@
-/* 极简 Service Worker：缓存应用外壳，让应用可安装、离线可打开 */
-const CACHE = "gh-cn-v2";
+/* Service Worker：网络优先 + 离线兜底，保证每次打开都是最新版 */
+const CACHE = "gh-cn-v3";
 const ASSETS = ["./index.html", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", e => {
@@ -11,8 +11,15 @@ self.addEventListener("activate", e => {
   ).then(() => self.clients.claim()));
 });
 self.addEventListener("fetch", e => {
-  // 应用外壳走缓存优先；GitHub API 等网络请求直接放行
-  if (new URL(e.request.url).origin === location.origin) {
-    e.respondWith(caches.match(e.request).then(hit => hit || fetch(e.request)));
-  }
+  if (new URL(e.request.url).origin !== location.origin) return;
+  // 网络优先：先取线上最新内容，成功则顺手更新缓存；断网时才用缓存兜底
+  e.respondWith(
+    fetch(e.request).then(res => {
+      if (res && res.ok) {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy)).catch(()=>{});
+      }
+      return res;
+    }).catch(() => caches.match(e.request))
+  );
 });
