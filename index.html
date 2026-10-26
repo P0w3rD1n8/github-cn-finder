@@ -152,6 +152,20 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .modal-btns button{flex:1;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:600;cursor:pointer}
 #copyBtn{background:var(--accent);color:#fff}
 #closeModal{background:var(--chip);color:var(--text)}
+/* 新手词典 */
+.dict-entry{width:100%;text-align:left;background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:14px 16px;font-size:13.5px;color:var(--text);cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.dict-entry:active{transform:scale(1.01);border-color:var(--accent)}
+.dict-entry .dict-arrow{color:var(--accent);font-weight:700}
+.dict-search{width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:10px;
+  background:var(--card2);color:var(--text);padding:10px 12px;font-size:13.5px;margin-bottom:10px}
+.dict-list{max-height:55vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.dict-item{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.dict-item .dict-term{font-weight:700;color:var(--accent);font-size:13.5px}
+.dict-item .dict-zh{font-size:12px;color:#8b949e;margin-left:8px}
+.dict-item p{margin:4px 0 0;font-size:12.5px;line-height:1.7;color:var(--text)}
+.dict-empty{padding:24px;text-align:center;color:#8b949e;font-size:13px}
 .copy-fav-btn{margin-left:8px;font-size:12px;padding:4px 10px;background:var(--chip);border:1px solid var(--border);border-radius:10px;color:var(--accent);cursor:pointer;vertical-align:middle}
 .copy-fav-btn:active{transform:scale(.96)}
 .about-box .repo-link{color:var(--accent);text-decoration:underline}
@@ -306,6 +320,8 @@ nav{
     </div>
     <div class="sec-title">⭐ 我的收藏 <span class="count" id="favCount"></span><button class="copy-fav-btn" id="copyFavBtn">📋 复制清单</button></div>
     <div id="favList"></div>
+    <div class="sec-title">📖 新手词典</div>
+    <button class="dict-entry" id="dictEntry">GitHub 黑话大白话速查（Repository / PR / Fork…）<span class="dict-arrow">→</span></button>
     <div class="sec-title">ℹ️ 关于</div>
     <div class="about-box">
       <b>GitHub 中文发现器</b><span class="ver">v1.2</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
@@ -331,6 +347,18 @@ nav{
     <div class="modal-btns">
       <button id="copyBtn">一键复制</button>
       <button id="closeModal">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新手词典弹窗 -->
+<div class="modal-mask" id="dictModal">
+  <div class="modal">
+    <div class="modal-title">📖 GitHub 新手词典</div>
+    <input class="dict-search" id="dictSearch" placeholder="搜词，支持中文或英文，如：Fork / 仓库 / PR" autocomplete="off">
+    <div class="dict-list" id="dictList"></div>
+    <div class="modal-btns">
+      <button id="closeDict">关闭</button>
     </div>
   </div>
 </div>
@@ -1517,6 +1545,52 @@ $("#contactMail").addEventListener("click", ()=>{
     .then(()=>{ t.textContent = "✅ 已复制"; setTimeout(()=>{ t.textContent = "11589839@qq.com"; }, 1800); })
     .catch(()=>{});
 });
+
+/* ================= 新手词典 ================= */
+const TERMS = [
+  {t:"Repository", z:"仓库", s:"一个项目文件的家，GitHub 上每个项目就是一个仓库"},
+  {t:"README", z:"项目说明书", s:"仓库首页的说明文档，教你怎么用、怎么装"},
+  {t:"Star", z:"点赞/收藏", s:"给项目点星标，相当于点赞+书签，方便以后找"},
+  {t:"Fork", z:"复制一份", s:"把别人的项目整个复制到自己账号下，可以随便研究、修改"},
+  {t:"Pull Request（PR）", z:"提交代码申请合并", s:"你改完别人的代码，发起申请，让对方把你的改动合进项目"},
+  {t:"Issue", z:"问题留言板", s:"给项目提问题、报 bug、提建议的地方"},
+  {t:"Merge", z:"合并", s:"把分支或别人提交的代码改动，并入主版本"},
+  {t:"Commit", z:"提交记录", s:"每次修改代码打的一个快照，记录改了什么、谁改的"},
+  {t:"Branch", z:"分支", s:"代码的分岔路，各改各的互不影响，改完再合并回主路"},
+  {t:"Clone", z:"克隆/下载", s:"把 GitHub 上的项目整个下载到自己电脑上"},
+  {t:"Push", z:"推送上传", s:"把本地改好的代码上传到 GitHub 仓库"},
+  {t:"Pull", z:"拉取更新", s:"把 GitHub 上别人最新的改动下载到本地"},
+  {t:"Release", z:"发布版/安装包", s:"作者正式发布的版本，一般能直接下载安装包"},
+  {t:"Tag", z:"版本标签", s:"给某个版本打标签，比如 v1.0、v2.0，方便认版本"},
+  {t:"License", z:"开源协议", s:"授权条款，规定别人能不能用、怎么用你的代码"},
+  {t:"Open Source", z:"开源", s:"代码公开免费，谁都能看、能改、能用"},
+  {t:"Contributor", z:"贡献者", s:"给项目贡献过代码或文档的人"},
+  {t:"Maintainer", z:"维护者", s:"负责管理、维护、回复问题的人"},
+  {t:"Watch", z:"关注项目", s:"关注项目动态，有更新会通知你"},
+  {t:"Archive", z:"归档", s:"项目停止维护、封存只读，不再更新"},
+  {t:"GitHub Actions", z:"自动化任务", s:"自动帮你跑测试、打包、发布这些重复流程"},
+  {t:"Markdown", z:"排版语法", s:"README 用的轻量排版语言，# 是标题、** 是加粗"},
+  {t:"Avatar", z:"头像", s:"账号头像，一般加载不出来也不影响使用"},
+  {t:"404", z:"页面不存在", s:"链接失效或项目被删了，换个搜索词再找"}
+];
+function renderDict(kw){
+  const list = $("#dictList");
+  const k = (kw||"").trim().toLowerCase();
+  const items = TERMS.filter(x=>{
+    if(!k) return true;
+    return x.t.toLowerCase().includes(k) || x.z.includes(kw.trim()) || x.s.includes(kw.trim());
+  });
+  list.innerHTML = items.map(x=>`<div class="dict-item"><span class="dict-term">${x.t}</span><span class="dict-zh">${x.z}</span><p>${x.s}</p></div>`).join("") || `<div class="dict-empty">没搜到这个词，换个说法试试～</div>`;
+}
+$("#dictEntry").addEventListener("click", ()=>{
+  $("#dictModal").classList.add("show");
+  $("#dictSearch").value = "";
+  renderDict("");
+  setTimeout(()=>$("#dictSearch").focus(), 150);
+});
+$("#closeDict").addEventListener("click", ()=>$("#dictModal").classList.remove("show"));
+$("#dictModal").addEventListener("click", e=>{ if(e.target.id==="dictModal") $("#dictModal").classList.remove("show"); });
+$("#dictSearch").addEventListener("input", e=>renderDict(e.target.value));
 
 /* ================= 导航 & 主题 ================= */
 document.querySelectorAll(".nav-item").forEach(item=>{
