@@ -1,5 +1,5 @@
 /* Service Worker：网络优先 + 离线兜底，保证每次打开都是最新版 */
-const CACHE = "gh-cn-v3";
+const CACHE = "gh-cn-v4";
 const ASSETS = ["./index.html", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", e => {

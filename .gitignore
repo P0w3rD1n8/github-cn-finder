@@ -1,0 +1,7 @@
+# IDE 与本地辅助文件（不推送到 GitHub 线上仓库）
+.trae/
+.trae-html-share-packages/
+.screenshots/
+support/
+serve.ps1
+_chunk.js
