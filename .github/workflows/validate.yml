@@ -1,0 +1,23 @@
+name: 数据校验
+
+# v1.15：data.js 每次变更（push）自动校验完整性/无重复/无404，
+# 失败阻断，防止坏数据上线
+on:
+  push:
+    branches: [main]
+    paths: ["data.js", "validate-data.js"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  validate-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: 校验 data.js（完整性/无重复key/仓库存在性）
+        run: node validate-data.js

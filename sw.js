@@ -1,9 +1,10 @@
 /* Service Worker：stale-while-revalidate + 超时兜底
    首页/清单立即从缓存渲染（秒开 + 离线可开），网络更新在后台进行，下次打开即新内容；
    缓存未命中（首次访问）走网络，5 秒超时兜底，避免网络卡死时白等。
-   版本 v5：由 network-first 重构（Review 项：每次重下 167KB → 缓存优先 + 后台更新） */
-const CACHE = "gh-cn-v5";
-const ASSETS = ["./", "./index.html", "./manifest.json", "./icon.svg"];
+   版本 v6：v1.15 数据抽到 data.js，缓存清单补 data.js 与 v1.14 新增图标 */
+const CACHE = "gh-cn-v6";
+const ASSETS = ["./", "./index.html", "./data.js", "./manifest.json", "./icon.svg",
+  "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));

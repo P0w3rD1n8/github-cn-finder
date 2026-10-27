@@ -19,7 +19,7 @@ import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-INDEX = os.path.join(os.path.dirname(os.path.abspath(__file__)), "index.html")
+INDEX = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data.js")  # v1.15 数据抽到 data.js
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "repos.json")
 API = "https://api.github.com"
 RAW_PREV = "https://raw.githubusercontent.com/P0w3rD1n8/github-cn-finder/main/repos.json"
@@ -45,7 +45,7 @@ def load_prev_repos():
 
 
 def parse_repos(html):
-    """从 index.html 的 REPOS 数组提取全部 {n:'owner/repo'}"""
+    """从 data.js 的 REPOS 数组提取全部 {n:'owner/repo'}（v1.15 数据已从 index.html 抽到 data.js）"""
     m = re.search(r"const REPOS = \[(.*?)\n\];", html, re.S)
     if not m:
         sys.exit("找不到 REPOS 数组")
