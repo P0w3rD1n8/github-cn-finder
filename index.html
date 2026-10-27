@@ -10,6 +10,18 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.svg">
 <title>GitHub 中文发现器</title>
+<script>
+/* 主题首帧防闪烁：CSS 生效前先按用户偏好设置 data-theme（localStorage 优先，其次系统偏好） */
+(function(){
+  try{
+    var t = localStorage.getItem("gh_theme");
+    if(!t) t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    document.documentElement.dataset.theme = t;
+    var mc = document.querySelector('meta[name="theme-color"]');
+    if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
+  }catch(e){}
+})();
+</script>
 <style>
 :root{
   --bg:#0d1117; --card:#161b22; --card2:#1c2330; --border:#2d333b;
@@ -625,6 +637,10 @@ const REPOS = [
 {n:"cathrynlavery/diagram-design",d:"用大白话描述一张图，它按你的风格画出 45 种专业图表",s:61437,l:"HTML",c:"实用工具"},
 {n:"bilawalsidhu/gods-eye-view",d:"浏览器里的 3D 间谍卫星模拟器，能看到真实的飞机和船只",s:60453,l:"JavaScript",c:"游戏娱乐"}
 ];
+/* 精选库索引：owner/repo -> 条目，榜单/搜索中文简介回退用 */
+const REPOS_MAP = new Map(REPOS.map(r=>[r.n,r]));
+/* 渲染过的项目快照登记处：搜索/榜单实时结果也会登记，收藏时抓快照用 */
+const KNOWN = {};
 
 const LANG_COLORS = {"JavaScript":"#f1e05a","TypeScript":"#3178c6","Python":"#3572A5","Go":"#00ADD8","Java":"#b07219","C++":"#f34b7d","C":"#555","C#":"#178600","Rust":"#dea584","Dart":"#00B4AB","Kotlin":"#A97BFF","Shell":"#89e051","Haskell":"#5e5086","CSS":"#563d7c","汇编":"#6E4C13","文档":"#888"};
 
@@ -887,37 +903,35 @@ const AUTHORS = {
   "chrislgarry":{t:"user",b:"阿波罗 11 号登月飞船原始源代码整理者。"},
   "libretro":{t:"org",b:"Libretro 团队，维护 RetroArch 复古游戏模拟器前端。"},
   "felixrieseberg":{t:"user",b:"Node.js 和 Electron 核心贡献者之一，Windows 95 模拟器项目作者。"},
-  "open-webui/open-webui":{t:"org",b:"Open WebUI 团队，致力于让大模型人人都能用。"},
-  "lobehub/lobe-chat":{t:"org",b:"LobeHub 团队，打造新一代 AI 聊天界面。"},
-  "significant-gravitas/AutoGPT":{t:"org",b:"Significant Gravitas 团队，AutoGPT 的创造者，AI 智能体概念先行者。"},
-  "deepseek-ai/DeepSeek-V3":{t:"org",b:"深度求索（DeepSeek）团队，国产开源大模型代表。"},
-  "QwenLM/Qwen2.5":{t:"org",b:"阿里巴巴通义千问团队，中文大模型明星。"},
-  "obsproject/obs-studio":{t:"org",b:"OBS 项目团队，全球最流行的开源直播录屏软件。"},
-  "FFmpeg/FFmpeg":{t:"org",b:"FFmpeg 社区，音视频处理领域的事实标准。"},
-  "torvalds/linux":{t:"user",b:"林纳斯·托瓦兹（Linus Torvalds），Linux 内核之父，开源世界的旗帜人物。"},
-  "codecrafters-io/build-your-own-x":{t:"org",b:"CodeCrafters 团队，用'亲手重造'的方式帮开发者深入理解技术。"},
-  "microsoft/PowerToys":{t:"org",b:"微软官方团队。"},
-  "521xueweihan/HelloGitHub":{t:"org",b:"HelloGitHub 社区，面向中文用户的开源项目月刊。"},
-  "go-gitea/gitea":{t:"org",b:"Gitea 社区，轻量代码托管平台。"},
-  "home-assistant/core":{t:"org",b:"Home Assistant 团队，全球最大的开源智能家居平台。"},
-  "n8n-io/n8n":{t:"org",b:"n8n 团队，可视化工作流自动化平台。"},
-  "All-Hands-AI/OpenHands":{t:"org",b:"OpenHands 团队，开源 AI 编程代理。"},
-  "syncthing/syncthing":{t:"org",b:"Syncthing 团队，去中心化文件同步工具。"},
-  "microsoft/autogen":{t:"org",b:"微软研究院团队，多智能体协作框架。"},
-  "lm-sys/FastChat":{t:"org",b:"LMSYS 组织，大模型竞技场的维护者。"},
-  "jellyfin/jellyfin":{t:"org",b:"Jellyfin 团队，开源家庭媒体服务器。"},
-  "OpenTTD/OpenTTD":{t:"org",b:"OpenTTD 社区，经典运输大亨的开源复刻。"},
-  "wesnoth/wesnoth":{t:"org",b:"韦诺之战社区，经典开源奇幻策略游戏。"},
-  "veloren/veloren":{t:"org",b:"Veloren 社区，开源多人像素沙盒游戏。"},
-  "kovidgoyal/calibre":{t:"user",b:"Kovid Goyal，Calibre 电子书管理器的作者。"},
-  "HandBrake/HandBrake":{t:"org",b:"HandBrake 团队，开源视频转码软件。"},
-  "sumatrapdfreader/sumatrapdf":{t:"user",b:"Krzysztof Kowalczyk，SumatraPDF 阅读器作者。"},
-  "keepassxc/keepassxc":{t:"org",b:"KeePassXC 团队，开源密码管理器。"},
-  "ScoopInstaller/Scoop":{t:"org",b:"Scoop 社区，Windows 命令行软件管理工具。"},
-  "bitwarden/clients":{t:"org",b:"Bitwarden 团队，开源密码管理平台。"},
-  "kodi/xbmc":{t:"org",b:"Kodi 团队，老牌开源家庭影院软件。"},
-  "public-apis/public-apis":{t:"org",b:"Public APIs 社区维护的免费接口合集。"},
-  "microsoft/generative-ai-for-beginners":{t:"org",b:"微软官方课程团队。"},
+  "open-webui":{t:"org",b:"Open WebUI 团队，致力于让大模型人人都能用。"},
+  "lobehub":{t:"org",b:"LobeHub 团队，打造新一代 AI 聊天界面。"},
+  "significant-gravitas":{t:"org",b:"Significant Gravitas 团队，AutoGPT 的创造者，AI 智能体概念先行者。"},
+  "deepseek-ai":{t:"org",b:"深度求索（DeepSeek）团队，国产开源大模型代表。"},
+  "QwenLM":{t:"org",b:"阿里巴巴通义千问团队，中文大模型明星。"},
+  "obsproject":{t:"org",b:"OBS 项目团队，全球最流行的开源直播录屏软件。"},
+  "FFmpeg":{t:"org",b:"FFmpeg 社区，音视频处理领域的事实标准。"},
+  "torvalds":{t:"user",b:"林纳斯·托瓦兹（Linus Torvalds），Linux 内核之父，开源世界的旗帜人物。"},
+  "codecrafters-io":{t:"org",b:"CodeCrafters 团队，用'亲手重造'的方式帮开发者深入理解技术。"},
+  "521xueweihan":{t:"org",b:"HelloGitHub 社区，面向中文用户的开源项目月刊。"},
+  "go-gitea":{t:"org",b:"Gitea 社区，轻量代码托管平台。"},
+  "home-assistant":{t:"org",b:"Home Assistant 团队，全球最大的开源智能家居平台。"},
+  "n8n-io":{t:"org",b:"n8n 团队，可视化工作流自动化平台。"},
+  "All-Hands-AI":{t:"org",b:"OpenHands 团队，开源 AI 编程代理。"},
+  "syncthing":{t:"org",b:"Syncthing 团队，去中心化文件同步工具。"},
+  "microsoft":{t:"org",b:"微软研究院团队，多智能体协作框架。"},
+  "lm-sys":{t:"org",b:"LMSYS 组织，大模型竞技场的维护者。"},
+  "jellyfin":{t:"org",b:"Jellyfin 团队，开源家庭媒体服务器。"},
+  "OpenTTD":{t:"org",b:"OpenTTD 社区，经典运输大亨的开源复刻。"},
+  "wesnoth":{t:"org",b:"韦诺之战社区，经典开源奇幻策略游戏。"},
+  "veloren":{t:"org",b:"Veloren 社区，开源多人像素沙盒游戏。"},
+  "kovidgoyal":{t:"user",b:"Kovid Goyal，Calibre 电子书管理器的作者。"},
+  "HandBrake":{t:"org",b:"HandBrake 团队，开源视频转码软件。"},
+  "sumatrapdfreader":{t:"user",b:"Krzysztof Kowalczyk，SumatraPDF 阅读器作者。"},
+  "keepassxc":{t:"org",b:"KeePassXC 团队，开源密码管理器。"},
+  "ScoopInstaller":{t:"org",b:"Scoop 社区，Windows 命令行软件管理工具。"},
+  "bitwarden":{t:"org",b:"Bitwarden 团队，开源密码管理平台。"},
+  "kodi":{t:"org",b:"Kodi 团队，老牌开源家庭影院软件。"},
+  "public-apis":{t:"org",b:"Public APIs 社区维护的免费接口合集。"},
   "Asabeneh":{t:"user",b:"Asabeneh Yetayeh，30 天编程系列教程作者。"}
 };
 /* ================= 精选项目中文名（作者代表作等场景显示中文，小白友好） ================= */
@@ -977,12 +991,15 @@ const REPO_ZH = {
 };
 /* 代表作显示名：优先中文名，否则回退英文短名 */
 function repoZh(n){ return REPO_ZH[n] || n.split("/")[1]; }
-/* 作者简介：有手写用手写，没有用模板 */
+/* 实测组织名单：精选库作者里已知的组织（GitHub API 逐位实测），弥补正则猜测不可靠 */
+const ORG_SET = new Set("alist-org,apache,aria2,d3,immich-app,keras-team,kubernetes,langchain-ai,meta-llama,multica-ai,nuxt,ossu,paperclipai,practical-tutorials,prometheus,qBittorrent,RPCS3,RVC-Project,shadcn-ui,TeamNewPipe,TheAlgorithms,vllm-project,vercel,withastro".split(","));
+/* 作者简介：有手写用手写，否则用模板；类型：手写优先 → 实测组织名单 → 正则兜底 */
 function authorInfo(owner){
   const a = AUTHORS[owner];
   if(a) return {t:a.t, b:a.b};
   const isUser = /^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9]))*$/i.test(owner);
-  return {t: isUser?"user":"org", b: `GitHub 上的开源${isUser?"开发者":"组织"}。`};
+  const t = ORG_SET.has(owner) ? "org" : (isUser ? "user" : "org");
+  return {t: t, b: `GitHub 上的开源${t==="org"?"组织":"开发者"}。`};
 }
 /* 精选库内该作者的代表作（按 star 排序取 Top 3） */
 function ownedReposTop3(owner){
@@ -1135,6 +1152,8 @@ function cleanDesc(s){
 }
 function cnDesc(n, orig){
   if(CN_DESC[n]) return {d:CN_DESC[n], en:false};
+  const r = REPOS_MAP.get(n);
+  if(r && r.d) return {d:r.d, en:false};
   const c = cleanDesc(orig);
   return {d: c || "（该项目暂无中文简介，点项目名查看 GitHub 原文）", en: !!orig};
 }
@@ -1151,11 +1170,21 @@ const $ = s => document.querySelector(s);
 const fmt = n => n>=10000 ? (n/10000).toFixed(1).replace(/\.0$/,"")+" 万" : n>=1000 ? (n/1000).toFixed(1).replace(/\.0$/,"")+" k" : n;
 const esc = s => String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 
-/* 收藏（localStorage） */
+/* 收藏（localStorage）：favs 存名字，favSnap 存项目快照（防"我的"页丢信息） */
 let favs = new Set(JSON.parse(localStorage.getItem("gh_favs")||"[]"));
-function saveFavs(){ localStorage.setItem("gh_favs", JSON.stringify([...favs])); }
+let favSnap = JSON.parse(localStorage.getItem("gh_favs_snap")||"{}");
+function saveFavs(){
+  localStorage.setItem("gh_favs", JSON.stringify([...favs]));
+  localStorage.setItem("gh_favs_snap", JSON.stringify(favSnap));
+}
 function toggleFav(name, el){
-  favs.has(name) ? favs.delete(name) : favs.add(name);
+  if(favs.has(name)){
+    favs.delete(name); delete favSnap[name];
+  }else{
+    favs.add(name);
+    const r = KNOWN[name] || REPOS_MAP.get(name);
+    if(r) favSnap[name] = {n:r.n, d:r.d, s:r.s, l:r.l, c:r.c, av:r.av||"", owner:r.owner||r.n.split("/")[0]};
+  }
   saveFavs();
   document.querySelectorAll(`[data-fav="${CSS.escape(name)}"]`).forEach(b=>{
     b.classList.toggle("on", favs.has(name));
@@ -1183,6 +1212,7 @@ function linkAuthorWorks(owner, text){
 
 /* 卡片渲染 */
 function cardHTML(r, src, rank){
+  KNOWN[r.n]=r;   // 登记快照：收藏时能存下完整信息
   const on = favs.has(r.n) ? " on" : "";
   // owner / 类型：实时数据从 API 字段取，精选库用路径推导
   const owner = r.owner || r.n.split("/")[0];
@@ -1504,12 +1534,13 @@ let rankLoaded = false, rankRange = "all";
 const RANK_TITLES = {day:"今日热榜", week:"本周热榜", month:"本月热榜", year:"今年热榜", all:"全站总榜"};
 function rangeSince(){
   const d = new Date();
-  if(rankRange==="day"){ /* 今天 0 点 */ }
-  else if(rankRange==="week"){ d.setDate(d.getDate()-7); }
-  else if(rankRange==="month"){ d.setDate(d.getDate()-30); }
-  else if(rankRange==="year"){ d.setMonth(0,1); }
-  else return null; // all：不加时间过滤
-  return d.toISOString().slice(0,10);
+  const pad = n=>String(n).padStart(2,"0");
+  const fmt = x => `${x.getFullYear()}-${pad(x.getMonth()+1)}-${pad(x.getDate())}`;  // 本地时区日期
+  if(rankRange==="day"){ d.setDate(d.getDate()-3); return fmt(d); }  // "今日"取近3天：当天创建项目星标≈0，检索几乎恒为空
+  else if(rankRange==="week"){ d.setDate(d.getDate()-7); return fmt(d); }
+  else if(rankRange==="month"){ d.setMonth(d.getMonth()-1); return fmt(d); }
+  else if(rankRange==="year"){ d.setMonth(0,1); return fmt(d); }
+  return null; // all：不加时间过滤
 }
 async function loadRank(){
   const box = $("#rankList");
@@ -1521,6 +1552,10 @@ async function loadRank(){
       {headers:{"Accept":"application/vnd.github+json"}});
     if(!res.ok) throw new Error(res.status);
     const data = await res.json();
+    if(!data.items || !data.items.length){
+      box.innerHTML = `<div class="notice warn">😅 ${RANK_TITLES[rankRange]}：这个时间段暂时没有符合条件的新项目，换个时间段看看</div>`;
+      return;
+    }
     const list = data.items.map(it=>{
       const t = cnDesc(it.full_name, it.description);
       return {n:it.full_name, d:t.d, en:t.en, s:it.stargazers_count, fk:it.forks_count, iu:it.open_issues_count, av:it.owner&&it.owner.avatar_url, owner:it.owner&&it.owner.login, ownerType:it.owner&&(it.owner.type==="Organization"?"org":"user"), l:it.language||"", c:"GitHub 实时"};
@@ -1541,21 +1576,23 @@ $("#rankTabs").addEventListener("click", e=>{
   loadRank();
 });
 
-/* 今日新星：今天新创建、人气上升最快的黑马项目 */
+/* 新星榜：近 3 天新创建、人气上升最快的黑马项目 */
 async function loadNewStars(){
   const box = $("#newStars");
   try{
-    const today = new Date().toISOString().slice(0,10);
-    const res = await fetch(`https://api.github.com/search/repositories?q=created:>${today}&sort=stars&order=desc&per_page=3`,
+    const d = new Date(); d.setDate(d.getDate()-3);
+    const pad = n=>String(n).padStart(2,"0");
+    const since = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;  // 本地时区近3天
+    const res = await fetch(`https://api.github.com/search/repositories?q=created:>${since}&sort=stars&order=desc&per_page=3`,
       {headers:{"Accept":"application/vnd.github+json"}});
     if(!res.ok) throw new Error(res.status);
     const data = await res.json();
-    if(!data.items || !data.items.length){ box.innerHTML=""; return; }
+    if(!data.items || !data.items.length){ box.innerHTML = `<div class="ns-head" style="color:var(--text2);font-size:13px">🆕 近3天暂无新建黑马项目</div>`; return; }
     const list = data.items.map(it=>{
       const t = cnDesc(it.full_name, it.description);
       return {n:it.full_name, d:t.d, en:t.en, s:it.stargazers_count, fk:it.forks_count, iu:it.open_issues_count, av:it.owner&&it.owner.avatar_url, owner:it.owner&&it.owner.login, ownerType:it.owner&&(it.owner.type==="Organization"?"org":"user"), l:it.language||"", c:"GitHub 实时"};
     });
-    box.innerHTML = `<div class="ns-head">🆕 今日新星 · 今天刚诞生的黑马项目</div>`
+    box.innerHTML = `<div class="ns-head">🆕 新星榜 · 近3天诞生的黑马项目</div>`
       + list.map((r,i)=>cardHTML(r,"GitHub",i+1)).join("");
   }catch(err){
     box.innerHTML = "";   // 接口不可用时静默隐藏，不打扰榜单
@@ -1567,9 +1604,11 @@ function renderFavs(){
   const box = $("#favList");
   $("#favCount").textContent = favs.size ? `共 ${favs.size} 个` : "";
   if(!favs.size){ box.innerHTML = `<div class="empty" style="padding:24px"><span class="big">🤍</span>还没有收藏<br>点项目卡片右上角的心形即可收藏</div>`; return; }
-  const all = [...REPOS];
   box.innerHTML = [...favs].map(name=>{
-    const r = all.find(x=>x.n===name) || {n:name, d:"（来自 GitHub 搜索结果收藏的项目）", s:0, l:"", c:"GitHub"};
+    const snap = favSnap[name];
+    const r = REPOS_MAP.get(name)
+      || (snap && snap.s ? snap : null)
+      || {n:name, d:"（来自 GitHub 搜索结果收藏的项目）", s:0, l:"", c:"GitHub"};
     return cardHTML(r);
   }).join("");
 }
@@ -1582,10 +1621,9 @@ $("#copyFavBtn").addEventListener("click", ()=>{
     setTimeout(()=>{ btn.textContent = "📋 复制清单"; }, 1500);
     return;
   }
-  const all = [...REPOS];
   const lines = [...favs].map(name=>{
-    const r = all.find(x=>x.n===name);
-    return `· ${name}${r ? ` — ${r.d}` : ""}`;
+    const r = REPOS_MAP.get(name) || favSnap[name];
+    return `· ${name}${r && r.d ? ` — ${r.d}` : ""}`;
   });
   const text = `我的 GitHub 中文发现器收藏（共 ${favs.size} 个）：\n` + lines.join("\n");
   (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
