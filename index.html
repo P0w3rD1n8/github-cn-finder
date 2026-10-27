@@ -270,6 +270,8 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .about-box b{color:var(--accent)}
 .about-box .contact-mail{cursor:pointer;color:var(--accent);border-bottom:1px dashed var(--accent);padding-bottom:1px}
 .about-box .ver{display:inline-block;font-size:11px;color:#8b949e;background:var(--chip);border:1px solid var(--border);border-radius:8px;padding:0 6px;margin-left:6px;vertical-align:2px}
+.about-disc{margin-top:12px;padding-top:10px;border-top:1px dashed var(--border);font-size:11.5px;color:var(--text2);line-height:1.8}
+.about-disc b{color:var(--text2)}
 /* 底部导航 */
 nav{
   position:fixed;bottom:0;left:0;right:0;z-index:30;
@@ -378,7 +380,8 @@ nav{
     <div class="sec-title">ℹ️ 关于</div>
     <div class="about-box">
       <b>GitHub 中文发现器</b><span class="ver">v1.16</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
-      · 内置 <b>精选项目库</b>，每条都有大白话中文简介，专为英文小白翻译<br>
+      · 内置 <b><span id="repoCount">152</span> 个精选项目</b>，每条都有大白话中文简介，专为英文小白翻译<br>
+      · 星标等数据由 GitHub Actions <b>每小时自动抓取真实值</b>，不靠手填数字<br>
       · 搜索时会同时查询 <b>GitHub 官方接口</b>，网络不通时自动只展示本地精选<br>
       · 收藏保存在你的浏览器本地，不上传任何数据<br>
       · 📮 联系/合作：<b class="contact-mail" id="contactMail">11589839@qq.com</b>（点一下复制）<br>
@@ -386,7 +389,8 @@ nav{
       <br>
       项目还在成长中，我知道它还不够好：精选项目数量有限、部分中文介绍可能不够准确、功能也在不断完善中。<br>
       如果你有<b>好项目推荐、翻译修正或功能建议</b>，欢迎随时告诉我 📮，每一条建议我都会认真看。<br>
-      <b>后续计划</b>：持续扩充精选库 · 一键生成项目海报 · 实时新星推荐 · 更多人群分类。
+      <b>后续计划</b>：持续扩充精选库 · 一键生成项目海报 · 实时新星推荐 · 更多人群分类。<br>
+      <div class="about-disc"><b>免责声明</b>：本站为个人兴趣项目，内容仅供学习参考，不构成任何形式的推荐或担保。项目中文介绍为人工整理，可能存在偏差；星标等数据由程序自动抓取，以 GitHub 官方信息为准。使用任何项目前，请以该项目官方文档为准，自行评估风险（尤其涉及安装运行、自托管或隐私数据的项目）。页内国内镜像链接指向 GitCode / Gitee 等第三方平台，由对应平台同步维护，并非本站自建，请以镜像平台实际内容为准。</div>
     </div>
     <button class="app-share-btn" id="appShareBtn">📤 分享这个应用</button>
   </section>
@@ -1173,6 +1177,8 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 }
 
 /* 初始化 */
+const repoCountEl = document.getElementById("repoCount");
+if(repoCountEl) repoCountEl.textContent = REPOS.length;
 renderCats(); renderUsages(); renderHome(); renderMirrorStats(); renderDailyPick(); renderFavs();
 measureHeader(); window.addEventListener("resize", measureHeader);
 </script>
