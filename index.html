@@ -253,9 +253,11 @@ nav{
   border:1px solid var(--border);color:var(--text);font-size:12.5px;cursor:pointer;
   white-space:nowrap}
 .usage-toggle.active{background:var(--accent);color:#fff;border-color:transparent}
-.usage-panel{display:none;flex-wrap:wrap;gap:8px;margin:-2px 0 10px}
+.usage-panel{display:none;flex-wrap:wrap;gap:6px;margin:4px 0 14px;padding:10px 12px;
+  background:var(--card2);border:1px solid var(--border);border-radius:12px;
+  box-shadow:0 4px 14px var(--shadow)}
 .usage-panel.show{display:flex}
-.usage-panel .cat{font-size:12.5px;padding:5px 12px;border:1px dashed var(--border)}
+.usage-panel .cat{font-size:12px;padding:4px 10px;border:1px dashed var(--border)}
 /* 今日新星 */
 .newstars{padding-top:10px}
 .newstars .ns-head{font-size:12.5px;font-weight:700;color:var(--text2);margin-bottom:8px}
@@ -1416,11 +1418,16 @@ $("#catBar").addEventListener("click", e=>{
   if(active) active.scrollIntoView({behavior:"smooth", block:"nearest", inline:"center"});
   updateCatsScroll();
 });
-/* 人群筛选：点按钮展开/收起，选完自动收起 */
+/* 人群筛选：点按钮展开/收起，选完自动收起，点面板外区域也收起 */
 $("#usageToggle").addEventListener("click", ()=>{
   const p = $("#usagePanel");
   p.classList.toggle("show");
   $("#usageToggle").classList.toggle("active", p.classList.contains("show"));
+});
+document.addEventListener("click", e=>{
+  const p = $("#usagePanel"); if(!p.classList.contains("show")) return;
+  if(e.target.closest("#usageToggle")||e.target.closest("#usagePanel")) return;
+  p.classList.remove("show"); $("#usageToggle").classList.remove("active");
 });
 $("#usagePanel").addEventListener("click", e=>{
   const t = e.target.closest(".cat"); if(!t) return;
