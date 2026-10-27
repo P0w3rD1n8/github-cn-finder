@@ -217,6 +217,9 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .rank-list{padding-top:8px}
 /* 搜索 */
 .search-wrap{display:flex;gap:8px;margin-bottom:10px;position:sticky;top:0;z-index:50;background:var(--bg);padding:10px 0;border-bottom:1px solid transparent}
+.mirror-stats{font-size:11.5px;color:var(--text2);padding:4px 2px 10px;line-height:1.6}
+.mirror-stats b{color:var(--accent);font-weight:700}
+.mirror-stats .m-no{color:#8b949e}
 #searchInput{
   flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;
   padding:12px 14px;font-size:15px;color:var(--text);outline:none;
@@ -302,6 +305,7 @@ nav{
       <input id="searchInput" type="search" placeholder="输入中文或英文关键词，如：AI、画图、Vue" autocomplete="off">
       <button id="searchBtn">搜索</button>
     </div>
+    <div class="mirror-stats" id="mirrorStats"></div>
     <div id="dailyPick"></div>
     <div class="filter-row">
       <div class="sort-tabs" id="sortTabs">
@@ -1221,11 +1225,11 @@ function cardHTML(r, src, rank){
     const mkey = (r.n||"").toLowerCase();
     const gcUrl = GC_MIRRORS[mkey], gtUrl = GT_MIRRORS[mkey];
     if(gcUrl){
-      detHTML += `\n<div class="detail-tip">⚡ 国内镜像直达：<a class="detail-link" href="${esc(gcUrl)}" target="_blank" rel="noopener">GitCode 镜像</a>（GitHub 官方合作镜像平台，与上游同步）。</div>`;
+      detHTML += `\n<div class="detail-tip">⚡ 国内镜像直达：<a class="detail-link" href="${esc(gcUrl)}" target="_blank" rel="noopener">GitCode 镜像</a>（GitCode 官方镜像计划，平台统一同步 GitHub 热门项目，非作者自建，内容以 GitHub 原文为准）。</div>`;
     }else if(gtUrl){
-      detHTML += `\n<div class="detail-tip">⚡ 国内镜像直达：<a class="detail-link" href="${esc(gtUrl)}" target="_blank" rel="noopener">Gitee 官方镜像</a>（Gitee 极速下载，与上游同步）。</div>`;
+      detHTML += `\n<div class="detail-tip">⚡ 国内镜像直达：<a class="detail-link" href="${esc(gtUrl)}" target="_blank" rel="noopener">Gitee 官方镜像</a>（Gitee 官方镜像计划，平台统一同步，非作者自建，内容以 GitHub 原文为准）。</div>`;
     }else{
-      detHTML += `\n<div class="detail-tip">ℹ️ 该项目国内暂无可靠镜像，请访问 GitHub 官方页面查看。</div>`;
+      detHTML += `\n<div class="detail-tip">ℹ️ 该项目国内暂无平台官方镜像，请访问 GitHub 官方页面查看原文。</div>`;
     }
   }
   // 图标：实时数据用 owner 头像；精选库用项目名首字母 + 分类配色圆标
@@ -1433,6 +1437,13 @@ $("#sortTabs").addEventListener("click", e=>{
   $("#searchInput").value = "";   // 排序时退出搜索状态，回到精选浏览
   renderHome();
 });
+/* 镜像覆盖统计（首页标注：让人一眼看到多少项目能国内镜像直达） */
+function renderMirrorStats(){
+  const total = REPOS.length;
+  const ok = REPOS.filter(r=>{ const k=(r.n||"").toLowerCase(); return GC_MIRRORS[k]||GT_MIRRORS[k]; }).length;
+  const no = total - ok;
+  $("#mirrorStats").innerHTML = `🌐 精选 <b>${total}</b> 个项目 · <b>${ok}</b> 个国内镜像直达 · <span class="m-no">${no}</span> 个暂无（点卡片详情查看）`;
+}
 /* 今日推荐：每天自动换一个精选项目 */
 function renderDailyPick(){
   const idx = Math.floor(Date.now()/86400000) % REPOS.length;
@@ -1720,7 +1731,7 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 }
 
 /* 初始化 */
-renderCats(); renderUsages(); renderHome(); renderDailyPick(); renderFavs();
+renderCats(); renderUsages(); renderHome(); renderMirrorStats(); renderDailyPick(); renderFavs();
 </script>
 </body>
 </html>
