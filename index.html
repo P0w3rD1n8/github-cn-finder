@@ -47,8 +47,15 @@ header{
   width:36px;height:36px;border-radius:10px;font-size:16px;cursor:pointer;
   display:flex;align-items:center;justify-content:center}
 /* 分类标签 */
-.cats{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;scrollbar-width:none}
+.cats-wrap{position:relative}
+.cats-wrap::before,.cats-wrap::after{content:"";position:absolute;top:0;bottom:0;width:26px;z-index:2;pointer-events:none;opacity:0;transition:opacity .18s}
+.cats-wrap::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
+.cats-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
+.cats-wrap.can-left::before{opacity:1}
+.cats-wrap.can-right::after{opacity:1}
+.cats{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;scrollbar-width:none;scroll-snap-type:x proximity}
 .cats::-webkit-scrollbar{display:none}
+.cats .cat{scroll-snap-align:start}
 .usage-cats{padding-top:2px;margin-top:-8px}
 .usage-cats .cat{font-size:12px;padding:5px 12px;border:1px dashed var(--border)}
 .usage-cats .cat.active{border:1px solid transparent}
@@ -266,7 +273,7 @@ nav{
     </div>
     <button id="themeBtn" title="切换主题">☀️</button>
   </div>
-  <div class="cats" id="catBar"></div>
+  <div class="cats-wrap"><div class="cats" id="catBar"></div></div>
 </header>
 
 <main>
@@ -1342,8 +1349,16 @@ document.addEventListener("keydown", e=>{
 
 /* ================= 发现页 ================= */
 let curCat = "全部";
+function updateCatsScroll(){
+  const bar = $("#catBar"); if(!bar) return;
+  const w = bar.parentElement;
+  w.classList.toggle("can-left", bar.scrollLeft > 2);
+  w.classList.toggle("can-right", bar.scrollLeft + bar.clientWidth < bar.scrollWidth - 2);
+}
+$("#catBar").addEventListener("scroll", updateCatsScroll);
 function renderCats(){
   $("#catBar").innerHTML = CATS.map(c=>`<div class="cat${c===curCat?" active":""}" data-cat="${c}">${c}</div>`).join("");
+  updateCatsScroll();
 }
 let curSort = "star";
 function sortRepos(list){
@@ -1383,6 +1398,9 @@ $("#catBar").addEventListener("click", e=>{
   curCat = t.dataset.cat; renderCats();
   $("#searchInput").value = "";   // 切分类时退出搜索状态
   renderHome();
+  const active = document.querySelector("#catBar .cat.active");
+  if(active) active.scrollIntoView({behavior:"smooth", block:"nearest", inline:"center"});
+  updateCatsScroll();
 });
 /* 人群筛选：点按钮展开/收起，选完自动收起 */
 $("#usageToggle").addEventListener("click", ()=>{
