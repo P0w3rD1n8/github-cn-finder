@@ -10,6 +10,11 @@ on:
 permissions:
   contents: write
 
+# 并发锁：手动触发与定时任务撞车时，取消旧任务只保留最新一次，避免 push 打架
+concurrency:
+  group: data-update
+  cancel-in-progress: true
+
 jobs:
   update-data:
     runs-on: ubuntu-latest

@@ -1,6 +1,9 @@
-/* Service Worker：网络优先 + 离线兜底，保证每次打开都是最新版 */
-const CACHE = "gh-cn-v4";
-const ASSETS = ["./index.html", "./manifest.json", "./icon.svg"];
+/* Service Worker：stale-while-revalidate + 超时兜底
+   首页/清单立即从缓存渲染（秒开 + 离线可开），网络更新在后台进行，下次打开即新内容；
+   缓存未命中（首次访问）走网络，5 秒超时兜底，避免网络卡死时白等。
+   版本 v5：由 network-first 重构（Review 项：每次重下 167KB → 缓存优先 + 后台更新） */
+const CACHE = "gh-cn-v5";
+const ASSETS = ["./", "./index.html", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -11,15 +14,47 @@ self.addEventListener("activate", e => {
   ).then(() => self.clients.claim()));
 });
 self.addEventListener("fetch", e => {
-  if (new URL(e.request.url).origin !== location.origin) return;
-  // 网络优先：先取线上最新内容，成功则顺手更新缓存；断网时才用缓存兜底
-  e.respondWith(
-    fetch(e.request).then(res => {
-      if (res && res.ok) {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copy)).catch(()=>{});
-      }
-      return res;
-    }).catch(() => caches.match(e.request))
-  );
+  const u = new URL(e.request.url);
+  if (u.origin !== location.origin) return;      // 跨源（如 repos.json）不拦截，走正常网络
+  if (e.request.method !== "GET") return;        // 只处理 GET
+  e.respondWith(fromCacheOrNetwork(e.request));
 });
+
+async function fromCacheOrNetwork(req){
+  const cached = await caches.match(req);
+  if (cached){
+    // 缓存命中：先回缓存（秒开/离线可用），后台静默更新
+    updateCache(req).catch(()=>{});
+    return cached;
+  }
+  // 缓存未命中（首次访问或新资源）：走网络，5 秒超时兜底
+  try{
+    const res = await fetchWithTimeout(req, 5000);
+    if (res && res.ok){
+      const copy = res.clone();
+      caches.open(CACHE).then(c => c.put(req, copy)).catch(()=>{});
+    }
+    return res;
+  }catch(err){
+    return new Response("离线状态：缓存中暂无该资源，请联网后刷新重试", {
+      status: 503, headers: {"Content-Type": "text/plain;charset=utf-8"}
+    });
+  }
+}
+
+async function updateCache(req){
+  const res = await fetchWithTimeout(req, 8000);
+  if (res && res.ok){
+    const copy = res.clone();
+    const c = await caches.open(CACHE);
+    await c.put(req, copy);
+  }
+}
+
+function fetchWithTimeout(req, ms){
+  return new Promise((resolve, reject)=>{
+    const timer = setTimeout(()=>reject(new Error("fetch timeout")), ms);
+    fetch(req).then(r=>{ clearTimeout(timer); resolve(r); },
+                    err=>{ clearTimeout(timer); reject(err); });
+  });
+}

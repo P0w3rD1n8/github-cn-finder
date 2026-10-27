@@ -136,6 +136,16 @@ def main():
         "updated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "repos": repos,
     }
+
+    # ETag 增量：与上一版快照相比全部真实字段未变 → 不覆盖文件，避免无意义提交
+    if prev and len(prev) >= ok:
+        def same_prev(n, r):
+            p = prev.get(n)
+            return bool(p) and all(p.get(k) == r.get(k) for k in ("s", "fk", "iu", "lg"))
+        if all(same_prev(n, r) for n, r in repos.items()):
+            print(f"ℹ️ 与上一版快照完全一致（ETag 增量，{ok} 个仓库无变化），跳过写入")
+            return
+
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
     print(f"✅ 已生成 {OUT}：{ok} 成功 / {fail} 失败 / 共 {len(names)}，ps 命中 {ps_hit}")
