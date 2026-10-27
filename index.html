@@ -2,7 +2,7 @@
 <html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="GitHub发现器">
 <meta name="theme-color" content="#0d1117">
@@ -13,7 +13,7 @@
 <meta property="og:description" content="不懂英文也能轻松逛 GitHub：132 个精选开源项目全中文介绍，实时热门榜单 + 每日推荐，小白友好。">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>GitHub 中文发现器</title>
 <script>
 /* 主题首帧防闪烁：CSS 生效前先按用户偏好设置 data-theme（localStorage 优先，其次系统偏好） */
@@ -230,9 +230,12 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 #searchInput{
   flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;
-  padding:12px 14px;font-size:15px;color:var(--text);outline:none;
+  padding:12px 14px;font-size:15px;color:var(--text);
 }
 #searchInput:focus{border-color:var(--accent)}
+/* 无障碍：键盘焦点可见（Review 无障碍项：去掉了输入框焦点框） */
+:focus{outline:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 #searchBtn{background:var(--accent);color:#fff;border:none;border-radius:12px;
   padding:0 18px;font-size:15px;font-weight:600;cursor:pointer}
 .notice{font-size:12.5px;color:var(--text2);background:var(--card2);
@@ -1287,6 +1290,15 @@ function cardHTML(r, src, rank){
 function renderList(el, list, src){
   el.innerHTML = list.length ? list.map(r=>cardHTML(r,src)).join("") : `<div class="empty"><span class="big">🌵</span>这里空空如也</div>`;
 }
+
+/* 无障碍增强：div 按钮（分类/排序/导航）补 role+tabindex，支持键盘 Enter/Space 触发（Review 无障碍项基础版） */
+document.querySelectorAll(".cat, .sort-tab, .nav-item").forEach(el=>{
+  if(!el.hasAttribute("role")) el.setAttribute("role","button");
+  if(!el.hasAttribute("tabindex")) el.setAttribute("tabindex","0");
+  el.addEventListener("keydown", e=>{
+    if(e.key==="Enter" || e.key===" "){ e.preventDefault(); el.click(); }
+  });
+});
 
 /* 卡片点击：作者名 → 作者弹窗；分享按钮 → 分享弹窗；其余 a/fav 正常跳转；卡片展开 */
 document.querySelector("main").addEventListener("click", e=>{
