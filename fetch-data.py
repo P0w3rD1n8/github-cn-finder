@@ -14,6 +14,7 @@ import sys
 import time
 import urllib.parse
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 INDEX = os.path.join(os.path.dirname(os.path.abspath(__file__)), "index.html")
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "repos.json")
@@ -52,6 +53,7 @@ def fetch_repo(full_name, retries=3):
                 "fk": d.get("forks_count"),
                 "iu": d.get("open_issues_count"),
                 "pa": (d.get("pushed_at") or "")[:10],
+                "lg": d.get("language") or "",
             }
         except Exception as e:
             code = getattr(e, "code", None)
@@ -74,19 +76,24 @@ def main():
     with open(INDEX, encoding="utf-8") as f:
         html = f.read()
     names = parse_repos(html)
-    print(f"共 {len(names)} 个仓库，开始抓取（token={'有' if TOKEN else '无'}）…")
+    print(f"共 {len(names)} 个仓库，开始抓取（token={'有' if TOKEN else '无'}，8 并发）…")
 
     repos = {}
     ok = fail = 0
-    for i, n in enumerate(names, 1):
-        r = fetch_repo(n)
-        if r:
-            repos[n] = r
-            ok += 1
-        else:
-            fail += 1
-        if i % 25 == 0:
-            print(f"  进度 {i}/{len(names)}（成功 {ok}，失败 {fail}）")
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        futures = {ex.submit(fetch_repo, n): n for n in names}
+        done = 0
+        for fut in as_completed(futures):
+            n = futures[fut]
+            r = fut.result()
+            if r:
+                repos[n] = r
+                ok += 1
+            else:
+                fail += 1
+            done += 1
+            if done % 25 == 0:
+                print(f"  进度 {done}/{len(names)}（成功 {ok}，失败 {fail}）")
         time.sleep(0.15)  # 轻微限速，避免打爆限流
 
     data = {
