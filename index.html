@@ -6,6 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="GitHub发现器">
 <meta name="theme-color" content="#0d1117">
+<meta name="description" content="GitHub 中文发现器：不懂英文也能轻松逛 GitHub。132 个精选开源项目全中文介绍、实时热门榜单、每日推荐，小白也能看懂会用。">
+<meta property="og:title" content="GitHub 中文发现器">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://P0w3rD1n8.github.io/github-cn-finder/">
+<meta property="og:description" content="不懂英文也能轻松逛 GitHub：132 个精选开源项目全中文介绍，实时热门榜单 + 每日推荐，小白友好。">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -160,7 +165,7 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .modal-mask.show{display:flex}
 .modal{background:var(--card);border:1px solid var(--border);border-bottom:none;
   border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));
-  width:100%;max-width:520px;animation:fade .25s ease}
+  width:100%;max-width:520px;max-height:78vh;overflow-y:auto;animation:fade .25s ease}
 .modal-title{font-size:15px;font-weight:700;margin-bottom:12px}
 .share-text{white-space:pre-wrap;word-break:break-all;background:var(--card2);
   border:1px solid var(--border);border-radius:10px;padding:12px;
@@ -216,10 +221,13 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
   box-shadow:0 2px 6px rgba(252,74,26,.4)}
 .rank-list{padding-top:8px}
 /* 搜索 */
-.search-wrap{display:flex;gap:8px;margin-bottom:10px;position:sticky;top:0;z-index:50;background:var(--bg);padding:10px 0;border-bottom:1px solid transparent}
+.search-wrap{display:flex;gap:8px;margin-bottom:10px;position:sticky;top:var(--header-h,108px);z-index:50;background:var(--bg);padding:10px 0;border-bottom:1px solid transparent}
 .mirror-stats{font-size:11.5px;color:var(--text2);padding:4px 2px 10px;line-height:1.6}
 .mirror-stats b{color:var(--accent);font-weight:700}
 .mirror-stats .m-no{color:#8b949e}
+.repo-path{font-size:11.5px;color:var(--text2);margin:1px 0 3px;font-weight:400}
+.dp-sub{font-size:11px;color:var(--text2);font-weight:400;margin-left:6px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 #searchInput{
   flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;
   padding:12px 14px;font-size:15px;color:var(--text);outline:none;
@@ -294,6 +302,7 @@ nav{
 <main>
   <!-- 发现页 -->
   <section class="page show" id="page-home">
+    <h1 class="sr-only">GitHub 中文发现器</h1>
     <div class="banner">
       <span class="b-icon">🧭</span>
       <div class="b-text">
@@ -310,7 +319,6 @@ nav{
     <div class="filter-row">
       <div class="sort-tabs" id="sortTabs">
         <div class="sort-tab active" data-sort="star">⭐ 热门</div>
-        <div class="sort-tab" data-sort="rating">★ 高分</div>
         <div class="sort-tab" data-sort="fav">🔖 收藏多</div>
       </div>
       <div class="usage-toggle" id="usageToggle">👥 人群：<span id="usageLabel">全部</span></div>
@@ -493,153 +501,153 @@ let curUsage = "全部";
 
 const REPOS = [
 // AI 人工智能
-{n:"huggingface/transformers",d:"最大的开源 AI 模型库，数万种预训练模型直接调用",s:150000,l:"Python",c:"AI 人工智能"},
-{n:"ollama/ollama",d:"在自己电脑上一条命令运行大语言模型的神器",s:150000,l:"Go",c:"AI 人工智能"},
-{n:"AUTOMATIC1111/stable-diffusion-webui",d:"最流行的 AI 绘画工具，输入文字就能生成图片",s:155000,l:"Python",c:"AI 人工智能"},
-{n:"langchain-ai/langchain",d:"用大语言模型开发应用的框架，轻松做智能问答和机器人",s:115000,l:"Python",c:"AI 人工智能"},
-{n:"openai/whisper",d:"OpenAI 开源的语音识别模型，把语音准确转成文字",s:85000,l:"Python",c:"AI 人工智能"},
-{n:"pytorch/pytorch",d:"Meta 开源的深度学习框架，AI 研究和开发的主流工具",s:93000,l:"Python",c:"AI 人工智能"},
-{n:"tensorflow/tensorflow",d:"Google 开源的机器学习框架，工业界应用广泛",s:191000,l:"C++",c:"AI 人工智能"},
-{n:"ggerganov/llama.cpp",d:"用纯 C++ 在普通电脑上高效运行大语言模型",s:84000,l:"C++",c:"AI 人工智能"},
-{n:"keras-team/keras",d:"简单易学的深度学习框架，几行代码搭建神经网络",s:63000,l:"Python",c:"AI 人工智能"},
-{n:"vllm-project/vllm",d:"大模型高速推理引擎，让 AI 服务更快更省显存",s:55000,l:"Python",c:"AI 人工智能"},
+{n:"huggingface/transformers",d:"最大的开源 AI 模型库，数万种预训练模型直接调用",s:168225,l:"Python",c:"AI 人工智能"},
+{n:"ollama/ollama",d:"在自己电脑上一条命令运行大语言模型的神器",s:184935,l:"Go",c:"AI 人工智能"},
+{n:"AUTOMATIC1111/stable-diffusion-webui",d:"最流行的 AI 绘画工具，输入文字就能生成图片",s:165160,l:"Python",c:"AI 人工智能"},
+{n:"langchain-ai/langchain",d:"用大语言模型开发应用的框架，轻松做智能问答和机器人",s:148536,l:"Python",c:"AI 人工智能"},
+{n:"openai/whisper",d:"OpenAI 开源的语音识别模型，把语音准确转成文字",s:111358,l:"Python",c:"AI 人工智能"},
+{n:"pytorch/pytorch",d:"Meta 开源的深度学习框架，AI 研究和开发的主流工具",s:105109,l:"Python",c:"AI 人工智能"},
+{n:"tensorflow/tensorflow",d:"Google 开源的机器学习框架，工业界应用广泛",s:201287,l:"C++",c:"AI 人工智能"},
+{n:"ggerganov/llama.cpp",d:"用纯 C++ 在普通电脑上高效运行大语言模型",s:132486,l:"C++",c:"AI 人工智能"},
+{n:"keras-team/keras",d:"简单易学的深度学习框架，几行代码搭建神经网络",s:64391,l:"Python",c:"AI 人工智能"},
+{n:"vllm-project/vllm",d:"大模型高速推理引擎，让 AI 服务更快更省显存",s:95655,l:"Python",c:"AI 人工智能"},
 // 前端
-{n:"facebook/react",d:"Meta 开源的界面构建库，全球使用最广的前端框架",s:237000,l:"JavaScript",c:"网页界面"},
-{n:"vuejs/core",d:"尤雨溪开发的渐进式框架，国内最流行的前端框架",s:51000,l:"TypeScript",c:"网页界面"},
-{n:"vitejs/vite",d:"下一代前端构建工具，启动和热更新速度快到飞起",s:75000,l:"TypeScript",c:"网页界面"},
-{n:"twbs/bootstrap",d:"最流行的 CSS 框架，快速做出好看的响应式网页",s:173000,l:"JavaScript",c:"网页界面"},
-{n:"tailwindlabs/tailwindcss",d:"实用至上的 CSS 框架，用类名直接拼出界面",s:90000,l:"CSS",c:"网页界面"},
-{n:"axios/axios",d:"简单易用的网络请求库，前端发请求的标配",s:107000,l:"JavaScript",c:"网页界面"},
-{n:"ant-design/ant-design",d:"蚂蚁集团开源的企业级 React 组件库",s:95000,l:"TypeScript",c:"网页界面"},
-{n:"angular/angular",d:"Google 开发的企业级前端框架",s:98000,l:"TypeScript",c:"网页界面"},
-{n:"sveltejs/svelte",d:"编译时前端框架，代码更少运行更快",s:83000,l:"JavaScript",c:"网页界面"},
-{n:"mui/material-ui",d:"谷歌风格的 React 组件库，开箱即用的精美界面",s:96000,l:"JavaScript",c:"网页界面"},
+{n:"facebook/react",d:"Meta 开源的界面构建库，全球使用最广的前端框架",s:251896,l:"JavaScript",c:"网页界面"},
+{n:"vuejs/core",d:"尤雨溪开发的渐进式框架，国内最流行的前端框架",s:54906,l:"TypeScript",c:"网页界面"},
+{n:"vitejs/vite",d:"下一代前端构建工具，启动和热更新速度快到飞起",s:83592,l:"TypeScript",c:"网页界面"},
+{n:"twbs/bootstrap",d:"最流行的 CSS 框架，快速做出好看的响应式网页",s:175018,l:"MDX",c:"网页界面"},
+{n:"tailwindlabs/tailwindcss",d:"实用至上的 CSS 框架，用类名直接拼出界面",s:98131,l:"TypeScript",c:"网页界面"},
+{n:"axios/axios",d:"简单易用的网络请求库，前端发请求的标配",s:109309,l:"JavaScript",c:"网页界面"},
+{n:"ant-design/ant-design",d:"蚂蚁集团开源的企业级 React 组件库",s:99916,l:"TypeScript",c:"网页界面"},
+{n:"angular/angular",d:"Google 开发的企业级前端框架",s:101102,l:"TypeScript",c:"网页界面"},
+{n:"sveltejs/svelte",d:"编译时前端框架，代码更少运行更快",s:88492,l:"JavaScript",c:"网页界面"},
+{n:"mui/material-ui",d:"谷歌风格的 React 组件库，开箱即用的精美界面",s:99279,l:"JavaScript",c:"网页界面"},
 // 后端
-{n:"spring-projects/spring-boot",d:"Java 后端的事实标准框架，快速搭建企业级应用",s:78000,l:"Java",c:"后台服务"},
-{n:"nodejs/node",d:"让 JavaScript 跑在服务器上的运行环境",s:112000,l:"JavaScript",c:"后台服务"},
-{n:"expressjs/express",d:"Node.js 最经典的 Web 框架，简洁灵活",s:67000,l:"JavaScript",c:"后台服务"},
-{n:"gin-gonic/gin",d:"Go 语言最快的 Web 框架，写接口简单高效",s:84000,l:"Go",c:"后台服务"},
-{n:"django/django",d:"Python 最完善的全栈框架，自带后台管理系统",s:85000,l:"Python",c:"后台服务"},
-{n:"pallets/flask",d:"Python 轻量级 Web 框架，简单易学适合入门",s:70000,l:"Python",c:"后台服务"},
-{n:"fastapi/fastapi",d:"Python 现代高性能接口框架，自动生成接口文档",s:87000,l:"Python",c:"后台服务"},
-{n:"nestjs/nest",d:"企业级 Node.js 框架，构建可扩展的服务端应用",s:72000,l:"TypeScript",c:"后台服务"},
-{n:"go-kratos/kratos",d:"B 站开源的 Go 微服务框架，大厂生产验证",s:24000,l:"Go",c:"后台服务"},
+{n:"spring-projects/spring-boot",d:"Java 后端的事实标准框架，快速搭建企业级应用",s:81772,l:"Java",c:"后台服务"},
+{n:"nodejs/node",d:"让 JavaScript 跑在服务器上的运行环境",s:123129,l:"JavaScript",c:"后台服务"},
+{n:"expressjs/express",d:"Node.js 最经典的 Web 框架，简洁灵活",s:69580,l:"JavaScript",c:"后台服务"},
+{n:"gin-gonic/gin",d:"Go 语言最快的 Web 框架，写接口简单高效",s:89438,l:"Go",c:"后台服务"},
+{n:"django/django",d:"Python 最完善的全栈框架，自带后台管理系统",s:91679,l:"Python",c:"后台服务"},
+{n:"pallets/flask",d:"Python 轻量级 Web 框架，简单易学适合入门",s:75106,l:"Python",c:"后台服务"},
+{n:"fastapi/fastapi",d:"Python 现代高性能接口框架，自动生成接口文档",s:104250,l:"Python",c:"后台服务"},
+{n:"nestjs/nest",d:"企业级 Node.js 框架，构建可扩展的服务端应用",s:76917,l:"TypeScript",c:"后台服务"},
+{n:"go-kratos/kratos",d:"B 站开源的 Go 微服务框架，大厂生产验证",s:25994,l:"Go",c:"后台服务"},
 // 工具
-{n:"microsoft/vscode",d:"微软开源的代码编辑器，全球程序员最常用",s:174000,l:"TypeScript",c:"开发者工具"},
-{n:"yt-dlp/yt-dlp",d:"强大的视频下载工具，支持上千个网站",s:124000,l:"Python",c:"影音与直播"},
-{n:"ohmyzsh/ohmyzsh",d:"让命令行终端好用又好看的配置框架",s:180000,l:"Shell",c:"开发者工具"},
-{n:"localsend/localsend",d:"局域网免流量跨设备传文件，苹果安卓电脑互通",s:68000,l:"Dart",c:"实用工具"},
-{n:"neovim/neovim",d:"现代化的 Vim 编辑器，极致高效的文本编辑",s:93000,l:"C",c:"开发者工具"},
-{n:"jesseduffield/lazygit",d:"终端里的 Git 可视化工具，告别背命令",s:64000,l:"Go",c:"开发者工具"},
-{n:"BurntSushi/ripgrep",d:"超快的文本搜索工具，比传统 grep 快一个量级",s:55000,l:"Rust",c:"开发者工具"},
-{n:"sharkdp/bat",d:"cat 命令增强版，自带语法高亮和 Git 提示",s:54000,l:"Rust",c:"开发者工具"},
-{n:"jgm/pandoc",d:"万能文档转换器，Markdown、Word、PDF 互转",s:39000,l:"Haskell",c:"开发者工具"},
-{n:"ShareX/ShareX",d:"Windows 最强的截图与屏幕录制分享工具",s:32000,l:"C#",c:"实用工具"},
+{n:"microsoft/vscode",d:"微软开源的代码编辑器，全球程序员最常用",s:194362,l:"TypeScript",c:"开发者工具"},
+{n:"yt-dlp/yt-dlp",d:"强大的视频下载工具，支持上千个网站",s:202716,l:"Python",c:"影音与直播"},
+{n:"ohmyzsh/ohmyzsh",d:"让命令行终端好用又好看的配置框架",s:190177,l:"Shell",c:"开发者工具"},
+{n:"localsend/localsend",d:"局域网免流量跨设备传文件，苹果安卓电脑互通",s:95952,l:"Dart",c:"实用工具"},
+{n:"neovim/neovim",d:"现代化的 Vim 编辑器，极致高效的文本编辑",s:103201,l:"Vim Script",c:"开发者工具"},
+{n:"jesseduffield/lazygit",d:"终端里的 Git 可视化工具，告别背命令",s:83435,l:"Go",c:"开发者工具"},
+{n:"BurntSushi/ripgrep",d:"超快的文本搜索工具，比传统 grep 快一个量级",s:69483,l:"Rust",c:"开发者工具"},
+{n:"sharkdp/bat",d:"cat 命令增强版，自带语法高亮和 Git 提示",s:60962,l:"Rust",c:"开发者工具"},
+{n:"jgm/pandoc",d:"万能文档转换器，Markdown、Word、PDF 互转",s:46712,l:"Haskell",c:"开发者工具"},
+{n:"ShareX/ShareX",d:"Windows 最强的截图与屏幕录制分享工具",s:40448,l:"C#",c:"实用工具"},
 // 游戏
-{n:"godotengine/godot",d:"免费开源的游戏引擎，2D 和 3D 游戏都能做",s:100000,l:"C++",c:"游戏娱乐"},
-{n:"luanti-org/luanti",d:"开源《我的世界》风格的沙盒游戏引擎",s:12000,l:"C++",c:"游戏娱乐"},
-{n:"gabrielecirulli/2048",d:"经典数字合成小游戏 2048 的网页版开源实现",s:12000,l:"JavaScript",c:"游戏娱乐"},
-{n:"chrislgarry/Apollo-11",d:"阿波罗 11 号登月飞船的原始源代码，历史性项目",s:62000,l:"汇编",c:"游戏娱乐"},
-{n:"libretro/RetroArch",d:"全能复古游戏模拟器，一个应用玩遍经典老游戏",s:12000,l:"C",c:"游戏娱乐"},
-{n:"0ad/0ad",d:"开源帝国时代风格的即时战略游戏，画面精美",s:5000,l:"C++",c:"游戏娱乐"},
-{n:"SuperTuxKart/stk-code",d:"开源卡丁车竞速游戏，好玩且完全免费",s:4000,l:"C++",c:"游戏娱乐"},
-{n:"playcanvas/engine",d:"网页 3D 游戏引擎，浏览器里跑高质量游戏画面",s:11000,l:"JavaScript",c:"游戏娱乐"},
-{n:"felixrieseberg/windows95",d:"把 Windows 95 整个装进一个应用里运行的趣味项目",s:47000,l:"JavaScript",c:"游戏娱乐"},
+{n:"godotengine/godot",d:"免费开源的游戏引擎，2D 和 3D 游戏都能做",s:119139,l:"C++",c:"游戏娱乐"},
+{n:"luanti-org/luanti",d:"开源《我的世界》风格的沙盒游戏引擎",s:13778,l:"C++",c:"游戏娱乐"},
+{n:"gabrielecirulli/2048",d:"经典数字合成小游戏 2048 的网页版开源实现",s:13451,l:"JavaScript",c:"游戏娱乐"},
+{n:"chrislgarry/Apollo-11",d:"阿波罗 11 号登月飞船的原始源代码，历史性项目",s:75965,l:"Assembly",c:"游戏娱乐"},
+{n:"libretro/RetroArch",d:"全能复古游戏模拟器，一个应用玩遍经典老游戏",s:14451,l:"C",c:"游戏娱乐"},
+{n:"0ad/0ad",d:"开源帝国时代风格的即时战略游戏，画面精美",s:2828,l:"C++",c:"游戏娱乐"},
+{n:"SuperTuxKart/stk-code",d:"开源卡丁车竞速游戏，好玩且完全免费",s:5453,l:"C++",c:"游戏娱乐"},
+{n:"playcanvas/engine",d:"网页 3D 游戏引擎，浏览器里跑高质量游戏画面",s:17144,l:"JavaScript",c:"游戏娱乐"},
+{n:"felixrieseberg/windows95",d:"把 Windows 95 整个装进一个应用里运行的趣味项目",s:24280,l:"TypeScript",c:"游戏娱乐"},
 // 手机应用
-{n:"flutter/flutter",d:"Google 跨平台框架，一套代码跑遍手机电脑网页",s:172000,l:"Dart",c:"手机 App"},
-{n:"facebook/react-native",d:"用 JavaScript 一次开发，同时生成苹果和安卓应用",s:123000,l:"C++",c:"手机 App"},
-{n:"Genymobile/scrcpy",d:"电脑免费投屏控制安卓手机的神器，零延迟",s:128000,l:"C",c:"手机 App"},
-{n:"termux/termux-app",d:"在安卓手机上运行完整的 Linux 终端环境",s:45000,l:"Java",c:"手机 App"},
-{n:"expo/expo",d:"让 React Native 手机应用开发变简单的工具链",s:42000,l:"TypeScript",c:"手机 App"},
-{n:"kivy/kivy",d:"用 Python 开发跨平台手机应用的框架",s:19000,l:"Python",c:"手机 App"},
-{n:"ionic-team/capacitor",d:"把网页应用直接打包成原生手机应用",s:14000,l:"Java",c:"手机 App"},
-{n:"signalapp/Signal-Android",d:"注重隐私的加密聊天软件 Signal 的安卓客户端",s:27000,l:"Kotlin",c:"手机 App"},
+{n:"flutter/flutter",d:"Google 跨平台框架，一套代码跑遍手机电脑网页",s:180383,l:"Dart",c:"手机 App"},
+{n:"facebook/react-native",d:"用 JavaScript 一次开发，同时生成苹果和安卓应用",s:126806,l:"C++",c:"手机 App"},
+{n:"Genymobile/scrcpy",d:"电脑免费投屏控制安卓手机的神器，零延迟",s:153255,l:"C",c:"手机 App"},
+{n:"termux/termux-app",d:"在安卓手机上运行完整的 Linux 终端环境",s:63494,l:"Java",c:"手机 App"},
+{n:"expo/expo",d:"让 React Native 手机应用开发变简单的工具链",s:53109,l:"TypeScript",c:"手机 App"},
+{n:"kivy/kivy",d:"用 Python 开发跨平台手机应用的框架",s:19030,l:"Python",c:"手机 App"},
+{n:"ionic-team/capacitor",d:"把网页应用直接打包成原生手机应用",s:16966,l:"TypeScript",c:"手机 App"},
+{n:"signalapp/Signal-Android",d:"注重隐私的加密聊天软件 Signal 的安卓客户端",s:29540,l:"Kotlin",c:"手机 App"},
 // 学习资源
-{n:"freeCodeCamp/freeCodeCamp",d:"全球最大的免费编程学习平台，GitHub 星标第一",s:425000,l:"TypeScript",c:"学编程"},
-{n:"EbookFoundation/free-programming-books",d:"各种语言的免费编程书籍大全，含大量中文书",s:367000,l:"文档",c:"学编程"},
-{n:"kamranahmedse/developer-roadmap",d:"程序员成长路线图，告诉你每一步该学什么",s:333000,l:"TypeScript",c:"学编程"},
-{n:"jwasham/coding-interview-university",d:"从零基础到通过大厂算法面试的完整自学计划",s:321000,l:"文档",c:"学编程"},
-{n:"trekhleb/javascript-algorithms",d:"JavaScript 算法与数据结构教程，带中文讲解",s:192000,l:"JavaScript",c:"学编程"},
-{n:"donnemartin/system-design-primer",d:"系统设计面试学习指南，有中文翻译版本",s:315000,l:"Python",c:"学编程"},
-{n:"jackfrued/Python-100-Days",d:"Python 100 天从新手到大师，优质中文教程",s:170000,l:"Python",c:"学编程"},
-{n:"CyC2018/CS-Notes",d:"中文技术面试必备：计算机基础与算法笔记",s:180000,l:"文档",c:"学编程"},
-{n:"justjavac/free-programming-books-zh_CN",d:"免费的中文编程书籍索引，持续更新",s:115000,l:"文档",c:"学编程"},
-{n:"PKUFlyingPig/cs-self-learning",d:"北大出品的计算机科学自学指南",s:68000,l:"文档",c:"学编程"},
+{n:"freeCodeCamp/freeCodeCamp",d:"全球最大的免费编程学习平台，GitHub 星标第一",s:458007,l:"TypeScript",c:"学编程"},
+{n:"EbookFoundation/free-programming-books",d:"各种语言的免费编程书籍大全，含大量中文书",s:400233,l:"Python",c:"学编程"},
+{n:"kamranahmedse/developer-roadmap",d:"程序员成长路线图，告诉你每一步该学什么",s:370509,l:"TypeScript",c:"学编程"},
+{n:"jwasham/coding-interview-university",d:"从零基础到通过大厂算法面试的完整自学计划",s:363437,l:"文档",c:"学编程"},
+{n:"trekhleb/javascript-algorithms",d:"JavaScript 算法与数据结构教程，带中文讲解",s:196699,l:"JavaScript",c:"学编程"},
+{n:"donnemartin/system-design-primer",d:"系统设计面试学习指南，有中文翻译版本",s:375744,l:"Python",c:"学编程"},
+{n:"jackfrued/Python-100-Days",d:"Python 100 天从新手到大师，优质中文教程",s:187473,l:"Jupyter Notebook",c:"学编程"},
+{n:"CyC2018/CS-Notes",d:"中文技术面试必备：计算机基础与算法笔记",s:186352,l:"Python",c:"学编程"},
+{n:"justjavac/free-programming-books-zh_CN",d:"免费的中文编程书籍索引，持续更新",s:119376,l:"文档",c:"学编程"},
+{n:"PKUFlyingPig/cs-self-learning",d:"北大出品的计算机科学自学指南",s:76459,l:"HTML",c:"学编程"},
 // AI 人工智能（扩充）
-{n:"comfyanonymous/ComfyUI",d:"AI 绘画工作流神器，节点式操作火遍全网",s:90000,l:"Python",c:"AI 人工智能"},
-{n:"meta-llama/llama",d:"Meta 开源的大模型家族，ChatGPT 的最强开源对手",s:62000,l:"Python",c:"AI 人工智能"},
-{n:"Sanster/IOPaint",d:"AI 修图工具，一键抹除照片里不需要的人和物",s:24000,l:"Python",c:"AI 人工智能"},
-{n:"RVC-Project/Retrieval-based-Voice-Conversion-WebUI",d:"AI 变声工具，声音克隆效果惊艳",s:32000,l:"Python",c:"AI 人工智能"},
+{n:"comfyanonymous/ComfyUI",d:"AI 绘画工作流神器，节点式操作火遍全网",s:143369,l:"Python",c:"AI 人工智能"},
+{n:"meta-llama/llama",d:"Meta 开源的大模型家族，ChatGPT 的最强开源对手",s:59628,l:"Python",c:"AI 人工智能"},
+{n:"Sanster/IOPaint",d:"AI 修图工具，一键抹除照片里不需要的人和物",s:23300,l:"Python",c:"AI 人工智能"},
+{n:"RVC-Project/Retrieval-based-Voice-Conversion-WebUI",d:"AI 变声工具，声音克隆效果惊艳",s:38882,l:"Python",c:"AI 人工智能"},
 // 实用工具（扩充）
-{n:"RustDesk/RustDesk",d:"国产开源远程桌面，TeamViewer 的免费替代",s:90000,l:"Rust",c:"实用工具"},
-{n:"alist-org/alist",d:"把阿里云盘百度网盘挂载成一个网盘，网页直接看",s:55000,l:"Go",c:"实用工具"},
-{n:"qBittorrent/qBittorrent",d:"功能强大的开源 BT 下载工具，干净无广告",s:33000,l:"C++",c:"实用工具"},
-{n:"aria2/aria2",d:"命令行高速下载神器，多线程断点续传",s:38000,l:"C++",c:"实用工具"},
+{n:"RustDesk/RustDesk",d:"国产开源远程桌面，TeamViewer 的免费替代",s:127206,l:"Rust",c:"实用工具"},
+{n:"alist-org/alist",d:"把阿里云盘百度网盘挂载成一个网盘，网页直接看",s:50365,l:"Go",c:"实用工具"},
+{n:"qBittorrent/qBittorrent",d:"功能强大的开源 BT 下载工具，干净无广告",s:41154,l:"C++",c:"实用工具"},
+{n:"aria2/aria2",d:"命令行高速下载神器，多线程断点续传",s:43295,l:"C++",c:"实用工具"},
 // 学编程（扩充）
-{n:"TheAlgorithms/Python",d:"用 Python 实现各种算法的教学仓库，入门首选",s:200000,l:"Python",c:"学编程"},
-{n:"ossu/computer-science",d:"免费的计算机科学完整自学课程计划",s:180000,l:"文档",c:"学编程"},
-{n:"practical-tutorials/project-based-learning",d:"边做项目边学编程的教程合集，动手派最爱",s:190000,l:"文档",c:"学编程"},
+{n:"TheAlgorithms/Python",d:"用 Python 实现各种算法的教学仓库，入门首选",s:225558,l:"Python",c:"学编程"},
+{n:"ossu/computer-science",d:"免费的计算机科学完整自学课程计划",s:210393,l:"HTML",c:"学编程"},
+{n:"practical-tutorials/project-based-learning",d:"边做项目边学编程的教程合集，动手派最爱",s:288134,l:"Python",c:"学编程"},
 // 网页界面（扩充）
-{n:"vercel/next.js",d:"React 全栈框架，全球最流行的 Web 开发框架",s:140000,l:"JavaScript",c:"网页界面"},
-{n:"mrdoob/three.js",d:"浏览器 3D 图形库，网页 3D 效果都靠它",s:110000,l:"JavaScript",c:"网页界面"},
-{n:"d3/d3",d:"数据可视化图表库，做出专业级图表",s:110000,l:"JavaScript",c:"网页界面"},
+{n:"vercel/next.js",d:"React 全栈框架，全球最流行的 Web 开发框架",s:143310,l:"JavaScript",c:"网页界面"},
+{n:"mrdoob/three.js",d:"浏览器 3D 图形库，网页 3D 效果都靠它",s:117013,l:"JavaScript",c:"网页界面"},
+{n:"d3/d3",d:"数据可视化图表库，做出专业级图表",s:113803,l:"Shell",c:"网页界面"},
 // 后台服务（扩充）
-{n:"kubernetes/kubernetes",d:"谷歌开源容器编排系统，云时代的操作系统",s:120000,l:"Go",c:"后台服务"},
-{n:"prometheus/prometheus",d:"开源监控告警系统，服务器运维必备",s:60000,l:"Go",c:"后台服务"},
-{n:"apache/kafka",d:"高吞吐消息队列，大数据时代的基础设施",s:30000,l:"Java",c:"后台服务"},
+{n:"kubernetes/kubernetes",d:"谷歌开源容器编排系统，云时代的操作系统",s:128724,l:"Go",c:"后台服务"},
+{n:"prometheus/prometheus",d:"开源监控告警系统，服务器运维必备",s:66800,l:"Go",c:"后台服务"},
+{n:"apache/kafka",d:"高吞吐消息队列，大数据时代的基础设施",s:34134,l:"Java",c:"后台服务"},
 // 手机 App（扩充）
-{n:"immich-app/immich",d:"自托管照片备份，手机照片存到自己服务器",s:60000,l:"TypeScript",c:"手机 App"},
-{n:"TeamNewPipe/NewPipe",d:"去广告的看视频应用，隐私友好",s:32000,l:"Java",c:"手机 App"},
+{n:"immich-app/immich",d:"自托管照片备份，手机照片存到自己服务器",s:117342,l:"TypeScript",c:"手机 App"},
+{n:"TeamNewPipe/NewPipe",d:"去广告的看视频应用，隐私友好",s:40318,l:"Java",c:"手机 App"},
 // 游戏娱乐（扩充）
-{n:"RPCS3/rpcs3",d:"在电脑上玩 PS3 游戏的模拟器，怀旧玩家福音",s:17000,l:"C++",c:"游戏娱乐"},
+{n:"RPCS3/rpcs3",d:"在电脑上玩 PS3 游戏的模拟器，怀旧玩家福音",s:20213,l:"C++",c:"游戏娱乐"},
 // 精选库扩充（第三批 36 个）
-{n:"open-webui/open-webui",d:"开箱即用的本地 AI 聊天界面，一条命令跑起自己的 ChatGPT",s:120000,l:"Python",c:"AI 人工智能"},
-{n:"lobehub/lobe-chat",d:"高颜值 AI 聊天助手，一键接入各家大模型",s:100000,l:"TypeScript",c:"AI 人工智能"},
-{n:"danny-avila/LibreChat",d:"聚合多个 AI 大模型的聊天平台，一个界面用遍所有助手",s:60000,l:"TypeScript",c:"AI 人工智能"},
-{n:"microsoft/autogen",d:"微软出品的多智能体框架，多个 AI 协作完成任务",s:45000,l:"Python",c:"AI 人工智能"},
-{n:"deepseek-ai/DeepSeek-V3",d:"国产 DeepSeek 开源大模型，中文理解能力一流",s:25000,l:"Python",c:"AI 人工智能"},
-{n:"QwenLM/Qwen2.5",d:"阿里巴巴通义千问开源模型，中文大模型明星",s:20000,l:"Python",c:"AI 人工智能"},
-{n:"significant-gravitas/AutoGPT",d:"让 AI 自主拆解并执行任务的知名智能体项目",s:170000,l:"Python",c:"AI 人工智能"},
-{n:"lm-sys/FastChat",d:"训练和部署聊天大模型的全能工具，含开源模型",s:40000,l:"Python",c:"AI 人工智能"},
-{n:"All-Hands-AI/OpenHands",d:"AI 编程助手，说需求就能自动改代码",s:60000,l:"Python",c:"AI 人工智能"},
-{n:"withastro/astro",d:"面向内容网站的现代框架，写博客做文档超快",s:55000,l:"TypeScript",c:"网页界面"},
-{n:"shadcn-ui/ui",d:"惊艳全网的现代 UI 组件库，复制即用",s:90000,l:"TypeScript",c:"网页界面"},
-{n:"nuxt/nuxt",d:"Vue 全家桶框架，做网站应用的成熟方案",s:60000,l:"TypeScript",c:"网页界面"},
-{n:"go-gitea/gitea",d:"自建代码托管平台，像迷你版 GitHub",s:45000,l:"Go",c:"后台服务"},
-{n:"n8n-io/n8n",d:"自动化工作流神器，把重复劳动交给 AI 机器人",s:80000,l:"TypeScript",c:"后台服务"},
-{n:"home-assistant/core",d:"智能家居中枢，让全屋设备听你指挥",s:80000,l:"Python",c:"实用工具"},
-{n:"microsoft/PowerToys",d:"微软官方 Windows 增强工具包，截图取色一键搞定",s:120000,l:"C#",c:"实用工具"},
-{n:"syncthing/syncthing",d:"多设备文件实时同步，自己的私有同步盘",s:65000,l:"Go",c:"实用工具"},
-{n:"keepassxreboot/keepassxc",d:"开源密码保险库，所有账号密码一把锁",s:22000,l:"C++",c:"实用工具"},
-{n:"kovidgoyal/calibre",d:"电子书管理大师，整理阅读一站式",s:22000,l:"Python",c:"实用工具"},
-{n:"sumatrapdfreader/sumatrapdf",d:"秒开 PDF 阅读器，轻巧不占内存",s:13000,l:"C++",c:"实用工具"},
-{n:"HandBrake/HandBrake",d:"视频压缩转码利器，大文件秒变清晰小文件",s:18000,l:"C",c:"影音与直播"},
-{n:"obsproject/obs-studio",d:"专业录屏直播软件，主播和网课老师必备",s:70000,l:"C",c:"影音与直播"},
-{n:"FFmpeg/FFmpeg",d:"音视频处理的瑞士军刀，所有格式都能转",s:48000,l:"C",c:"影音与直播"},
-{n:"ScoopInstaller/Scoop",d:"Windows 命令行装软件，一行命令安装卸载",s:23000,l:"Shell",c:"开发者工具"},
-{n:"jellyfin/jellyfin",d:"家庭影院服务器，自建流媒体影音库",s:40000,l:"C#",c:"实用工具"},
-{n:"public-apis/public-apis",d:"免费 API 大全，找接口灵感一站式",s:32000,l:"Python",c:"学编程"},
-{n:"Asabeneh/30-Days-Of-React",d:"30 天学会 React，最好的入门教程之一",s:30000,l:"JavaScript",c:"学编程"},
-{n:"codecrafters-io/build-your-own-x",d:"教你亲手从零造操作系统、数据库等经典项目",s:320000,l:"文档",c:"学编程"},
-{n:"521xueweihan/HelloGitHub",d:"每月一期开源项目月刊，新手友好",s:11000,l:"文档",c:"学编程"},
-{n:"torvalds/linux",d:"Linux 操作系统内核，开源世界的地基",s:190000,l:"C",c:"学编程"},
-{n:"microsoft/generative-ai-for-beginners",d:"微软官方生成式 AI 入门课，21 节零基础学",s:80000,l:"Python",c:"学编程"},
-{n:"OpenTTD/OpenTTD",d:"经典模拟经营游戏《运输大亨》开源复刻",s:6000,l:"C++",c:"游戏娱乐"},
-{n:"wesnoth/wesnoth",d:"史诗奇幻策略游戏，免费开源的战棋经典",s:6000,l:"C++",c:"游戏娱乐"},
-{n:"veloren/veloren",d:"开源多人像素沙盒游戏，像《我的世界》RPG 版",s:9000,l:"Rust",c:"游戏娱乐"},
-{n:"bitwarden/clients",d:"跨平台密码管理器，手机电脑同步",s:12000,l:"TypeScript",c:"手机 App"},
-{n:"xbmc/xbmc",d:"老牌家庭影院播放器，电视盒子首选",s:20000,l:"C++",c:"手机 App"},
+{n:"open-webui/open-webui",d:"开箱即用的本地 AI 聊天界面，一条命令跑起自己的 ChatGPT",s:156881,l:"Python",c:"AI 人工智能"},
+{n:"lobehub/lobe-chat",d:"高颜值 AI 聊天助手，一键接入各家大模型",s:83516,l:"TypeScript",c:"AI 人工智能"},
+{n:"danny-avila/LibreChat",d:"聚合多个 AI 大模型的聊天平台，一个界面用遍所有助手",s:46362,l:"TypeScript",c:"AI 人工智能"},
+{n:"microsoft/autogen",d:"微软出品的多智能体框架，多个 AI 协作完成任务",s:61581,l:"Python",c:"AI 人工智能"},
+{n:"deepseek-ai/DeepSeek-V3",d:"国产 DeepSeek 开源大模型，中文理解能力一流",s:104627,l:"Python",c:"AI 人工智能"},
+{n:"QwenLM/Qwen2.5",d:"阿里巴巴通义千问开源模型，中文大模型明星",s:27689,l:"Python",c:"AI 人工智能"},
+{n:"significant-gravitas/AutoGPT",d:"让 AI 自主拆解并执行任务的知名智能体项目",s:187784,l:"Python",c:"AI 人工智能"},
+{n:"lm-sys/FastChat",d:"训练和部署聊天大模型的全能工具，含开源模型",s:39549,l:"Python",c:"AI 人工智能"},
+{n:"All-Hands-AI/OpenHands",d:"AI 编程助手，说需求就能自动改代码",s:91961,l:"TypeScript",c:"AI 人工智能"},
+{n:"withastro/astro",d:"面向内容网站的现代框架，写博客做文档超快",s:63498,l:"TypeScript",c:"网页界面"},
+{n:"shadcn-ui/ui",d:"惊艳全网的现代 UI 组件库，复制即用",s:126642,l:"TypeScript",c:"网页界面"},
+{n:"nuxt/nuxt",d:"Vue 全家桶框架，做网站应用的成熟方案",s:60998,l:"TypeScript",c:"网页界面"},
+{n:"go-gitea/gitea",d:"自建代码托管平台，像迷你版 GitHub",s:58719,l:"Go",c:"后台服务"},
+{n:"n8n-io/n8n",d:"自动化工作流神器，把重复劳动交给 AI 机器人",s:208712,l:"TypeScript",c:"后台服务"},
+{n:"home-assistant/core",d:"智能家居中枢，让全屋设备听你指挥",s:91758,l:"Python",c:"实用工具"},
+{n:"microsoft/PowerToys",d:"微软官方 Windows 增强工具包，截图取色一键搞定",s:140019,l:"C",c:"实用工具"},
+{n:"syncthing/syncthing",d:"多设备文件实时同步，自己的私有同步盘",s:89788,l:"Go",c:"实用工具"},
+{n:"keepassxreboot/keepassxc",d:"开源密码保险库，所有账号密码一把锁",s:29525,l:"C++",c:"实用工具"},
+{n:"kovidgoyal/calibre",d:"电子书管理大师，整理阅读一站式",s:26259,l:"Python",c:"实用工具"},
+{n:"sumatrapdfreader/sumatrapdf",d:"秒开 PDF 阅读器，轻巧不占内存",s:17859,l:"C",c:"实用工具"},
+{n:"HandBrake/HandBrake",d:"视频压缩转码利器，大文件秒变清晰小文件",s:24794,l:"C",c:"影音与直播"},
+{n:"obsproject/obs-studio",d:"专业录屏直播软件，主播和网课老师必备",s:78309,l:"C",c:"影音与直播"},
+{n:"FFmpeg/FFmpeg",d:"音视频处理的瑞士军刀，所有格式都能转",s:65854,l:"C",c:"影音与直播"},
+{n:"ScoopInstaller/Scoop",d:"Windows 命令行装软件，一行命令安装卸载",s:24771,l:"PowerShell",c:"开发者工具"},
+{n:"jellyfin/jellyfin",d:"家庭影院服务器，自建流媒体影音库",s:58666,l:"C#",c:"实用工具"},
+{n:"public-apis/public-apis",d:"免费 API 大全，找接口灵感一站式",s:492498,l:"Python",c:"学编程"},
+{n:"Asabeneh/30-Days-Of-React",d:"30 天学会 React，最好的入门教程之一",s:27526,l:"JavaScript",c:"学编程"},
+{n:"codecrafters-io/build-your-own-x",d:"教你亲手从零造操作系统、数据库等经典项目",s:556507,l:"Markdown",c:"学编程"},
+{n:"521xueweihan/HelloGitHub",d:"每月一期开源项目月刊，新手友好",s:184817,l:"Python",c:"学编程"},
+{n:"torvalds/linux",d:"Linux 操作系统内核，开源世界的地基",s:253629,l:"C",c:"学编程"},
+{n:"microsoft/generative-ai-for-beginners",d:"微软官方生成式 AI 入门课，21 节零基础学",s:122240,l:"Jupyter Notebook",c:"学编程"},
+{n:"OpenTTD/OpenTTD",d:"经典模拟经营游戏《运输大亨》开源复刻",s:8430,l:"C++",c:"游戏娱乐"},
+{n:"wesnoth/wesnoth",d:"史诗奇幻策略游戏，免费开源的战棋经典",s:6960,l:"C++",c:"游戏娱乐"},
+{n:"veloren/veloren",d:"开源多人像素沙盒游戏，像《我的世界》RPG 版",s:7653,l:"Rust",c:"游戏娱乐"},
+{n:"bitwarden/clients",d:"跨平台密码管理器，手机电脑同步",s:14072,l:"TypeScript",c:"手机 App"},
+{n:"xbmc/xbmc",d:"老牌家庭影院播放器，电视盒子首选",s:21390,l:"C++",c:"手机 App"},
 // 2026 新晋爆款（小红书精选补充）
-{n:"morluto/rea",d:"让 AI 逆向分析任何软件：拆解功能是怎么做出来的，甚至能读二进制",s:392449,l:"TypeScript",c:"开发者工具"},
-{n:"mattpocock/skills",d:"TypeScript 圈最会讲课的人分享的编程技能包，小而好用",s:304169,l:"Shell",c:"开发者工具"},
-{n:"affaan-m/ECC",d:"给 Claude Code、Cursor 等 AI 编程工具装上技能、记忆和安全防护",s:289965,l:"JavaScript",c:"开发者工具"},
-{n:"multica-ai/andrej-karpathy-skills",d:"Karpathy 总结的 AI 写代码常见错误，一个文件 4 条规则就够",s:224770,l:"文档",c:"开发者工具"},
-{n:"paperclipai/paperclip",d:"开一家由 AI 智能体组成的公司，像带团队一样管理它们",s:107714,l:"TypeScript",c:"开发者工具"},
-{n:"thedotmack/claude-mem",d:"让 AI 记住上次干过的活，下次会话不用从头解释",s:103474,l:"TypeScript",c:"开发者工具"},
-{n:"debpalash/VoiceStudio",d:"本地运行的 AI 声音工具：克隆声音、视频配音、转写 646 种语言，完全免费",s:89549,l:"Python",c:"影音与直播"},
-{n:"hugohe3/ppt-master",d:"丢进一个 PDF 或 Word，拿回真正可编辑带动画的 PPT",s:69017,l:"Python",c:"实用工具"},
-{n:"cathrynlavery/diagram-design",d:"用大白话描述一张图，它按你的风格画出 45 种专业图表",s:61437,l:"HTML",c:"实用工具"},
-{n:"bilawalsidhu/gods-eye-view",d:"浏览器里的 3D 间谍卫星模拟器，能看到真实的飞机和船只",s:60453,l:"JavaScript",c:"游戏娱乐"}
+{n:"morluto/rea",d:"让 AI 逆向分析任何软件：拆解功能是怎么做出来的，甚至能读二进制",s:393225,l:"TypeScript",c:"开发者工具"},
+{n:"mattpocock/skills",d:"TypeScript 圈最会讲课的人分享的编程技能包，小而好用",s:304285,l:"Shell",c:"开发者工具"},
+{n:"affaan-m/ECC",d:"给 Claude Code、Cursor 等 AI 编程工具装上技能、记忆和安全防护",s:290080,l:"JavaScript",c:"开发者工具"},
+{n:"multica-ai/andrej-karpathy-skills",d:"Karpathy 总结的 AI 写代码常见错误，一个文件 4 条规则就够",s:224916,l:"文档",c:"开发者工具"},
+{n:"paperclipai/paperclip",d:"开一家由 AI 智能体组成的公司，像带团队一样管理它们",s:107756,l:"TypeScript",c:"开发者工具"},
+{n:"thedotmack/claude-mem",d:"让 AI 记住上次干过的活，下次会话不用从头解释",s:103507,l:"TypeScript",c:"开发者工具"},
+{n:"debpalash/VoiceStudio",d:"本地运行的 AI 声音工具：克隆声音、视频配音、转写 646 种语言，完全免费",s:89868,l:"Python",c:"影音与直播"},
+{n:"hugohe3/ppt-master",d:"丢进一个 PDF 或 Word，拿回真正可编辑带动画的 PPT",s:69148,l:"Python",c:"实用工具"},
+{n:"cathrynlavery/diagram-design",d:"用大白话描述一张图，它按你的风格画出 45 种专业图表",s:61493,l:"HTML",c:"实用工具"},
+{n:"bilawalsidhu/gods-eye-view",d:"浏览器里的 3D 间谍卫星模拟器，能看到真实的飞机和船只",s:60497,l:"JavaScript",c:"游戏娱乐"}
 ];
 /* 国内镜像直达表（2026-10-27 第三方核实报告提取）：owner/repo(小写) -> 镜像URL */
 /* GitCode：GitHub 官方合作镜像平台（gitcode.com/GitHub_Trending 或 gh_mirrors），114 个可用 */
@@ -1144,7 +1152,7 @@ function cnDesc(n, orig){
 const forkOf = r => r.fk ?? 0;
 const issueOf = r => r.iu ?? 0;
 /* 评分：按真实 star 数量级换算（数据每小时自动同步 GitHub，不再手填） */
-const ratingOf = r => (r.s>=100000?4.9 : r.s>=10000?4.6 : r.s>=1000?4.2 : r.s>=100?4.0 : 3.8);
+const ratingOf = r => (r.s>=100000?4.9 : r.s>=10000?4.6 : r.s>=1000?4.2 : r.s>=100?4.0 : 3.8);  // 保留兼容旧调用，卡片不再展示（伪指标，易误导）
 
 /* ================= 工具 ================= */
 const $ = s => document.querySelector(s);
@@ -1152,7 +1160,9 @@ const fmt = n => n>=10000 ? (n/10000).toFixed(1).replace(/\.0$/,"")+" 万" : n>=
 const esc = s => String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 
 /* 收藏（localStorage）：favs 存名字，favSnap 存项目快照（防"我的"页丢信息） */
-let favs = new Set(JSON.parse(localStorage.getItem("gh_favs")||"[]"));
+let favs;
+try{ favs = new Set(JSON.parse(localStorage.getItem("gh_favs")||"[]")); }
+catch(e){ favs = new Set(); localStorage.removeItem("gh_favs"); }   // 坏数据兜底：不白屏、自动清掉
 let favSnap = JSON.parse(localStorage.getItem("gh_favs_snap")||"{}");
 function saveFavs(){
   localStorage.setItem("gh_favs", JSON.stringify([...favs]));
@@ -1219,6 +1229,8 @@ function cardHTML(r, src, rank){
   }
   // 统一提示：搭建/安装命令有时效性，避免过时误导小白（对所有项目生效，不用逐条维护）
   if(detHTML) detHTML += `\n\n<div class="detail-tip">💡 提示：安装或搭建命令可能随版本更新而变化，具体以官方文档为准。</div>`;
+  // 数据快照（复刻/反馈从卡片收进详情，避免卡片术语堆叠）
+  if(detHTML) detHTML += `\n\n<div class="detail-tip">📊 数据快照：⭐ ${fmt(r.s)} 星标 · 🍴 ${fmt(forkOf(r))} 复刻 · 💬 ${fmt(issueOf(r))} 反馈（GitHub 实时统计）</div>`;
   // 如实告知 + 境内镜像直达（合规：只放境内公开镜像平台链接，不提供任何通道）
   if(detHTML){
     detHTML += `\n\n<div class="detail-tip">🌐 访问提示：GitHub 为境外站点，打开或加载速度受本地网络环境影响，属正常现象。</div>`;
@@ -1241,10 +1253,11 @@ function cardHTML(r, src, rank){
     ${rank?`<span class="rank-badge${rank<=3?" top":""}">第${rank}名</span>`:""}
     <div class="card-top">
       ${icon}
-      <a class="repo-name" href="https://github.com/${esc(r.n)}" target="_blank" rel="noopener">${esc(r.n)}</a>
+      <a class="repo-name" href="https://github.com/${esc(r.n)}" target="_blank" rel="noopener">${esc(repoZh(r.n))}</a>
       <button class="share-btn" data-share="${esc(r.n)}" title="分享">📤 分享</button>
       <button class="fav-btn${on}" data-fav="${esc(r.n)}" onclick="toggleFav('${esc(r.n).replace(/'/g,"\\'")}')" title="收藏">${favs.has(r.n)?"❤️":"🤍"}</button>
     </div>
+    <div class="repo-path">${esc(r.n)}</div>
     <div class="author-line">
       <a class="author-name" href="https://github.com/${esc(owner)}" target="_blank" rel="noopener" data-author="${esc(owner)}" data-authortype="${ownerType}">${esc(owner)}</a>
       <span class="author-type ${ownerType}">${typeLabel}</span>
@@ -1252,9 +1265,6 @@ function cardHTML(r, src, rank){
     <div class="repo-desc">${esc(r.d)}</div>
     <div class="repo-meta">
       <span class="meta-item" title="星标：GitHub 上点赞这个项目的人数">⭐ <span class="lbl">星标</span> <span style="color:var(--star)">${fmt(r.s)}</span></span>
-      <span class="meta-item rating" title="综合评分（满分 5 星）">★ <span class="lbl">评分</span> ${ratingOf(r).toFixed(1)}</span>
-      <span class="meta-item" title="复刻：有多少人复制了这份代码去改造">🍴 <span class="lbl">复刻</span> ${fmt(forkOf(r))}</span>
-      <span class="meta-item" title="反馈：社区提了多少条建议和问题">💬 <span class="lbl">反馈</span> ${fmt(issueOf(r))}</span>
       <span class="meta-item" title="项目使用的编程语言"><span class="lang-dot" style="background:${LANG_COLORS[r.l]||"#8b949e"}"></span>${esc(r.l)||"多语言"}</span>
       <span class="tag" title="项目所属分类">${esc(r.c)}</span>
       ${r.en?`<span class="tag en" title="英文简介">EN</span>`:""}
@@ -1294,7 +1304,7 @@ function fallbackCopy(t, done){
   document.body.removeChild(ta); done();
 }
 function openShare(name){
-  const r = REPOS.find(x=>x.n===name);
+  const r = REPOS.find(x=>x.n===name) || KNOWN[name];
   const desc = r ? r.d : (CN_DESC[name] || "GitHub 上的优质开源项目");
   $("#shareText").textContent =
     `【${name}】\n${desc}\nGitHub 链接：https://github.com/${name}\n—— 来自「GitHub 中文发现器」，不懂英文也能轻松逛 GitHub`;
@@ -1305,7 +1315,7 @@ $("#closeModal").addEventListener("click", ()=>$("#shareModal").classList.remove
 $("#shareModal").addEventListener("click", e=>{ if(e.target.id==="shareModal") $("#shareModal").classList.remove("show"); });
 /* 分享整个应用 */
 $("#appShareBtn").addEventListener("click", function(){
-  copyText(`推荐一个好东西「GitHub 中文发现器」：不懂英文也能轻松逛 GitHub，60+ 优质项目全中文介绍，还有实时热门榜单和小白版详解。手机打开可以添加到主屏幕，像 App 一样用：${location.href}`, this);
+  copyText(`推荐一个好东西「GitHub 中文发现器」：不懂英文也能轻松逛 GitHub，132 个优质项目全中文介绍，还有实时热门榜单和小白版详解。手机打开可以添加到主屏幕，像 App 一样用：${location.href}`, this);
 });
 
 /* ================= 作者详情弹窗 ================= */
@@ -1417,11 +1427,11 @@ function renderCats(){
 }
 let curSort = "star";
 function sortRepos(list){
-  if(curSort==="rating") return [...list].sort((a,b)=>(RATING[b.n]||4)-(RATING[a.n]||4));
   if(curSort==="fav") return [...list].sort((a,b)=>{ const fa=favs.has(a.n)?1:0, fb=favs.has(b.n)?1:0; if(fa!==fb) return fb-fa; return b.s-a.s; });
   return [...list].sort((a,b)=>b.s-a.s);
 }
 function renderHome(){
+  cancelPendingSearch();   // 切分类/清空输入/排序时取消在途搜索，防止旧结果盖新页面
   let list = curCat==="全部" ? REPOS : REPOS.filter(r=>r.c===curCat);
   if(curUsage!=="全部") list = list.filter(r=>(USAGE[r.n]||[]).includes(curUsage));
   renderList($("#homeList"), sortRepos(list));
@@ -1444,13 +1454,26 @@ function renderMirrorStats(){
   const no = total - ok;
   $("#mirrorStats").innerHTML = `🌐 精选 <b>${total}</b> 个项目 · <b>${ok}</b> 个国内镜像直达 · <span class="m-no">${no}</span> 个暂无（点卡片详情查看）`;
 }
-/* 今日推荐：每天自动换一个精选项目 */
+/* 今日推荐：每天自动换一个精选项目（按本地时区换日，北京早上 8 点前仍是前一天） */
+function fmtLocalU(s){
+  if(!s) return "";
+  try{
+    const raw = String(s);
+    let iso = raw;
+    if(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(raw) && !/[Zz]|[+-]\d{2}:?\d{2}$/.test(raw)) iso = raw + "Z";  // 无时区标记按 UTC 处理
+    const d = new Date(iso);
+    if(isNaN(d)) return raw.slice(5,16).replace("T"," ");
+    const p = n=>String(n).padStart(2,"0");
+    return `${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  }catch(e){ return String(s).slice(5,16).replace("T"," "); }
+}
 function renderDailyPick(){
-  const idx = Math.floor(Date.now()/86400000) % REPOS.length;
+  const dayIdx = Math.floor((Date.now() - new Date().getTimezoneOffset()*60000)/86400000);
+  const idx = dayIdx % REPOS.length;
   const r = REPOS[idx];
   $("#dailyPick").innerHTML = `<div class="daily-pick" title="去 GitHub 查看这个项目">
-    <div class="dp-head">🔥 今日推荐${DATA_UPDATED?`<span class="dp-upd" style="font-size:11px;color:var(--text2);font-weight:400;margin-left:8px">数据每小时自动同步 · ${DATA_UPDATED.slice(5,16).replace("T"," ")}</span>`:""}</div>
-    <div class="dp-name">${esc(r.n)} <span class="rating">★ ${ratingOf(r).toFixed(1)}</span></div>
+    <div class="dp-head">🔥 今日推荐${DATA_UPDATED?`<span class="dp-upd" style="font-size:11px;color:var(--text2);font-weight:400;margin-left:8px">数据每小时自动同步 · ${fmtLocalU(DATA_UPDATED)}</span>`:""}</div>
+    <div class="dp-name">${esc(repoZh(r.n))} <span class="dp-sub">${esc(r.n)}</span></div>
     <div class="dp-desc">${esc(r.d)}</div>
   </div>`;
   $("#dailyPick").querySelector(".daily-pick").addEventListener("click", ()=>window.open(`https://github.com/${r.n}`,"_blank"));
@@ -1491,6 +1514,10 @@ function localSearch(q){
   return REPOS.filter(r => r.n.toLowerCase().includes(q) || r.d.toLowerCase().includes(q) || r.c.toLowerCase().includes(q));
 }
 let searchTimer = null, abortCtrl = null;
+/* 取消在途搜索：renderHome（切分类/清空/排序）与新一轮搜索都会调用，防止旧结果覆盖新页面 */
+function cancelPendingSearch(){
+  if(abortCtrl){ abortCtrl.abort(); abortCtrl = null; }
+}
 async function doSearch(){
   const q = $("#searchInput").value.trim();
   const box = $("#homeList");
@@ -1501,7 +1528,7 @@ async function doSearch(){
   if(local.length) box.innerHTML = `<div class="notice">📚 精选库命中 ${local.length} 个项目</div>` + local.map(r=>cardHTML(r,"精选")).join("") + `<div class="loading"><span class="spin"></span>正在从 GitHub 补充更多结果…</div>`;
 
   // 调 GitHub 官方接口，失败自动降级
-  if(abortCtrl) abortCtrl.abort();
+  cancelPendingSearch();
   abortCtrl = new AbortController();
   try{
     const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=20`;
@@ -1556,16 +1583,24 @@ async function loadRank(){
       box.innerHTML = `<div class="notice warn">😅 ${RANK_TITLES[rankRange]}：这个时间段暂时没有符合条件的新项目，换个时间段看看</div>`;
       return;
     }
-    const list = data.items.map(it=>{
+    /* 违禁词黑名单：过滤破解/成人/灰产类仓库，避免把这类项目当热门推荐给用户 */
+    const BLOCK_RE = /crack|keygen|serial|激活码|破解|免费.{0,6}(vip|会员)|成人|色情|porn|adult|18\+/i;
+    const safe = data.items.filter(it=>!BLOCK_RE.test((it.full_name||"")+" "+(it.description||"")));
+    const list = safe.map(it=>{
       const t = cnDesc(it.full_name, it.description);
       return {n:it.full_name, d:t.d, en:t.en, s:it.stargazers_count, fk:it.forks_count, iu:it.open_issues_count, av:it.owner&&it.owner.avatar_url, owner:it.owner&&it.owner.login, ownerType:it.owner&&(it.owner.type==="Organization"?"org":"user"), l:it.language||"", c:"GitHub 实时"};
     });
-    box.innerHTML = `<div class="notice">🏆 GitHub ${RANK_TITLES[rankRange]} Top 20（实时数据${since?"，"+since+" 后创建":""}）</div>`
+    if(!list.length){
+      box.innerHTML = `<div class="notice warn">😅 ${RANK_TITLES[rankRange]}：这个时间段暂无可展示的热门项目</div>`;
+      return;
+    }
+    box.innerHTML = `<div class="notice">🏆 GitHub ${RANK_TITLES[rankRange]} Top 20（实时数据${since?"，"+since+" 后创建":""}${data.incomplete_results?" · ⚠️ 结果过多，仅显示前 20 条":""}${safe.length<data.items.length?" · 已过滤违规类项目"+ (data.items.length-safe.length)+" 个":""}）</div>`
       + list.map((r,i)=>cardHTML(r,"GitHub",i+1)).join("");
   }catch(err){
+    rankLoaded = false;   // 失败不锁死：下次进入榜单页可重试
     // API 失败时降级：用精选库内置 star 数排序
     const list = [...REPOS].sort((a,b)=>b.s-a.s).slice(0,20);
-    box.innerHTML = `<div class="notice warn">⚠️ GitHub 接口暂时不可用，已降级展示精选库 Top 20</div>`
+    box.innerHTML = `<div class="notice warn">⚠️ GitHub 接口暂时不可用，已降级展示精选库 Top 20（点榜单标签可重试）</div>`
       + list.map((r,i)=>cardHTML(r,"精选",i+1)).join("");
   }
 }
@@ -1702,9 +1737,14 @@ function applyTheme(t){
   document.documentElement.dataset.theme = t;
   themeBtn.textContent = t==="dark" ? "☀️" : "🌙";
   localStorage.setItem("gh_theme", t);
+  const mc = document.querySelector('meta[name="theme-color"]');
+  if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");   // 状态栏颜色跟随主题
 }
 themeBtn.addEventListener("click", ()=>applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
-applyTheme(localStorage.getItem("gh_theme")||"dark");
+/* 默认值跟随系统偏好（不再是强制 dark），与 head 首帧防闪烁脚本保持一致 */
+applyTheme(localStorage.getItem("gh_theme") || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"));
+/* 吸顶偏移：实测 header 高度写入 CSS 变量，搜索框吸顶时停在顶栏下方，不再压住 logo/分类 */
+try{ document.documentElement.style.setProperty("--header-h", document.querySelector("header").offsetHeight+"px"); }catch(e){}
 
 /* ===== 真实数据自动同步：repos.json 由 GitHub Actions 每小时生成（失败时静默回退内置数据） ===== */
 fetch("./repos.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{
