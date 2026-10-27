@@ -96,8 +96,14 @@ main{padding:14px 16px}
   color:#fff;font-weight:800;font-size:11px;box-shadow:0 2px 6px var(--shadow)}
 img.repo-icon{object-fit:cover;background:var(--chip)}
 .repo-name{flex:1;font-size:14.5px;font-weight:700;word-break:break-all;
-  text-decoration:none;line-height:1.3;color:var(--text);letter-spacing:.1px}
-.repo-name:active{opacity:.7}
+  text-decoration:none;line-height:1.3;color:var(--text);letter-spacing:.1px;
+  display:inline-flex;align-items:baseline;gap:4px;cursor:pointer;
+  transition:color .15s,transform .12s}
+.repo-name .go-ico,.dp-name .go-ico{font-size:11px;color:var(--text2);opacity:.5;
+  flex:0 0 auto;transition:transform .2s,opacity .2s,color .2s}
+.repo-name:hover{color:var(--accent)}
+.repo-name:hover .go-ico{opacity:1;color:var(--accent);transform:translate(2px,0)}
+.repo-name:active,.repo-name.pressed{opacity:.6;transform:scale(.94)}
 /* 作者信息行 */
 .author-line{display:flex;align-items:center;gap:5px;margin:2px 0 0;font-size:10.5px;color:var(--text2)}
 .author-name{cursor:pointer;color:var(--accent);font-weight:600;text-decoration:none;transition:opacity .2s}
@@ -142,11 +148,13 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .banner .b-sub{font-size:11.5px;color:var(--text2);margin-top:2px;line-height:1.5}
 /* 今日推荐 */
 .daily-pick{background:var(--card2);border:1px solid var(--border);border-radius:12px;
-  padding:11px 14px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
+  padding:11px 14px;margin-bottom:10px;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.daily-pick:hover{border-color:var(--accent);box-shadow:0 3px 10px var(--shadow)}
 .daily-pick:active{border-color:var(--accent)}
 .daily-pick .dp-head{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
   color:var(--accent);margin-bottom:5px}
-.daily-pick .dp-name{font-size:14px;font-weight:700;color:var(--text)}
+.daily-pick .dp-name{font-size:14px;font-weight:700;color:var(--text);display:inline-flex;align-items:baseline;gap:4px}
+.daily-pick:active .go-ico{opacity:1;color:var(--accent)}
 .daily-pick .dp-desc{font-size:11.5px;color:var(--text2);margin-top:3px;line-height:1.5}
 /* 排序切换 */
 .sort-tabs{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;scrollbar-width:none}
@@ -604,7 +612,7 @@ function cardHTML(r, src, rank){
     ${rank?`<span class="rank-badge${rank<=3?" top":""}">第${rank}名</span>`:""}
     <div class="card-top">
       ${icon}
-      <a class="repo-name" href="https://github.com/${esc(r.n)}" target="_blank" rel="noopener">${esc(repoZh(r.n))}</a>
+      <a class="repo-name" href="https://github.com/${esc(r.n)}" target="_blank" rel="noopener">${esc(repoZh(r.n))}<span class="go-ico">↗</span></a>
       <button class="share-btn" data-share="${esc(r.n)}" title="分享">📤 分享</button>
       <button class="fav-btn${on}" data-fav="${esc(r.n)}" onclick="toggleFav('${esc(r.n).replace(/'/g,"\\'")}')" title="收藏">${favs.has(r.n)?"❤️":"🤍"}</button>
     </div>
@@ -644,6 +652,18 @@ document.querySelector("main").addEventListener("click", e=>{
   if(authorLink){ e.preventDefault(); openAuthorModal(authorLink.dataset.author, authorLink.dataset.authortype); return; }
   const shareBtn = e.target.closest(".share-btn");
   if(shareBtn){ e.preventDefault(); openShare(shareBtn.dataset.share); return; }
+  /* 标题跳转交互：先按压缩放 150ms 再打开 GitHub，避免原生跳转瞬间无反馈 */
+  const goLink = e.target.closest(".repo-name");
+  if(goLink){
+    e.preventDefault();
+    const href = goLink.getAttribute("href");
+    goLink.classList.add("pressed");
+    setTimeout(()=>{
+      window.open(href, "_blank", "noopener");
+      setTimeout(()=>goLink.classList.remove("pressed"), 160);
+    }, 150);
+    return;
+  }
   if(e.target.closest("a,.fav-btn")) return;
   const card = e.target.closest(".card");
   if(card && card.querySelector(".repo-detail")) card.classList.toggle("open");
@@ -833,7 +853,7 @@ function renderDailyPick(){
   const r = REPOS[idx];
   $("#dailyPick").innerHTML = `<div class="daily-pick" title="去 GitHub 查看这个项目">
     <div class="dp-head">🔥 今日推荐${DATA_UPDATED?`<span class="dp-upd" style="font-size:11px;color:var(--text2);font-weight:400;margin-left:8px">数据每小时自动同步 · ${fmtLocalU(DATA_UPDATED)}</span>`:""}</div>
-    <div class="dp-name">${esc(repoZh(r.n))} <span class="dp-sub">${esc(r.n)}</span></div>
+    <div class="dp-name">${esc(repoZh(r.n))}<span class="go-ico">↗</span><span class="dp-sub">${esc(r.n)}</span></div>
     <div class="dp-desc">${esc(r.d)}</div>
   </div>`;
   $("#dailyPick").querySelector(".daily-pick").addEventListener("click", ()=>window.open(`https://github.com/${r.n}`,"_blank"));
