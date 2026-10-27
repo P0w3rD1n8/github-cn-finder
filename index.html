@@ -331,7 +331,7 @@ nav{
     <button class="dict-entry" id="dictEntry">GitHub 黑话大白话速查（Repository / PR / Fork…）<span class="dict-arrow">→</span></button>
     <div class="sec-title">ℹ️ 关于</div>
     <div class="about-box">
-      <b>GitHub 中文发现器</b><span class="ver">v1.2</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
+      <b>GitHub 中文发现器</b><span class="ver">v1.3</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
       · 内置 <b>精选项目库</b>，每条都有大白话中文简介，专为英文小白翻译<br>
       · 搜索时会同时查询 <b>GitHub 官方接口</b>，网络不通时自动只展示本地精选<br>
       · 收藏保存在你的浏览器本地，不上传任何数据<br>
@@ -401,10 +401,10 @@ nav{
 
 <script>
 /* ================= 精选项目数据（中文简介逐条大白话翻译，小白视角） ================= */
-const CATS = ["全部","AI 人工智能","实用工具","手机 App","学编程","游戏娱乐","网页界面","后台服务"];
+const CATS = ["全部","AI 人工智能","实用工具","开发者工具","影音与直播","手机 App","学编程","游戏娱乐","网页界面","后台服务"];
 
 /* ================= 人群/用途分类（小白视角，可多标签） ================= */
-const USAGES = ["全部","程序员","学编程","自媒体创作者","普通用户","游戏玩家"];
+const USAGES = ["全部","程序员","学编程","自媒体创作者","普通用户","游戏玩家","设计师","视频剪辑","自托管/运维"];
 const USAGE = {
   "huggingface/transformers":["程序员"],"ollama/ollama":["普通用户","程序员"],
   "AUTOMATIC1111/stable-diffusion-webui":["自媒体创作者","普通用户"],"langchain-ai/langchain":["程序员"],
@@ -450,7 +450,23 @@ const USAGE = {
   "jellyfin/jellyfin":["普通用户"],"public-apis/public-apis":["学编程","程序员"],"Asabeneh/30-Days-Of-React":["学编程"],
   "codecrafters-io/build-your-own-x":["学编程"],"521xueweihan/HelloGitHub":["学编程","普通用户"],"torvalds/linux":["学编程","程序员"],
   "microsoft/generative-ai-for-beginners":["学编程","普通用户"],"OpenTTD/OpenTTD":["游戏玩家"],"wesnoth/wesnoth":["游戏玩家"],
-  "veloren/veloren":["游戏玩家"],"bitwarden/clients":["普通用户"],"kodi/xbmc":["普通用户","游戏玩家"]
+  "veloren/veloren":["游戏玩家"],"bitwarden/clients":["普通用户"],"kodi/xbmc":["普通用户","游戏玩家"],
+  /* v1.3 分类细化：补充 设计师/视频剪辑/自托管运维 人群标签（键重复自动覆盖上一版值） */
+  "AUTOMATIC1111/stable-diffusion-webui":["自媒体创作者","普通用户","设计师"],
+  "comfyanonymous/ComfyUI":["自媒体创作者","设计师"],"Sanster/IOPaint":["普通用户","自媒体创作者","设计师"],
+  "mrdoob/three.js":["程序员","设计师"],"d3/d3":["程序员","设计师"],
+  "twbs/bootstrap":["程序员","设计师"],"tailwindlabs/tailwindcss":["程序员","设计师"],
+  "shadcn-ui/ui":["程序员","设计师"],"ant-design/ant-design":["程序员","设计师"],
+  "FFmpeg/FFmpeg":["自媒体创作者","程序员","视频剪辑"],"HandBrake/HandBrake":["自媒体创作者","普通用户","视频剪辑"],
+  "obsproject/obs-studio":["自媒体创作者","普通用户","视频剪辑"],"yt-dlp/yt-dlp":["自媒体创作者","普通用户","视频剪辑"],
+  "openai/whisper":["自媒体创作者","普通用户","视频剪辑"],"RVC-Project/Retrieval-based-Voice-Conversion-WebUI":["自媒体创作者","视频剪辑"],
+  "ShareX/ShareX":["自媒体创作者","普通用户","视频剪辑"],
+  "home-assistant/core":["普通用户","自托管/运维"],"immich-app/immich":["普通用户","自托管/运维"],
+  "jellyfin/jellyfin":["普通用户","自托管/运维"],"syncthing/syncthing":["普通用户","自托管/运维"],
+  "alist-org/alist":["普通用户","自托管/运维"],"go-gitea/gitea":["程序员","自托管/运维"],
+  "n8n-io/n8n":["自媒体创作者","普通用户","自托管/运维"],"kubernetes/kubernetes":["程序员","自托管/运维"],
+  "prometheus/prometheus":["程序员","自托管/运维"],"RustDesk/RustDesk":["普通用户","程序员","自托管/运维"],
+  "keepassxc/keepassxc":["普通用户","自托管/运维"],"bitwarden/clients":["普通用户","自托管/运维"]
 };
 let curUsage = "全部";
 
@@ -488,15 +504,15 @@ const REPOS = [
 {n:"nestjs/nest",d:"企业级 Node.js 框架，构建可扩展的服务端应用",s:72000,l:"TypeScript",c:"后台服务"},
 {n:"go-kratos/kratos",d:"B 站开源的 Go 微服务框架，大厂生产验证",s:24000,l:"Go",c:"后台服务"},
 // 工具
-{n:"microsoft/vscode",d:"微软开源的代码编辑器，全球程序员最常用",s:174000,l:"TypeScript",c:"实用工具"},
-{n:"yt-dlp/yt-dlp",d:"强大的视频下载工具，支持上千个网站",s:124000,l:"Python",c:"实用工具"},
-{n:"ohmyzsh/ohmyzsh",d:"让命令行终端好用又好看的配置框架",s:180000,l:"Shell",c:"实用工具"},
+{n:"microsoft/vscode",d:"微软开源的代码编辑器，全球程序员最常用",s:174000,l:"TypeScript",c:"开发者工具"},
+{n:"yt-dlp/yt-dlp",d:"强大的视频下载工具，支持上千个网站",s:124000,l:"Python",c:"影音与直播"},
+{n:"ohmyzsh/ohmyzsh",d:"让命令行终端好用又好看的配置框架",s:180000,l:"Shell",c:"开发者工具"},
 {n:"localsend/localsend",d:"局域网免流量跨设备传文件，苹果安卓电脑互通",s:68000,l:"Dart",c:"实用工具"},
-{n:"neovim/neovim",d:"现代化的 Vim 编辑器，极致高效的文本编辑",s:93000,l:"C",c:"实用工具"},
-{n:"jesseduffield/lazygit",d:"终端里的 Git 可视化工具，告别背命令",s:64000,l:"Go",c:"实用工具"},
-{n:"BurntSushi/ripgrep",d:"超快的文本搜索工具，比传统 grep 快一个量级",s:55000,l:"Rust",c:"实用工具"},
-{n:"sharkdp/bat",d:"cat 命令增强版，自带语法高亮和 Git 提示",s:54000,l:"Rust",c:"实用工具"},
-{n:"jgm/pandoc",d:"万能文档转换器，Markdown、Word、PDF 互转",s:39000,l:"Haskell",c:"实用工具"},
+{n:"neovim/neovim",d:"现代化的 Vim 编辑器，极致高效的文本编辑",s:93000,l:"C",c:"开发者工具"},
+{n:"jesseduffield/lazygit",d:"终端里的 Git 可视化工具，告别背命令",s:64000,l:"Go",c:"开发者工具"},
+{n:"BurntSushi/ripgrep",d:"超快的文本搜索工具，比传统 grep 快一个量级",s:55000,l:"Rust",c:"开发者工具"},
+{n:"sharkdp/bat",d:"cat 命令增强版，自带语法高亮和 Git 提示",s:54000,l:"Rust",c:"开发者工具"},
+{n:"jgm/pandoc",d:"万能文档转换器，Markdown、Word、PDF 互转",s:39000,l:"Haskell",c:"开发者工具"},
 {n:"ShareX/ShareX",d:"Windows 最强的截图与屏幕录制分享工具",s:32000,l:"C#",c:"实用工具"},
 // 游戏
 {n:"godotengine/godot",d:"免费开源的游戏引擎，2D 和 3D 游戏都能做",s:100000,l:"C++",c:"游戏娱乐"},
@@ -576,10 +592,10 @@ const REPOS = [
 {n:"keepassxc/keepassxc",d:"开源密码保险库，所有账号密码一把锁",s:22000,l:"C++",c:"实用工具"},
 {n:"kovidgoyal/calibre",d:"电子书管理大师，整理阅读一站式",s:22000,l:"Python",c:"实用工具"},
 {n:"sumatrapdfreader/sumatrapdf",d:"秒开 PDF 阅读器，轻巧不占内存",s:13000,l:"C++",c:"实用工具"},
-{n:"HandBrake/HandBrake",d:"视频压缩转码利器，大文件秒变清晰小文件",s:18000,l:"C",c:"实用工具"},
-{n:"obsproject/obs-studio",d:"专业录屏直播软件，主播和网课老师必备",s:70000,l:"C",c:"实用工具"},
-{n:"FFmpeg/FFmpeg",d:"音视频处理的瑞士军刀，所有格式都能转",s:48000,l:"C",c:"实用工具"},
-{n:"ScoopInstaller/Scoop",d:"Windows 命令行装软件，一行命令安装卸载",s:23000,l:"Shell",c:"实用工具"},
+{n:"HandBrake/HandBrake",d:"视频压缩转码利器，大文件秒变清晰小文件",s:18000,l:"C",c:"影音与直播"},
+{n:"obsproject/obs-studio",d:"专业录屏直播软件，主播和网课老师必备",s:70000,l:"C",c:"影音与直播"},
+{n:"FFmpeg/FFmpeg",d:"音视频处理的瑞士军刀，所有格式都能转",s:48000,l:"C",c:"影音与直播"},
+{n:"ScoopInstaller/Scoop",d:"Windows 命令行装软件，一行命令安装卸载",s:23000,l:"Shell",c:"开发者工具"},
 {n:"jellyfin/jellyfin",d:"家庭影院服务器，自建流媒体影音库",s:40000,l:"C#",c:"实用工具"},
 {n:"public-apis/public-apis",d:"免费 API 大全，找接口灵感一站式",s:32000,l:"Python",c:"学编程"},
 {n:"Asabeneh/30-Days-Of-React",d:"30 天学会 React，最好的入门教程之一",s:30000,l:"JavaScript",c:"学编程"},
