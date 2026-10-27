@@ -1558,7 +1558,24 @@ $("#searchInput").addEventListener("input", ()=>{ clearTimeout(searchTimer); sea
 
 /* ================= 榜单页 ================= */
 let rankLoaded = false, rankRange = "all";
-const RANK_TITLES = {day:"今日热榜", week:"本周热榜", month:"本月热榜", year:"今年热榜", all:"全站总榜"};
+const RANK_TITLES = {day:"星标增速", week:"本周热榜", month:"本月热榜", year:"今年热榜", all:"全站总榜"};
+/* 今日榜 v2：精选库星标增速榜（较上次快照的 star 增量，数据源 repos.json；无需 24h 历史数组，
+   口径由标题注明「数据截至 X」） */
+function renderDayGrowthRank(box){
+  const withPs = REPOS.filter(r=>typeof r.ps==="number" && r.ps>=0);
+  const stamp = DATA_UPDATED ? ` · 数据截至 ${fmtLocalU(DATA_UPDATED)}` : "";
+  if(withPs.length < 5){
+    // 快照不足（首次采集/数据未加载）：兜底按总星标展示，口径写清楚
+    const list = [...REPOS].sort((a,b)=>b.s-a.s).slice(0,20);
+    box.innerHTML = `<div class="notice">🔥 星标增速榜：快照数据准备中（每小时采集一次），先按总星标展示</div>`
+      + list.map((r,i)=>cardHTML(r,"精选",i+1)).join("");
+    return;
+  }
+  const dl = r => r.s - r.ps;   // 较上次快照的星标增量
+  const ranked = [...withPs].sort((a,b)=>(dl(b)-dl(a)) || (b.s-a.s)).slice(0,20);
+  box.innerHTML = `<div class="notice">🔥 星标增速榜 · 较上次快照${stamp}</div>`
+    + ranked.map((r,i)=>cardHTML(r,"精选",i+1)).join("");
+}
 function rangeSince(){
   const d = new Date();
   const pad = n=>String(n).padStart(2,"0");
@@ -1571,6 +1588,7 @@ function rangeSince(){
 }
 async function loadRank(){
   const box = $("#rankList");
+  if(rankRange==="day"){ renderDayGrowthRank(box); return; }   // 今日=精选库增速榜（本地快照 diff），无需调 GitHub API
   box.innerHTML = `<div class="loading"><span class="spin"></span>正在加载 GitHub ${RANK_TITLES[rankRange]}…</div>`;
   try{
     const since = rangeSince();
@@ -1757,6 +1775,7 @@ fetch("./repos.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{
       if(typeof d.fk==="number") r.fk = d.fk;  // 复刻
       if(typeof d.iu==="number") r.iu = d.iu;  // 反馈
       if(d.lg) r.l = d.lg;                      // 语言（v1.6 起由采集脚本提供真实值）
+      if(typeof d.ps==="number") r.ps = d.ps;   // 上次快照 star（v1.12 增速榜用）
     }
   }
   renderDailyPick();
