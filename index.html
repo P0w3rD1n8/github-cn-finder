@@ -53,14 +53,12 @@ header{
 .cats-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
 .cats-wrap.can-left::before{opacity:1}
 .cats-wrap.can-right::after{opacity:1}
-.cats{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;scrollbar-width:none;scroll-snap-type:x proximity}
-.cats::-webkit-scrollbar{display:none}
-.cats .cat{scroll-snap-align:start}
+.cats{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px 10px}
 .usage-cats{padding-top:2px;margin-top:-8px}
 .usage-cats .cat{font-size:12px;padding:5px 12px;border:1px dashed var(--border)}
 .usage-cats .cat.active{border:1px solid transparent}
-.cat{flex:0 0 auto;padding:7px 14px;border-radius:999px;background:var(--chip);
-  color:var(--text2);font-size:13px;cursor:pointer;border:1px solid transparent;
+.cat{flex:0 0 auto;padding:6px 12px;border-radius:999px;background:var(--chip);
+  color:var(--text2);font-size:12.5px;cursor:pointer;border:1px solid transparent;
   white-space:nowrap;transition:all .2s}
 .cat.active{background:var(--accent);color:#fff;font-weight:600}
 /* 页面 */
