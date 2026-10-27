@@ -70,7 +70,8 @@ header{
 .cats-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
 .cats-wrap.can-left::before{opacity:1}
 .cats-wrap.can-right::after{opacity:1}
-.cats{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px 10px}
+.cats{display:flex;flex-wrap:nowrap;gap:6px;padding:8px 16px 10px;overflow-x:auto;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
 .usage-cats{padding-top:2px;margin-top:-8px}
 .usage-cats .cat{font-size:12px;padding:5px 12px;border:1px dashed var(--border)}
 .usage-cats .cat.active{border:1px solid transparent}
@@ -340,7 +341,7 @@ nav{
     <div class="filter-row">
       <div class="sort-tabs" id="sortTabs">
         <div class="sort-tab active" data-sort="star">⭐ 热门</div>
-        <div class="sort-tab" data-sort="fav">🔖 收藏多</div>
+        <div class="sort-tab" data-sort="fav">🔖 我的收藏优先</div>
       </div>
       <div class="usage-toggle" id="usageToggle">👥 人群：<span id="usageLabel">全部</span></div>
     </div>
@@ -376,7 +377,7 @@ nav{
     <button class="dict-entry" id="dictEntry">GitHub 黑话大白话速查（Repository / PR / Fork…）<span class="dict-arrow">→</span></button>
     <div class="sec-title">ℹ️ 关于</div>
     <div class="about-box">
-      <b>GitHub 中文发现器</b><span class="ver">v1.3</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
+      <b>GitHub 中文发现器</b><span class="ver">v1.16</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
       · 内置 <b>精选项目库</b>，每条都有大白话中文简介，专为英文小白翻译<br>
       · 搜索时会同时查询 <b>GitHub 官方接口</b>，网络不通时自动只展示本地精选<br>
       · 收藏保存在你的浏览器本地，不上传任何数据<br>
@@ -522,7 +523,9 @@ const esc = s => String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"
 let favs;
 try{ favs = new Set(JSON.parse(localStorage.getItem("gh_favs")||"[]")); }
 catch(e){ favs = new Set(); localStorage.removeItem("gh_favs"); }   // 坏数据兜底：不白屏、自动清掉
-let favSnap = JSON.parse(localStorage.getItem("gh_favs_snap")||"{}");
+let favSnap = {};
+try{ favSnap = JSON.parse(localStorage.getItem("gh_favs_snap")||"{}")||{}; }
+catch(e){ favSnap = {}; localStorage.removeItem("gh_favs_snap"); }   // 坏数据兜底：不白屏、自动清掉
 function saveFavs(){
   localStorage.setItem("gh_favs", JSON.stringify([...favs]));
   localStorage.setItem("gh_favs_snap", JSON.stringify(favSnap));
@@ -1141,8 +1144,8 @@ function applyTheme(t){
 themeBtn.addEventListener("click", ()=>applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
 /* 默认值跟随系统偏好（不再是强制 dark），与 head 首帧防闪烁脚本保持一致 */
 applyTheme(localStorage.getItem("gh_theme") || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"));
-/* 吸顶偏移：实测 header 高度写入 CSS 变量，搜索框吸顶时停在顶栏下方，不再压住 logo/分类 */
-try{ document.documentElement.style.setProperty("--header-h", document.querySelector("header").offsetHeight+"px"); }catch(e){}
+/* 吸顶偏移：实测 header 高度写入 CSS 变量（renderCats 填充分类后再量，窗口尺寸变化时重算） */
+function measureHeader(){ try{ document.documentElement.style.setProperty("--header-h", document.querySelector("header").offsetHeight+"px"); }catch(e){} }
 
 /* ===== 真实数据自动同步：repos.json 由 GitHub Actions 每小时生成（失败时静默回退内置数据） ===== */
 fetch("./repos.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{
@@ -1171,6 +1174,7 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 
 /* 初始化 */
 renderCats(); renderUsages(); renderHome(); renderMirrorStats(); renderDailyPick(); renderFavs();
+measureHeader(); window.addEventListener("resize", measureHeader);
 </script>
 </body>
 </html>

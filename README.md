@@ -48,6 +48,15 @@
 
 ## 📜 版本历史
 
+**v1.16（2026-10-27）**
+- 精选库扩充 20 个日常向项目（132 → **152**）：VLC 视频播放、GIMP/Audacity 图像音频编辑、LibreOffice 办公、Joplin/思源笔记、Stirling-PDF、Motrix 下载、Upscayl 图片放大、沉浸式翻译、legado/Kotatsu 阅读、uBlock 广告拦截、ScreenToGif 录屏、Stellarium 天文、Habitica 习惯养成、Anki 学习、NanaZip 压缩、AppFlowy 笔记、Kdenlive 视频剪辑
+- 卡片标题跳转交互：常显 ↗ 图标 + 悬停变色 + 按压反馈延迟跳转，点标题直达 GitHub
+- 分类栏改**单行横向滚动**（手机不再折 3 行占屏）；吸顶测量修正（renderCats 后再量 + 窗口 resize 重算）
+- 健壮性：收藏快照坏数据兜底（不再整站白屏）；SW 对 repos.json 改 network-first（star 实时、不再显示上次打开的值）；版本号统一 v1.16
+
+**v1.15（2026-10-27）**
+- 数据抽离：项目数据从单文件拆到 `data.js`，新增 `validate-data.js` 结构校验 + CI 全量仓库存在性检查，加到第 200 个也不出错
+
 **v1.13（2026-10-27）**
 - 离线缓存重构：network-first → **stale-while-revalidate**（秒开 + 后台更新，断网也能打开上次内容）
 - 桌面端新增**两列卡片布局**（≥900px），1440px 屏幕不再是一根窄条

@@ -2,7 +2,7 @@
    首页/清单立即从缓存渲染（秒开 + 离线可开），网络更新在后台进行，下次打开即新内容；
    缓存未命中（首次访问）走网络，5 秒超时兜底，避免网络卡死时白等。
    版本 v6：v1.15 数据抽到 data.js，缓存清单补 data.js 与 v1.14 新增图标 */
-const CACHE = "gh-cn-v6";
+const CACHE = "gh-cn-v7";
 const ASSETS = ["./", "./index.html", "./data.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png"];
 
@@ -16,10 +16,30 @@ self.addEventListener("activate", e => {
 });
 self.addEventListener("fetch", e => {
   const u = new URL(e.request.url);
-  if (u.origin !== location.origin) return;      // 跨源（如 repos.json）不拦截，走正常网络
+  if (u.origin !== location.origin) return;      // 跨源资源不拦截，走正常网络
   if (e.request.method !== "GET") return;        // 只处理 GET
+  if (u.pathname.endsWith("/repos.json")) {      // 实时数据：network-first（3 秒超时回退缓存），保证 star 是最新的
+    e.respondWith(networkFirst(e.request));
+    return;
+  }
   e.respondWith(fromCacheOrNetwork(e.request));
 });
+
+async function networkFirst(req){
+  try{
+    const res = await fetchWithTimeout(req, 3000);
+    if (res && res.ok){
+      const copy = res.clone();
+      caches.open(CACHE).then(c => c.put(req, copy)).catch(()=>{});
+      return res;
+    }
+  }catch(err){}
+  const cached = await caches.match(req);
+  if (cached) return cached;
+  return new Response("离线状态：实时数据暂不可用，请联网后刷新重试", {
+    status: 503, headers: {"Content-Type": "text/plain;charset=utf-8"}
+  });
+}
 
 async function fromCacheOrNetwork(req){
   const cached = await caches.match(req);
