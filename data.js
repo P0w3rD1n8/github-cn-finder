@@ -135,7 +135,27 @@ const USAGE = {
   "debpalash/VoiceStudio":["视频剪辑","自媒体创作者"],
   "hugohe3/ppt-master":["普通用户"],
   "cathrynlavery/diagram-design":["设计师","程序员"],
-  "bilawalsidhu/gods-eye-view":["普通用户","游戏玩家"]
+  "bilawalsidhu/gods-eye-view":["普通用户","游戏玩家"],
+  "videolan/vlc":["普通用户"],
+  "GNOME/gimp":["设计师","普通用户","自媒体创作者"],
+  "audacity/audacity":["自媒体创作者","视频剪辑","普通用户"],
+  "LibreOffice/core":["普通用户"],
+  "laurent22/joplin":["普通用户","程序员"],
+  "siyuan-note/siyuan":["普通用户","程序员"],
+  "Stirling-Tools/Stirling-PDF":["普通用户"],
+  "agalwood/Motrix":["普通用户"],
+  "upscayl/upscayl":["普通用户","自媒体创作者","设计师"],
+  "immersive-translate/immersive-translate":["普通用户","程序员"],
+  "gedoor/legado":["普通用户"],
+  "KotatsuApp/Kotatsu":["普通用户"],
+  "gorhill/uBlock":["普通用户"],
+  "NickeManarin/ScreenToGif":["自媒体创作者","普通用户"],
+  "Stellarium/stellarium":["普通用户"],
+  "HabitRPG/habitica":["普通用户"],
+  "ankitects/anki":["普通用户","学编程"],
+  "M2Team/NanaZip":["普通用户"],
+  "AppFlowy-IO/AppFlowy":["普通用户","程序员"],
+  "KDE/kdenlive":["视频剪辑","自媒体创作者","普通用户"]
 };
 
 const REPOS = [
@@ -286,7 +306,28 @@ const REPOS = [
 {n:"debpalash/VoiceStudio",d:"本地运行的 AI 声音工具：克隆声音、视频配音、转写 646 种语言，完全免费",s:89868,l:"Python",c:"影音与直播"},
 {n:"hugohe3/ppt-master",d:"丢进一个 PDF 或 Word，拿回真正可编辑带动画的 PPT",s:69148,l:"Python",c:"实用工具"},
 {n:"cathrynlavery/diagram-design",d:"用大白话描述一张图，它按你的风格画出 45 种专业图表",s:61493,l:"HTML",c:"实用工具"},
-{n:"bilawalsidhu/gods-eye-view",d:"浏览器里的 3D 间谍卫星模拟器，能看到真实的飞机和船只",s:60497,l:"JavaScript",c:"游戏娱乐"}
+{n:"bilawalsidhu/gods-eye-view",d:"浏览器里的 3D 间谍卫星模拟器，能看到真实的飞机和船只",s:60497,l:"JavaScript",c:"游戏娱乐"},
+// 日常向扩充（普通用户天天用得上）
+{n:"videolan/vlc",d:"万能的免费视频播放器，什么格式都能播",s:20244,l:"C",c:"影音与直播"},
+{n:"GNOME/gimp",d:"免费开源的修图软件，Photoshop 的平民替代",s:6547,l:"C",c:"实用工具"},
+{n:"audacity/audacity",d:"免费开源的录音和音频剪辑软件，播客配音都在用",s:18850,l:"C++",c:"影音与直播"},
+{n:"LibreOffice/core",d:"免费开源的办公套件，Word 表格 PPT 全都有",s:4564,l:"C++",c:"实用工具"},
+{n:"laurent22/joplin",d:"开源笔记软件，印象笔记的免费替代",s:56903,l:"TypeScript",c:"实用工具"},
+{n:"siyuan-note/siyuan",d:"国产思源笔记，数据本地保存的块级笔记工具",s:46964,l:"TypeScript",c:"实用工具"},
+{n:"Stirling-Tools/Stirling-PDF",d:"网页版 PDF 工具箱：合并、压缩、转 Word 一键搞定",s:95122,l:"TypeScript",c:"实用工具"},
+{n:"agalwood/Motrix",d:"全平台下载管理器，浏览器插件一键接管下载",s:57510,l:"TypeScript",c:"实用工具"},
+{n:"upscayl/upscayl",d:"AI 图片放大工具，老照片模糊图一键变清晰",s:51149,l:"TypeScript",c:"实用工具"},
+{n:"immersive-translate/immersive-translate",d:"沉浸式翻译插件，外文网页一键双语对照",s:19506,l:"",c:"实用工具"},
+{n:"gedoor/legado",d:"开源免费的小说阅读器，自带海量书源",s:47168,l:"Kotlin",c:"手机 App"},
+{n:"KotatsuApp/Kotatsu",d:"安卓免费漫画阅读器，在线看海量漫画",s:8944,l:"Kotlin",c:"手机 App"},
+{n:"gorhill/uBlock",d:"浏览器广告拦截神器，干净上网体验",s:68863,l:"JavaScript",c:"实用工具"},
+{n:"NickeManarin/ScreenToGif",d:"录屏转 GIF 小工具，做教程做表情包都方便",s:27857,l:"C#",c:"实用工具"},
+{n:"Stellarium/stellarium",d:"星空模拟软件，躺着就能看遍全天星辰",s:10119,l:"C++",c:"游戏娱乐"},
+{n:"HabitRPG/habitica",d:"把打卡养成游戏化，完成任务角色就升级",s:14254,l:"JavaScript",c:"手机 App"},
+{n:"ankitects/anki",d:"记忆卡牌神器，背单词背知识点效率翻倍",s:32331,l:"Rust",c:"实用工具"},
+{n:"M2Team/NanaZip",d:"国产开源压缩工具，右键一键解压各种格式",s:16013,l:"C++",c:"实用工具"},
+{n:"AppFlowy-IO/AppFlowy",d:"开源 Notion，笔记看板数据库一体",s:77809,l:"Dart",c:"实用工具"},
+{n:"KDE/kdenlive",d:"免费开源视频剪辑软件，剪视频不用装 PR",s:5940,l:"C++",c:"影音与直播"}
 ];
 /* 国内镜像直达表（2026-10-27 第三方核实报告提取）：owner/repo(小写) -> 镜像URL */
 /* GitCode：GitHub 官方合作镜像平台（gitcode.com/GitHub_Trending 或 gh_mirrors），114 个可用 */
@@ -437,6 +478,26 @@ const CN_DESC = {
   "hugohe3/ppt-master":"丢进一个 PDF 或 Word，拿回真正可编辑带动画的 PPT",
   "cathrynlavery/diagram-design":"用大白话描述一张图，它按你的风格画出 45 种专业图表",
   "bilawalsidhu/gods-eye-view":"浏览器里的 3D 间谍卫星模拟器，能看到真实的飞机和船只",
+  "videolan/vlc":"万能视频播放器，几乎能播所有格式",
+  "GNOME/gimp":"免费开源的图像编辑器，Photoshop 的替代品",
+  "audacity/audacity":"免费开源的音频录制与剪辑软件",
+  "LibreOffice/core":"免费开源的办公套件，替代微软 Office",
+  "laurent22/joplin":"开源笔记与待办应用，数据自己保管",
+  "siyuan-note/siyuan":"国产开源块级笔记软件，支持本地数据",
+  "Stirling-Tools/Stirling-PDF":"本地运行的网页版 PDF 工具箱",
+  "agalwood/Motrix":"全平台开源下载管理器",
+  "upscayl/upscayl":"AI 驱动的开源图片放大工具",
+  "immersive-translate/immersive-translate":"浏览器双语对照翻译插件",
+  "gedoor/legado":"开源免费的小说阅读器，支持自定义书源",
+  "KotatsuApp/Kotatsu":"开源安卓漫画阅读器",
+  "gorhill/uBlock":"高效的开源浏览器广告拦截扩展",
+  "NickeManarin/ScreenToGif":"开源录屏与 GIF 制作工具",
+  "Stellarium/stellarium":"开源天文星空模拟软件",
+  "HabitRPG/habitica":"游戏化的习惯养成与任务打卡应用",
+  "ankitects/anki":"开源间隔重复记忆卡牌软件",
+  "M2Team/NanaZip":"国产开源的 Windows 文件压缩工具",
+  "AppFlowy-IO/AppFlowy":"开源的 Notion 替代品",
+  "KDE/kdenlive":"开源非线性视频剪辑软件",
 };
 
 const AUTHORS = {
@@ -591,7 +652,27 @@ const REPO_ZH = {
   "multica-ai/andrej-karpathy-skills":"Karpathy AI 写码守则","paperclipai/paperclip":"Paperclip AI 智能体公司",
   "thedotmack/claude-mem":"Claude Mem 记忆扩展","debpalash/VoiceStudio":"VoiceStudio 本地声音工坊",
   "hugohe3/ppt-master":"PPT Master 文档转幻灯片","cathrynlavery/diagram-design":"Diagram Design 白话图表",
-  "bilawalsidhu/gods-eye-view":"God's Eye View 卫星视角"
+  "bilawalsidhu/gods-eye-view":"God's Eye View 卫星视角",
+  "videolan/vlc":"VLC 万能播放器",
+  "GNOME/gimp":"GIMP 免费修图",
+  "audacity/audacity":"Audacity 音频剪辑",
+  "LibreOffice/core":"LibreOffice 免费办公",
+  "laurent22/joplin":"Joplin 笔记",
+  "siyuan-note/siyuan":"思源笔记",
+  "Stirling-Tools/Stirling-PDF":"Stirling-PDF 工具箱",
+  "agalwood/Motrix":"Motrix 下载管理器",
+  "upscayl/upscayl":"Upscayl AI 图片放大",
+  "immersive-translate/immersive-translate":"沉浸式翻译",
+  "gedoor/legado":"阅读（开源看书神器）",
+  "KotatsuApp/Kotatsu":"Kotatsu 漫画阅读器",
+  "gorhill/uBlock":"uBlock 广告拦截",
+  "NickeManarin/ScreenToGif":"ScreenToGif 录屏转GIF",
+  "Stellarium/stellarium":"Stellarium 星空模拟",
+  "HabitRPG/habitica":"Habitica 习惯打卡",
+  "ankitects/anki":"Anki 记忆卡牌",
+  "M2Team/NanaZip":"NanaZip 压缩工具",
+  "AppFlowy-IO/AppFlowy":"AppFlowy 开源笔记",
+  "KDE/kdenlive":"Kdenlive 免费剪辑"
 };
 
 /* 实测组织名单：精选库作者里已知的组织（GitHub API 逐位实测），弥补正则猜测不可靠 */
@@ -730,9 +811,29 @@ const DETAIL = {
 "hugohe3/ppt-master":"🎯应用场景：把 PDF / Word 一键变成可编辑、带动画的 PPT。\n✨主要功能：读取文档内容自动排版，生成可编辑幻灯片，支持动画与多种导出格式。\n💻适用平台：Windows / Mac / Linux，Python 环境。\n🛠怎么用起来：按文档运行后把文档交给它，等它输出 PPT 即可；经常做演示的人适用。",
 "cathrynlavery/diagram-design":"🎯应用场景：不会画图也能出专业图表——用大白话描述，它按你的风格生成。\n✨主要功能：支持 45 种专业图表类型，自动跟随你的风格偏好做设计。\n💻适用平台：Windows / Mac / Linux，需要 Node.js 环境。\n🛠怎么用起来：按文档安装后输入文字描述即可生成图表；产品经理、设计师、汇报党适用。",
 "bilawalsidhu/gods-eye-view":"🎯应用场景：在浏览器里体验卫星视角看地球，实时追踪真实航班与船只。\n✨主要功能：3D 地球渲染，实时显示飞机、船舶动态，支持视角切换与搜索。\n💻适用平台：浏览器直接运行，无需安装。\n🛠怎么用起来：打开网页即可使用；对地理、航空感兴趣的玩家不容错过。",
+"videolan/vlc":"🎯应用场景：电脑上看电影、听音乐，几乎所有视频格式都能放。\n✨主要功能：全格式解码、倍速播放、字幕加载、在线流媒体。\n💻适用平台：Windows / Mac / Linux / 安卓 / iOS。\n🛠怎么用起来：官网下载安装即用，双击视频文件自动打开；装一个就够，不用再找解码器。",
+"GNOME/gimp":"🎯应用场景：免费修图、做设计、处理照片，不用花钱买 PS。\n✨主要功能：画笔图层、抠图调色、插件丰富，功能对标专业软件。\n💻适用平台：Windows / Mac / Linux。\n🛠怎么用起来：官网下载安装即用，界面支持中文；想学修图设计又不想付费就用它。",
+"audacity/audacity":"🎯应用场景：录音、剪辑音频、做播客配音、剪歌。\n✨主要功能：多轨录音、降噪、变速变调、格式转换导出。\n💻适用平台：Windows / Mac / Linux。\n🛠怎么用起来：官网下载安装，接上麦克风点红点录音，剪完导出；播客和配音小白的第一个工具。",
+"LibreOffice/core":"🎯应用场景：替代微软 Office 写文档、做表格、做演示文稿。\n✨主要功能：Writer 文档、Calc 表格、Impress 幻灯片，兼容 docx/xlsx/pptx。\n💻适用平台：Windows / Mac / Linux。\n🛠怎么用起来：官网下载安装即用，可直接打开 Office 文件；不想买正版也不想装破解版就用它。",
+"laurent22/joplin":"🎯应用场景：记笔记、写待办、存资料，数据存在自己手里。\n✨主要功能：Markdown 笔记、待办清单、多设备同步、剪藏插件。\n💻适用平台：Windows / Mac / Linux / 安卓 / iOS。\n🛠怎么用起来：官网下载安装，注册同步账号即可多端同步；印象笔记涨价后的最佳替代。",
+"siyuan-note/siyuan":"🎯应用场景：重度笔记用户，想要块级编辑和本地数据。\n✨主要功能：块引用、双链笔记、思维导图、数据完全本地。\n💻适用平台：Windows / Mac / Linux / 安卓 / iOS / 网页。\n🛠怎么用起来：官网下载安装即用，数据存在自己电脑上；国产笔记软件里的口碑担当。",
+"Stirling-Tools/Stirling-PDF":"🎯应用场景：处理 PDF 各种需求：合并、拆分、压缩、转 Word。\n✨主要功能：网页界面操作几十种 PDF 功能，文件不出本机。\n💻适用平台：Windows / Mac / Linux（Docker 部署），浏览器操作。\n🛠怎么用起来：有 Docker 就一条命令部署，浏览器打开即用；在线 PDF 网站的免费替代。",
+"agalwood/Motrix":"🎯应用场景：下载大文件、BT 种子、磁力链接，一个工具全搞定。\n✨主要功能：多协议下载、断点续传、浏览器插件接管下载。\n💻适用平台：Windows / Mac / Linux。\n🛠怎么用起来：官网下载安装，装浏览器插件后下载链接自动接管；下载党的效率工具。",
+"upscayl/upscayl":"🎯应用场景：把模糊老照片、低清截图放大变清晰。\n✨主要功能：AI 放大图像、多种模型可选、本地运行免费。\n💻适用平台：Windows / Mac / Linux。\n🛠怎么用起来：官网下载安装，导入图片选模型点放大即可；旧照片翻新小能手。",
+"immersive-translate/immersive-translate":"🎯应用场景：看外文网页、外文资料，一键双语对照翻译。\n✨主要功能：网页全文双语对照、支持 PDF 和视频字幕、主流浏览器都有插件。\n💻适用平台：Chrome / Edge / Firefox / Safari 等浏览器。\n🛠怎么用起来：浏览器应用商店搜索安装，打开外文网页点插件即可；读外文资料不用再复制粘贴了。",
+"gedoor/legado":"🎯应用场景：手机上免费看书，海量书源任选。\n✨主要功能：自定义书源、换源阅读、本地导入、听书。\n💻适用平台：安卓。\n🛠怎么用起来：官网下载安装，导入书源后搜书即读；小说党的免费阅读神器。",
+"KotatsuApp/Kotatsu":"🎯应用场景：手机上在线看漫画，追更不花钱。\n✨主要功能：多漫画源、自动更新、下载缓存离线看。\n💻适用平台：安卓。\n🛠怎么用起来：GitHub 下载安装，选好漫画源即可浏览；漫画爱好者的免费追更工具。",
+"gorhill/uBlock":"🎯应用场景：上网去广告，干净清爽不弹窗。\n✨主要功能：拦截广告与追踪器、节省流量、页面更干净。\n💻适用平台：Chrome / Edge / Firefox 等主流浏览器。\n🛠怎么用起来：浏览器扩展商店搜索 uBlock Origin 安装即用；装机后上网体验立刻变好。",
+"NickeManarin/ScreenToGif":"🎯应用场景：录屏做教程、做表情包、记录操作步骤。\n✨主要功能：屏幕录制、摄像头录制、直接导出 GIF 和视频。\n💻适用平台：Windows。\n🛠怎么用起来：官网下载解压即用，框选区域点录制，结束自动转 GIF；做教程和分享操作步骤的利器。",
+"Stellarium/stellarium":"🎯应用场景：看星星认星座，在家就能仰望星空。\n✨主要功能：真实星空模拟、星座连线、天象预报、望远镜模式。\n💻适用平台：Windows / Mac / Linux / 安卓 / iOS。\n🛠怎么用起来：官网下载安装，选好地点和时间即可观星；天文爱好者的入门必备。",
+"HabitRPG/habitica":"🎯应用场景：把打卡、待办变成打怪升级游戏，坚持好习惯。\n✨主要功能：完成任务角色升级、失败掉血、组队打 boss、宠物系统。\n💻适用平台：网页 / 安卓 / iOS。\n🛠怎么用起来：官网注册账号即可用，把每日任务写进去；用玩游戏的心情坚持自律。",
+"ankitects/anki":"🎯应用场景：背单词、背考点、记知识点，间隔重复最高效。\n✨主要功能：卡片记忆算法、自制卡组、插件生态、多端同步。\n💻适用平台：Windows / Mac / Linux / 安卓 / iOS / 网页。\n🛠怎么用起来：官网下载安装，导入现成卡组或自制卡片，按计划复习；学生党和考证党的效率工具。",
+"M2Team/NanaZip":"🎯应用场景：Windows 上右键压缩解压各种格式。\n✨主要功能：右键菜单集成、支持几十种压缩格式、界面现代化。\n💻适用平台：Windows。\n🛠怎么用起来：微软商店或 GitHub 下载安装，右键文件即用；7-Zip 的现代化替代。",
+"AppFlowy-IO/AppFlowy":"🎯应用场景：笔记、看板、数据库一体的个人工作台，Notion 的开源替代。\n✨主要功能：文档、表格、看板视图、离线可用、插件扩展。\n💻适用平台：Windows / Mac / Linux / 安卓 / iOS。\n🛠怎么用起来：官网下载安装即用，数据本地保存；喜欢 Notion 又在意数据隐私就选它。",
+"KDE/kdenlive":"🎯应用场景：免费剪视频，不需要付费装专业剪辑软件。\n✨主要功能：多轨时间线、字幕、转场特效、直接导出常用格式。\n💻适用平台：Windows / Mac / Linux。\n🛠怎么用起来：官网下载安装，导入素材拖上时间线即可剪；入门剪辑的首选。",
 };
 /* 分类圆标配色 */
-const CAT_COLORS = {"AI 人工智能":"#a371f7","实用工具":"#f78166","手机 App":"#3fb950","学编程":"#58a6ff","游戏娱乐":"#f778ba","网页界面":"#d29922","后台服务":"#39c5cf"};
+const CAT_COLORS = {"AI 人工智能":"#a371f7","实用工具":"#f78166","手机 App":"#3fb950","学编程":"#58a6ff","游戏娱乐":"#f778ba","网页界面":"#d29922","后台服务":"#39c5cf","开发者工具":"#8250df","影音与直播":"#ffb86c"};
 
 
 /* 分类列表（首页分类标签） */
