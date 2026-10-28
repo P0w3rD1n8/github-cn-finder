@@ -300,6 +300,8 @@ nav{
   padding:9px 0 8px;color:var(--text2);font-size:11px;cursor:pointer;transition:color .2s}
 .nav-item.active{color:var(--accent)}
 .nav-item svg{width:22px;height:22px;fill:currentColor}
+/* v1.19.1：底部导航的"全部"是链接（a.nav-item），去掉默认下划线/蓝色 */
+a.nav-item{text-decoration:none;color:inherit}
 /* 人群筛选（折叠式，不常驻顶部） */
 .filter-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .usage-toggle{flex:0 0 auto;padding:5px 12px;border-radius:999px;background:var(--chip);
@@ -404,8 +406,9 @@ nav{
     <button class="dict-entry" id="dictEntry">GitHub 黑话大白话速查（Repository / PR / Fork…）<span class="dict-arrow">→</span></button>
     <div class="sec-title">ℹ️ 关于</div>
     <div class="about-box">
-      <b>GitHub 中文发现器</b><span class="ver">v1.19.1</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
+      <b>GitHub 中文发现器</b><span class="ver">v1.19.2</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
       · 内置 <b><span id="repoCount">152</span> 个精选项目</b>，每条都有大白话中文简介，专为英文小白翻译<br>
+      · 📂 <a class="repo-link" href="list.html" target="_blank" rel="noopener">全部 152 个项目（网页版）</a>——每页都有中文介绍和国内镜像直达<br>
       · 星标等数据由 GitHub Actions <b>每小时自动抓取真实值</b>，不靠手填数字<br>
       · 搜索时会同时查询 <b>GitHub 官方接口</b>，网络不通时自动只展示本地精选<br>
       · 收藏保存在你的浏览器本地，不上传任何数据<br>
@@ -472,6 +475,10 @@ nav{
     <svg viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm3-3a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v1H2v-1Z"/></svg>
     我的
   </div>
+  <a class="nav-item" href="list.html" target="_blank" rel="noopener">
+    <svg viewBox="0 0 16 16"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75Zm0 5a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1-.75-.75Z"/></svg>
+    全部
+  </a>
 </nav>
 
 <script src="data.js"></script>
@@ -723,18 +730,7 @@ document.querySelector("main").addEventListener("click", e=>{
   if(authorLink){ e.preventDefault(); openAuthorModal(authorLink.dataset.author, authorLink.dataset.authortype); return; }
   const shareBtn = e.target.closest(".share-btn");
   if(shareBtn){ e.preventDefault(); openShare(shareBtn.dataset.share); return; }
-  /* 标题跳转交互：先按压缩放 150ms 再打开 GitHub，避免原生跳转瞬间无反馈 */
-  const goLink = e.target.closest(".repo-name");
-  if(goLink){
-    e.preventDefault();
-    const href = goLink.getAttribute("href");
-    goLink.classList.add("pressed");
-    setTimeout(()=>{
-      window.open(href, "_blank", "noopener");
-      setTimeout(()=>goLink.classList.remove("pressed"), 160);
-    }, 150);
-    return;
-  }
+  /* 标题（.repo-name 是原生 <a target="_blank">）直接放行原生跳转，不 preventDefault——Safari 会拦截延时里的 window.open（v1.19.1 修复）；按压反馈交给 CSS :active */
   if(e.target.closest("a,.fav-btn")) return;
   const card = e.target.closest(".card");
   if(card && card.querySelector(".repo-detail")){
@@ -770,9 +766,18 @@ function fallbackCopy(t, done){
 function openShare(name){
   const r = REPOS.find(x=>x.n===name) || KNOWN[name];
   const desc = r ? r.d : (CN_DESC[name] || "GitHub 上的优质开源项目");
-  $("#shareText").textContent =
-    `【${name}】\n${desc}\nGitHub 链接：https://github.com/${name}\n—— 来自「GitHub 中文发现器」，不懂英文也能轻松逛 GitHub`;
-  $("#shareModal").classList.add("show");
+  const zh = repoZh(name) || name.split("/")[1];
+  // v1.19.1：分享优先发中文落地页（p 页），别再让小白点进英文 README
+  const pUrl = new URL("p/" + name.replace("/","-") + ".html", location.href).href;
+  const text =
+    `【${zh}】\n${desc}\n📄 中文详情页：${pUrl}\n🔗 去 GitHub 看原版：https://github.com/${name}\n—— 来自「GitHub 中文发现器」，不懂英文也能轻松逛 GitHub`;
+  // 手机端优先用系统分享（可直达微信），不支持或取消则回退复制弹窗
+  if(navigator.share){
+    navigator.share({ title: zh, text }).catch(()=>{ $("#shareText").textContent = text; $("#shareModal").classList.add("show"); });
+  }else{
+    $("#shareText").textContent = text;
+    $("#shareModal").classList.add("show");
+  }
 }
 $("#copyBtn").addEventListener("click", function(){ copyText($("#shareText").textContent, this); });
 $("#closeModal").addEventListener("click", ()=>$("#shareModal").classList.remove("show"));
