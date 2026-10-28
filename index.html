@@ -614,7 +614,7 @@ function buildDetailHTML(r){
     const ai = authorInfo(owner);
     const otherWorks = ownedReposTop3(owner).filter(x=>x.n!==r.n).slice(0,2);
     const ownerEsc = esc(owner), tEsc = esc(typeLabel);
-    let suffix = `\n\n—— 这个项目由 <a class="author-name-inline" href="https://github.com/${ownerEsc}" target="_blank" rel="noopener">${ownerEsc}</a>（${tEsc}）维护。${linkAuthorWorks(owner, ai.b)}`;
+    let suffix = `\n—— 这个项目由 <a class="author-name-inline" href="https://github.com/${ownerEsc}" target="_blank" rel="noopener">${ownerEsc}</a>（${tEsc}）维护。${linkAuthorWorks(owner, ai.b)}`;
     if(otherWorks.length){
       suffix += ` 该${typeLabel==="org"?"组织":"开发者"}还做过 ${otherWorks.map(x=>`<a class="author-work-link" href="https://github.com/${esc(x.n)}" target="_blank" rel="noopener" title="${esc(REPO_ZH[x.n]||"")}">${esc(x.n.split("/")[1])}</a>（${esc(x.d)}）`).join("、")} 等知名项目。`;
     }
@@ -623,12 +623,12 @@ function buildDetailHTML(r){
   // 命令行小白提示：详情涉及命令行操作时，自动追加大白话安抚（对所有项目生效，不用逐条维护）
   const CLI_MARKS = ["pip install","npm install","npm create","npx ","yarn ","命令行","终端","docker","git clone","brew install","apt install","node.js","python 环境","敲 ollama","运行命令"];
   if(detHTML && CLI_MARKS.some(m=>detHTML.toLowerCase().includes(m))){
-    detHTML += `\n\n<div class="detail-tip">👀 小白提示：这段涉及【命令行】操作，是给爱折腾的玩家准备的。看不懂没关系——先看🎯应用场景了解它是干嘛的；想体验同类功能，网上通常有更简单的图形版或网页版。</div>`;
+    detHTML += `<div class="detail-tip">👀 小白提示：这段涉及【命令行】操作，是给爱折腾的玩家准备的。看不懂没关系——先看🎯应用场景了解它是干嘛的；想体验同类功能，网上通常有更简单的图形版或网页版。</div>`;
   }
   // 统一提示：搭建/安装命令有时效性，避免过时误导小白（对所有项目生效，不用逐条维护）
-  if(detHTML) detHTML += `\n\n<div class="detail-tip">💡 提示：安装或搭建命令可能随版本更新而变化，具体以官方文档为准。</div>`;
+  if(detHTML) detHTML += `<div class="detail-tip">💡 提示：安装或搭建命令可能随版本更新而变化，具体以官方文档为准。</div>`;
   // 数据快照（复刻/反馈从卡片收进详情，避免卡片术语堆叠）
-  if(detHTML) detHTML += `\n\n<div class="detail-tip">📊 数据快照：⭐ ${fmt(r.s)} 星标 · 🍴 ${fmt(forkOf(r))} 复刻 · 💬 ${fmt(issueOf(r))} 反馈（GitHub 实时统计）</div>`;
+  if(detHTML) detHTML += `<div class="detail-tip">📊 数据快照：⭐ ${fmt(r.s)} 星标 · 🍴 ${fmt(forkOf(r))} 复刻 · 💬 ${fmt(issueOf(r))} 反馈（GitHub 实时统计）</div>`;
   // 最近更新：小白判断"这项目还活着吗"的关键信息（repos.json 的 pushed_at，旧版采集了但没用上）
   if(detHTML && r.pa){
     let stale = "";
@@ -636,19 +636,19 @@ function buildDetailHTML(r){
     if(days >= 730) stale = "（已两年多没更新，基本停止维护，建议只用现成版本）";
     else if(days >= 365) stale = "（一年多没更新，可能不再维护，入手前留意）";
     else if(days >= 180) stale = "（半年多没更新，更新节奏较慢）";
-    detHTML += `\n\n<div class="detail-tip">🕒 最近更新：${esc(r.pa)}${stale}</div>`;
+    detHTML += `<div class="detail-tip">🕒 最近更新：${esc(r.pa)}${stale}</div>`;
   }
   // 如实告知 + 境内镜像直达（合规：只放境内公开镜像平台链接，不提供任何通道）
   if(detHTML){
-    detHTML += `\n\n<div class="detail-tip">🌐 访问提示：GitHub 为境外站点，打开或加载速度受本地网络环境影响，属正常现象。</div>`;
+    detHTML += `<div class="detail-tip">🌐 访问提示：GitHub 为境外站点，打开或加载速度受本地网络环境影响，属正常现象。</div>`;
     const mkey = (r.n||"").toLowerCase();
     const gcUrl = GC_MIRRORS[mkey], gtUrl = GT_MIRRORS[mkey];
     if(gcUrl){
-      detHTML += `\n<div class="detail-tip">⚡ 国内镜像直达：<a class="detail-link" href="${esc(gcUrl)}" target="_blank" rel="noopener">GitCode 镜像</a>（GitCode 官方镜像计划，平台统一同步 GitHub 热门项目，非作者自建，内容以 GitHub 原文为准）。</div>`;
+      detHTML += `<div class="detail-tip">⚡ 国内镜像直达：<a class="detail-link" href="${esc(gcUrl)}" target="_blank" rel="noopener">GitCode 镜像</a>（GitCode 官方镜像计划，平台统一同步 GitHub 热门项目，非作者自建，内容以 GitHub 原文为准）。</div>`;
     }else if(gtUrl){
-      detHTML += `\n<div class="detail-tip">⚡ 国内镜像直达：<a class="detail-link" href="${esc(gtUrl)}" target="_blank" rel="noopener">Gitee 官方镜像</a>（Gitee 官方镜像计划，平台统一同步，非作者自建，内容以 GitHub 原文为准）。</div>`;
+      detHTML += `<div class="detail-tip">⚡ 国内镜像直达：<a class="detail-link" href="${esc(gtUrl)}" target="_blank" rel="noopener">Gitee 官方镜像</a>（Gitee 官方镜像计划，平台统一同步，非作者自建，内容以 GitHub 原文为准）。</div>`;
     }else{
-      detHTML += `\n<div class="detail-tip">ℹ️ 该项目国内暂无平台官方镜像，请访问 GitHub 官方页面查看原文。</div>`;
+      detHTML += `<div class="detail-tip">ℹ️ 该项目国内暂无平台官方镜像，请访问 GitHub 官方页面查看原文。</div>`;
     }
   }
   return detHTML;
