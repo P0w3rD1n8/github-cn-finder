@@ -1,7 +1,7 @@
 # GitHub 中文发现器 🧭
 
 > 不懂英文，也能轻松逛 GitHub
-> 当前版本：**v1.13**（2026-10-27）
+> 当前版本：**v1.17**（2026-10-28）
 
 一个面向中文用户的 GitHub 优质开源项目发现工具，把 GitHub 上最值得关注的项目翻译成大白话，让完全不懂英文、不懂编程的小白也能轻松找到好东西。
 
@@ -15,7 +15,7 @@
 - **一键分享**：生成分享文案，转发到微信、朋友圈、小红书
 - **人群分类**：按"程序员 / 学编程 / 自媒体创作者 / 普通用户 / 游戏玩家"筛选，找到适合自己的那一类
 - **作者信息**：每个项目标注作者（个人/组织），点击可查看作者简介和代表作（可点击跳转）
-- **国内镜像直达**：116 个精选项目提供国内镜像入口，附来源说明（平台官方同步，非作者自建）
+- **国内镜像直达**：多数精选项目提供国内镜像入口，附来源说明（平台官方同步，非作者自建）
 
 ## 📱 怎么使用
 
@@ -25,28 +25,42 @@
 
 ## 🛠 技术说明
 
-- 纯前端实现：单文件 HTML + CSS + JavaScript，无需服务器、无需安装
+- 纯前端实现：`index.html`（样式 + 逻辑）+ `data.js`（项目数据），无需服务器、无需安装
 - 数据来源：GitHub 官方 API（搜索 / 榜单实时数据）
-- 精选项目库内置在代码中，中文介绍逐条大白话翻译，专为英文小白准备
-- 数据管线：GitHub Actions 每小时自动抓取 132 个精选库的真实 star / fork / issue / 语言，写入 repos.json；带成功率门槛与快照 diff（增速榜数据源）
-- PWA 支持：可安装到手机主屏幕；离线缓存采用 stale-while-revalidate（秒开 + 后台更新，断网也能打开上次内容）
+- 精选项目库内置在 `data.js` 中，中文介绍逐条大白话翻译，专为英文小白准备；`validate-data.js` 在 CI 校验完整性、去重与仓库存在性
+- 数据管线：GitHub Actions 每小时自动抓取 **152 个**精选库的真实 star / fork / issue / 语言，写入 repos.json；带成功率门槛与快照 diff（增速榜数据源）
+- PWA 支持：可安装到手机主屏幕；静态资源走 stale-while-revalidate（秒开 + 后台更新，断网也能打开上次内容），`repos.json` 走 network-first 保证星标不慢一版
 - 收藏数据存储：浏览器本地存储（localStorage）
 
 ## 📂 项目结构
 
 | 文件 | 说明 |
 |---|---|
-| index.html | 主程序（含全部样式和逻辑） |
+| index.html | 主程序（样式 + 全部交互逻辑） |
+| data.js | 精选库数据（项目、中文简介、详情、人群标签、镜像表） |
+| validate-data.js | 数据校验脚本（CI 每次 push 跑） |
 | fetch-data.py | 数据采集脚本（每小时抓真实 star/fork/issue/语言） |
-| repos.json | 采集结果（前端启动时加载，覆盖内置手填数据） |
-| .github/workflows/data-update.yml | 定时采集工作流（每小时 + 手动触发） |
+| repos.json | 采集结果（前端启动时加载，覆盖内置兜底数据） |
+| .github/workflows/ | data-update.yml 定时采集；validate.yml 数据校验 |
 | manifest.json | PWA 配置（手机安装为 App） |
-| sw.js | 离线缓存服务（stale-while-revalidate） |
-| icon.svg | 应用图标 |
+| sw.js | 离线缓存服务（静态资源 SWR，数据文件 network-first） |
+| og-cover.png | 分享封面（1200×630，微信/X 外链预览） |
+| icon.svg / icon-*.png | 应用图标（含 maskable） |
 | LICENSE | MIT 开源协议 |
 | README.md | 项目说明 |
 
 ## 📜 版本历史
+
+**v1.17（2026-10-28）**
+- 分享预览：新增 1200×630 封面 `og-cover.png`，补 `og:image` / `twitter:card` / `canonical`，转发到微信、X 不再只有一行灰字
+- 口径统一：`meta description`、应用分享文案里的项目数改为动态/150+，不再写死「132 个」
+- 无障碍：分类栏与人群面板每次重建后重新补 `role`/`tabindex`，键盘操作不再首屏后失效
+- 榜单：点当前标签即可重试（旧版直接 return，提示语形同虚设）；今日增速榜卡片显示「▲ +N」增量
+- 搜索：800ms 防抖 + 中文输入法合成期不触发 + 单字母不发请求，降低 GitHub 搜索接口 403 概率
+- 内容安全：违禁词改词边界匹配，不再误杀 serial port / crack detection 等正常项目；新星榜同步过滤
+- 详情页新增「🕒 最近更新」：用采集到但一直没用的 `pushed_at` 判断项目是否还在维护（≥1 年 / ≥2 年给不同提示）
+- 兜底：`data.js` 加载失败时显示可读提示 + 重新加载按钮，不再白屏
+- 版本号统一为 v1.17（页面 / README / Service Worker 注释）
 
 **v1.16（2026-10-27）**
 - 精选库扩充 20 个日常向项目（132 → **152**）：VLC 视频播放、GIMP/Audacity 图像音频编辑、LibreOffice 办公、Joplin/思源笔记、Stirling-PDF、Motrix 下载、Upscayl 图片放大、沉浸式翻译、legado/Kotatsu 阅读、uBlock 广告拦截、ScreenToGif 录屏、Stellarium 天文、Habitica 习惯养成、Anki 学习、NanaZip 压缩、AppFlowy 笔记、Kdenlive 视频剪辑
@@ -134,7 +148,6 @@
 
 如果你有合作想法、希望推荐优质项目、或者想交流产品建议，欢迎联系我：
 
-- 🐛 **提 Issue（推荐）**：到 [Issues](https://github.com/P0w3rD1n8/github-cn-finder/issues) 选择模板提交——[💡 推荐项目](https://github.com/P0w3rD1n8/github-cn-finder/issues/new?template=01-recommend-project.yml) / [✍️ 内容纠错](https://github.com/P0w3rD1n8/github-cn-finder/issues/new?template=02-content-fix.yml)，比邮件更快处理
 - 邮箱：`11589839@qq.com`（也可在仓库 About 简介中找到）
 
 ## 📄 License
