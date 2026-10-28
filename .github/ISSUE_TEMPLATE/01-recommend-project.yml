@@ -1,0 +1,65 @@
+name: 💡 推荐项目
+description: 推荐一个值得收录的好用开源项目
+title: "[推荐] <项目名>：<一句话理由>"
+labels: ["💡 推荐"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢推荐！我们会审核后把它加入精选库（含中文介绍、作者简介和国内镜像）。
+  - type: input
+    id: repo
+    attributes:
+      label: GitHub 仓库地址
+      description: 粘贴仓库完整链接，例如 https://github.com/owner/repo
+      placeholder: https://github.com/owner/repo
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: 为什么推荐它？
+      description: 它解决什么痛点、哪些人适合用（写得越具体越容易被收录）
+      placeholder: |
+        比如：我平时做 PPT 经常找不到免费图标，这个项目提供了 10 万+ 可商用图标……
+      render: markdown
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: 建议放在哪个分类
+      multiple: false
+      options:
+        - 程序员
+        - 学编程
+        - 自媒体创作者
+        - 普通用户
+        - 游戏玩家
+        - 设计师
+        - 视频剪辑
+        - 其他（请在描述里说明）
+    validations:
+      required: true
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: 上手难度（你判断）
+      multiple: false
+      options:
+        - 一键安装 / 直接能用
+        - 要装环境或命令行
+        - 需要显卡 / 专业设备
+  - type: input
+    id: mirror
+    attributes:
+      label: 国内镜像线索（选填）
+      description: 如果知道它在 GitCode / Gitee 有镜像或官网有国内下载，可以填在这里
+      placeholder: 例如 gitee.com/mirrors/xxx
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 确认
+      options:
+        - label: 我确认该项目免费、开源且不是我自己推广的项目
+          required: true

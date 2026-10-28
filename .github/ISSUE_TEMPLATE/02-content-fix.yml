@@ -1,0 +1,47 @@
+name: ✍️ 内容纠错 / 翻译纠错
+description: 报告中文介绍、翻译、作者简介、镜像或数据错误
+title: "[纠错] <项目名>：<问题描述>"
+labels: ["✍️ 纠错"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        谢谢帮忙！中英文名、作者简介和镜像链接都是人工整理的，难免有错，看到问题尽管报。
+  - type: input
+    id: repo
+    attributes:
+      label: 涉及的仓库
+      description: 项目名或链接，例如 ollama/ollama
+      placeholder: owner/repo
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: 错误类型
+      multiple: true
+      options:
+        - 中文名 / 翻译不准确
+        - 项目介绍与事实不符
+        - 作者简介错误
+        - 镜像链接失效或指向错误
+        - 星标等数据异常
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: 具体问题
+      description: 描述哪里不对，附上正确信息或来源链接最好
+      placeholder: |
+        比如：Ollama 的中文介绍把"本地运行大模型"写成了"在线调用大模型"，官方说明见……
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: 建议改成什么（选填）
+      description: 直接给出你建议的中文写法或正确链接，我们会核对后修改
+      placeholder: 建议改为：……

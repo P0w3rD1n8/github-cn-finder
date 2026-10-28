@@ -134,6 +134,7 @@
 
 如果你有合作想法、希望推荐优质项目、或者想交流产品建议，欢迎联系我：
 
+- 🐛 **提 Issue（推荐）**：到 [Issues](https://github.com/P0w3rD1n8/github-cn-finder/issues) 选择模板提交——[💡 推荐项目](https://github.com/P0w3rD1n8/github-cn-finder/issues/new?template=01-recommend-project.yml) / [✍️ 内容纠错](https://github.com/P0w3rD1n8/github-cn-finder/issues/new?template=02-content-fix.yml)，比邮件更快处理
 - 邮箱：`11589839@qq.com`（也可在仓库 About 简介中找到）
 
 ## 📄 License
