@@ -1,0 +1,43 @@
+name: 生成静态项目页
+
+# B+ 方案（v1.19）：改 data.js 时自动重新生成静态项目页，无需手动跑；
+# 也可在 Actions 页面手动触发（workflow_dispatch）
+on:
+  push:
+    paths:
+      - "data.js"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-pages
+  cancel-in-progress: true
+
+jobs:
+  build-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取仓库
+        uses: actions/checkout@v4
+
+      - name: 配置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 生成静态项目页
+        run: python build_pages.py
+
+      - name: 提交生成的页面
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add p list.html sitemap.xml
+          if git diff --cached --quiet; then
+            echo "页面无变化，跳过提交"
+          else
+            git commit -m "chore: 重新生成静态项目页 $(date -u +%Y-%m-%d_%H:%M)"
+            git pull --rebase origin main && git push origin main && echo "✅ 已生成并推送静态页"
+          fi
