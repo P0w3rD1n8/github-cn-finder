@@ -318,10 +318,8 @@ nav{
 @media (min-width:900px){
   body{max-width:1100px}
   main{padding:16px 24px}
-  #homeList,#rankList{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 12px}
+  #homeList,#rankList{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 12px;align-items:start}
   #homeList .card,#rankList .card{margin-bottom:0}
-  /* v1.19.1 修复：两列下展开的卡片跨整行（grid-column:1/-1），避免 grid 拉伸把旁边的卡片拉高成大片空白 */
-  #homeList .card.open,#rankList .card.open{grid-column:1/-1}
   #homeList .empty,#rankList .empty,#rankList .loading,#rankList .notice{grid-column:1/-1}
   .search-wrap input{font-size:15px}
   .cats{gap:8px}
