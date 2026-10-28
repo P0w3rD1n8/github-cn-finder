@@ -1,7 +1,7 @@
 /* Service Worker：stale-while-revalidate + 超时兜底
    首页/清单立即从缓存渲染（秒开 + 离线可开），网络更新在后台进行，下次打开即新内容；
    缓存未命中（首次访问）走网络，5 秒超时兜底，避免网络卡死时白等。
-   版本 v7（v1.19.1）：repos.json 走 network-first（3 秒超时回退缓存），保证星标不慢一版；
+   版本 v7（v1.19.2）：repos.json 走 network-first（3 秒超时回退缓存），保证星标不慢一版；
    其余同源静态资源仍 SWR；缓存名升级会顺带清掉旧缓存。 */
 const CACHE = "gh-cn-v7";
 const ASSETS = ["./", "./index.html", "./data.js", "./manifest.json", "./icon.svg",
