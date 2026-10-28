@@ -1,11 +1,12 @@
 /* Service Worker：stale-while-revalidate + 超时兜底
    首页/清单立即从缓存渲染（秒开 + 离线可开），网络更新在后台进行，下次打开即新内容；
    缓存未命中（首次访问）走网络，5 秒超时兜底，避免网络卡死时白等。
-   版本 v7（v1.19.2）：repos.json 走 network-first（3 秒超时回退缓存），保证星标不慢一版；
-   其余同源静态资源仍 SWR；缓存名升级会顺带清掉旧缓存。 */
-const CACHE = "gh-cn-v7";
+   版本 v8（v1.19.3）：list.html 加入预缓存（离线/网络差也能打开全部清单），缓存名升级顺带清旧缓存；
+   repos.json 仍走 network-first（3 秒超时回退缓存），保证星标不慢一版。 */
+const CACHE = "gh-cn-v8";
 const ASSETS = ["./", "./index.html", "./data.js", "./manifest.json", "./icon.svg",
-  "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png"];
+  "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
+  "./list.html"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -80,3 +81,4 @@ function fetchWithTimeout(req, ms){
                     err=>{ clearTimeout(timer); reject(err); });
   });
 }
+
