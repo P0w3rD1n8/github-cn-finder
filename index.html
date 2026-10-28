@@ -214,6 +214,10 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .about-box .repo-link{color:var(--accent);text-decoration:underline}
 .app-share-btn{width:100%;margin-top:12px;background:var(--chip);border:1px solid var(--border);
   color:var(--accent);border-radius:12px;padding:12px;font-size:14px;font-weight:600;cursor:pointer}
+/* v1.19 首页分页：加载更多 */
+.load-more{text-align:center;margin:14px 0;padding:10px;border:1px dashed var(--border);
+  border-radius:12px;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;user-select:none}
+.load-more:active{transform:scale(.98);background:var(--chip)}
 /* 小白版详情展开区 */
 .card{cursor:pointer}
 .expand-hint{text-align:center;font-size:11.5px;color:var(--accent);margin-top:6px;user-select:none}
@@ -393,13 +397,14 @@ nav{
       <h2>GitHub 中文发现器</h2>
       <p>不懂英文，也能轻松逛 GitHub</p>
     </div>
-    <div class="sec-title">⭐ 我的收藏 <span class="count" id="favCount"></span><button class="copy-fav-btn" id="copyFavBtn">📋 复制清单</button></div>
+    <div class="sec-title">⭐ 我的收藏 <span class="count" id="favCount"></span><button class="copy-fav-btn" id="copyFavBtn">📋 复制清单</button><button class="copy-fav-btn" id="exportFavBtn">📤 导出</button><button class="copy-fav-btn" id="importFavBtn">📥 导入</button></div>
     <div id="favList"></div>
+    <div class="fav-tools"><span class="fav-tools-hint">导出/导入可在换电脑、换浏览器时备份收藏</span></div>
     <div class="sec-title">📖 新手词典</div>
     <button class="dict-entry" id="dictEntry">GitHub 黑话大白话速查（Repository / PR / Fork…）<span class="dict-arrow">→</span></button>
     <div class="sec-title">ℹ️ 关于</div>
     <div class="about-box">
-      <b>GitHub 中文发现器</b><span class="ver">v1.18</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
+      <b>GitHub 中文发现器</b><span class="ver">v1.19</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
       · 内置 <b><span id="repoCount">152</span> 个精选项目</b>，每条都有大白话中文简介，专为英文小白翻译<br>
       · 星标等数据由 GitHub Actions <b>每小时自动抓取真实值</b>，不靠手填数字<br>
       · 搜索时会同时查询 <b>GitHub 官方接口</b>，网络不通时自动只展示本地精选<br>
@@ -597,19 +602,14 @@ function linkAuthorWorks(owner, text){
   return out;
 }
 
-/* 卡片渲染 */
-function cardHTML(r, src, rank, delta){
-  KNOWN[r.n]=r;   // 登记快照：收藏时能存下完整信息
-  const on = favs.has(r.n) ? " on" : "";
-  const repoShort = r.n.split("/")[1];
-  // owner / 类型：实时数据从 API 字段取，精选库用路径推导
-  const owner = r.owner || r.n.split("/")[0];
-  let ownerType = r.ownerType;
-  if(!ownerType){ const ai = authorInfo(owner); ownerType = ai.t; }
-  const typeLabel = ownerType==="org" ? "组织" : "个人";
-  // 作者名显示策略：作者名 = 项目名前缀时简化（如 ollama/ollama → 作者 ollama 已在项目名里了，也正常显示）
-  // 小白版详情：命中 DETAIL 用中文详情；英文项目无详情时显示占位提示；末尾自动追加作者信息段（代表作自动变可点击链接）
+/* 小白版详情构建（v1.19 起独立函数：卡片详情懒渲染，首次展开时才注入，降低首屏 DOM 负担） */
+function buildDetailHTML(r){
+  if(!r) return null;
+  // 命中 DETAIL 用中文详情；英文项目无详情时显示占位提示；末尾自动追加作者信息段
   let detHTML = DETAIL[r.n] ? esc(DETAIL[r.n]) : (r.en ? esc("暂无中文详情，可点击项目名到 GitHub 主页查看原文介绍。") : null);
+  const owner = r.owner || r.n.split("/")[0];
+  const ownerType = r.ownerType;
+  const typeLabel = ownerType==="org" ? "组织" : "个人";
   if(detHTML && owner){
     const ai = authorInfo(owner);
     const otherWorks = ownedReposTop3(owner).filter(x=>x.n!==r.n).slice(0,2);
@@ -651,12 +651,27 @@ function cardHTML(r, src, rank, delta){
       detHTML += `\n<div class="detail-tip">ℹ️ 该项目国内暂无平台官方镜像，请访问 GitHub 官方页面查看原文。</div>`;
     }
   }
+  return detHTML;
+}
+
+/* 卡片渲染 */
+function cardHTML(r, src, rank, delta){
+  KNOWN[r.n]=r;   // 登记快照：收藏时能存下完整信息
+  const on = favs.has(r.n) ? " on" : "";
+  const repoShort = r.n.split("/")[1];
+  // owner / 类型：实时数据从 API 字段取，精选库用路径推导
+  const owner = r.owner || r.n.split("/")[0];
+  let ownerType = r.ownerType;
+  if(!ownerType){ const ai = authorInfo(owner); ownerType = ai.t; }
+  const typeLabel = ownerType==="org" ? "组织" : "个人";
+  // v1.19 懒渲染：详情不内联，展开时由事件委托注入（hasDet 只做轻量预判，详情构建见 buildDetailHTML）
   // 图标：实时数据用 owner 头像；精选库用项目名首字母 + 分类配色圆标
   const letter = (r.n.split("/")[1]||r.n).charAt(0).toUpperCase();
   const icon = r.av
     ? `<img class="repo-icon" src="${esc(r.av)}&s=96" loading="lazy" alt="">`
     : `<span class="repo-icon" style="background:${CAT_COLORS[r.c]||"var(--accent)"}">${esc(letter)}</span>`;
-  return `<div class="card">
+  const hasDet = !!(DETAIL[r.n] || r.en);   // 轻量预判是否有详情区（懒渲染：展开时才注入内容）
+  return `<div class="card" data-n="${esc(r.n)}">
     ${rank?`<span class="rank-badge${rank<=3?" top":""}">第${rank}名</span>`:""}
     <div class="card-top">
       ${icon}
@@ -679,7 +694,7 @@ function cardHTML(r, src, rank, delta){
       ${src?`<span class="tag src">${src}</span>`:""}
       ${favs.has(r.n)?`<span class="meta-item fav-count" title="你已收藏这个项目">🔖 <span class="lbl">已收藏</span></span>`:""}
     </div>
-    ${detHTML?`<div class="expand-hint">了解详情 <span class="arr">▾</span></div><div class="repo-detail">${detHTML}</div>`:""}
+    ${hasDet?`<div class="expand-hint">了解详情 <span class="arr">▾</span></div><div class="repo-detail" data-det="1"></div>`:""}
   </div>`;
 }
 function renderList(el, list, src){
@@ -722,7 +737,20 @@ document.querySelector("main").addEventListener("click", e=>{
   }
   if(e.target.closest("a,.fav-btn")) return;
   const card = e.target.closest(".card");
-  if(card && card.querySelector(".repo-detail")) card.classList.toggle("open");
+  if(card && card.querySelector(".repo-detail")){
+    /* v1.19 懒渲染：第一次展开时注入详情内容（空壳标记 data-det） */
+    const det = card.querySelector(".repo-detail");
+    if(det.hasAttribute("data-det")){
+      det.removeAttribute("data-det");
+      const rr = KNOWN[card.dataset.n];
+      det.innerHTML = buildDetailHTML(rr) || "";
+    }
+    card.classList.toggle("open");
+    return;
+  }
+  /* v1.19 首页分页：点「加载更多」追加一页 */
+  const more = e.target.closest("#loadMoreBtn");
+  if(more){ homePage++; renderHome(); return; }
 });
 
 /* ================= 分享 ================= */
@@ -867,11 +895,19 @@ function sortRepos(list){
   if(curSort==="fav") return [...list].sort((a,b)=>{ const fa=favs.has(a.n)?1:0, fb=favs.has(b.n)?1:0; if(fa!==fb) return fb-fa; return b.s-a.s; });
   return [...list].sort((a,b)=>b.s-a.s);
 }
-function renderHome(){
+/* v1.19 首页分页：首屏只渲染 PAGE_SIZE 条 + 加载更多（切分类/排序/人群时重置到第一页） */
+const HOME_PAGE_SIZE = 24;
+let homePage = 1;
+function renderHome(reset){
+  if(reset) homePage = 1;
   cancelPendingSearch();   // 切分类/清空输入/排序时取消在途搜索，防止旧结果盖新页面
   let list = curCat==="全部" ? REPOS : REPOS.filter(r=>r.c===curCat);
   if(curUsage!=="全部") list = list.filter(r=>(USAGE[r.n]||[]).includes(curUsage));
-  renderList($("#homeList"), sortRepos(list));
+  list = sortRepos(list);
+  const shown = list.slice(0, homePage * HOME_PAGE_SIZE);
+  const rest = list.length - shown.length;
+  $("#homeList").innerHTML = shown.map(r=>cardHTML(r)).join("")
+    + (rest>0 ? `<div class="load-more" id="loadMoreBtn">加载更多（还有 ${rest} 个）</div>` : "");
 }
 function renderUsages(){
   $("#usagePanel").innerHTML = USAGES.map(u=>`<div class="cat${u===curUsage?" active":""}" data-usage="${u}">${u}</div>`).join("");
@@ -883,7 +919,7 @@ $("#sortTabs").addEventListener("click", e=>{
   curSort = t.dataset.sort;
   document.querySelectorAll("#sortTabs .sort-tab").forEach(c=>c.classList.toggle("active", c===t));
   $("#searchInput").value = "";   // 排序时退出搜索状态，回到精选浏览
-  renderHome();
+  renderHome(true);
 });
 /* 镜像覆盖统计（首页标注：让人一眼看到多少项目能国内镜像直达） */
 function renderMirrorStats(){
@@ -920,7 +956,7 @@ $("#catBar").addEventListener("click", e=>{
   const t = e.target.closest(".cat"); if(!t) return;
   curCat = t.dataset.cat; renderCats();
   $("#searchInput").value = "";   // 切分类时退出搜索状态
-  renderHome();
+  renderHome(true);
   const active = document.querySelector("#catBar .cat.active");
   if(active) active.scrollIntoView({behavior:"smooth", block:"nearest", inline:"center"});
   updateCatsScroll();
@@ -940,7 +976,7 @@ $("#usagePanel").addEventListener("click", e=>{
   const t = e.target.closest(".cat"); if(!t) return;
   curUsage = t.dataset.usage; renderUsages();
   $("#searchInput").value = "";
-  renderHome();
+  renderHome(true);
   $("#usagePanel").classList.remove("show");
   $("#usageToggle").classList.remove("active");
 });
@@ -959,7 +995,7 @@ function cancelPendingSearch(){
 async function doSearch(){
   const q = $("#searchInput").value.trim();
   const box = $("#homeList");
-  if(!q){ renderHome(); return; }   // 清空搜索框 → 恢复精选列表
+  if(!q){ renderHome(true); return; }   // 清空搜索框 → 恢复精选列表
 
   const local = localSearch(q);
   box.innerHTML = `<div class="loading"><span class="spin"></span>正在搜索 GitHub…</div>`;
@@ -999,7 +1035,7 @@ function scheduleSearch(){
   clearTimeout(searchTimer);
   if(imeComposing) return;
   const q = $("#searchInput").value.trim();
-  if(!q){ renderHome(); return; }              // 清空 → 立即回到精选列表
+  if(!q){ renderHome(true); return; }              // 清空 → 立即回到精选列表
   if(q.length < 2 && !isCN(q)) return;          // 单个英文字母搜不出有效结果，省一次请求
   searchTimer = setTimeout(doSearch, 800);
 }
@@ -1129,7 +1165,60 @@ function renderFavs(){
   }).join("");
 }
 
-/* 收藏清单一键复制 */
+/* 我的页导出/导入（v1.19）：收藏存 localStorage，换设备会丢；导出 JSON 可备份，导入可恢复 */
+$("#exportFavBtn").addEventListener("click", ()=>{
+  const btn = $("#exportFavBtn");
+  if(!favs.size){
+    btn.textContent = "🤍 还没有收藏";
+    setTimeout(()=>{ btn.textContent = "📤 导出"; }, 1500);
+    return;
+  }
+  const data = { app:"github-cn-finder", type:"favorites", version:1, exported:new Date().toISOString(), favs:[...favs], snap:favSnap };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `github-cn-finder-收藏备份-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+  btn.textContent = "✅ 已导出";
+  setTimeout(()=>{ btn.textContent = "📤 导出"; }, 1800);
+});
+/* 导入：隐藏 file input 读文件 + 粘贴文本兜底 */
+$("#importFavBtn").addEventListener("click", ()=>{
+  const inp = document.createElement("input");
+  inp.type = "file"; inp.accept = ".json,application/json";
+  inp.onchange = ()=>{
+    const f = inp.files && inp.files[0];
+    if(!f) return;
+    const rd = new FileReader();
+    rd.onload = ()=>importFavsText(String(rd.result||""), $("#importFavBtn"));
+    rd.onerror = ()=>alert("文件读取失败，请重试");
+    rd.readAsText(f);
+  };
+  inp.click();
+});
+function importFavsText(text, btn){
+  const done = (ok, msg)=>{ if(!btn) return; btn.textContent = ok?msg:msg; setTimeout(()=>{ btn.textContent = "📥 导入"; }, 2600); };
+  if(!text || !text.trim()){ done(false,"❌ 内容为空"); return; }
+  let data = null;
+  try{ data = JSON.parse(text); }catch(e){ done(false,"❌ 不是有效的 JSON"); return; }
+  const arr = Array.isArray(data) ? data : (data && Array.isArray(data.favs) ? data.favs : null);
+  if(!arr || !arr.length){ done(false,"❌ 没有可导入的收藏"); return; }
+  const names = arr.map(x=>typeof x==="string" ? x.trim() : (x && x.n ? x.n : "")).filter(x=>/^[^\/\s]+\/[^\/\s]+$/.test(x));
+  if(!names.length){ done(false,"❌ 收藏格式不对（应为 owner/repo 列表）"); return; }
+  const added = [];
+  names.forEach(n=>{
+    if(!favs.has(n)){
+      favs.add(n); added.push(n);
+      const snap = data && data.snap && data.snap[n];
+      if(snap && typeof snap==="object") favSnap[n] = snap;
+    }
+  });
+  saveFavs();
+  renderFavs();
+  done(true, added.length ? `✅ 导入 ${added.length} 个（跳过 ${names.length-added.length} 个已有）` : "ℹ️ 全部已存在，无新增");
+}
+/* 收藏清单一键复制（v1.19 升级为带链接的 Markdown，方便分享给别人） */
 $("#copyFavBtn").addEventListener("click", ()=>{
   const btn = $("#copyFavBtn");
   if(!favs.size){
@@ -1139,7 +1228,8 @@ $("#copyFavBtn").addEventListener("click", ()=>{
   }
   const lines = [...favs].map(name=>{
     const r = REPOS_MAP.get(name) || favSnap[name];
-    return `· ${name}${r && r.d ? ` — ${r.d}` : ""}`;
+    const zh = r && repoZh(name) ? repoZh(name) : name.split("/")[1];
+    return `- [${zh}](https://github.com/${name})${r && r.d ? ` — ${r.d}` : ""}`;
   });
   const text = `我的 GitHub 中文发现器收藏（共 ${favs.size} 个）：\n` + lines.join("\n");
   (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
@@ -1245,7 +1335,7 @@ fetch("./repos.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{
   }
   renderDailyPick();
   const active = document.querySelector(".nav-item.active");
-  if(active && active.dataset.page==="home") renderHome();
+  if(active && active.dataset.page==="home") renderHome(true);
   if(active && active.dataset.page==="me") renderFavs();
 }).catch(()=>{ /* repos.json 缺失或网络失败：沿用内置兜底数据 */ });
 
@@ -1257,7 +1347,7 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 /* 初始化 */
 const repoCountEl = document.getElementById("repoCount");
 if(repoCountEl) repoCountEl.textContent = REPOS.length;
-renderCats(); renderUsages(); renderHome(); renderMirrorStats(); renderDailyPick(); renderFavs();
+renderCats(); renderUsages(); renderHome(true); renderMirrorStats(); renderDailyPick(); renderFavs();
 measureHeader(); window.addEventListener("resize", measureHeader);
 </script>
 </body>
