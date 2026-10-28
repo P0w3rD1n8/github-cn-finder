@@ -6,11 +6,21 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="GitHub发现器">
 <meta name="theme-color" content="#0d1117">
-<meta name="description" content="GitHub 中文发现器：不懂英文也能轻松逛 GitHub。132 个精选开源项目全中文介绍、实时热门榜单、每日推荐，小白也能看懂会用。">
+<meta name="color-scheme" content="dark light">
+<meta name="description" content="GitHub 中文发现器：不懂英文也能轻松逛 GitHub。150+ 个精选开源项目全中文介绍、实时热门榜单、每日推荐，小白也能看懂会用。">
+<link rel="canonical" href="https://p0w3rd1n8.github.io/github-cn-finder/">
+<meta property="og:site_name" content="GitHub 中文发现器">
 <meta property="og:title" content="GitHub 中文发现器">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://P0w3rD1n8.github.io/github-cn-finder/">
-<meta property="og:description" content="不懂英文也能轻松逛 GitHub：132 个精选开源项目全中文介绍，实时热门榜单 + 每日推荐，小白友好。">
+<meta property="og:url" content="https://p0w3rd1n8.github.io/github-cn-finder/">
+<meta property="og:description" content="不懂英文也能轻松逛 GitHub：150+ 个精选开源项目全中文介绍，实时热门榜单 + 每日推荐，小白友好。">
+<meta property="og:image" content="https://p0w3rd1n8.github.io/github-cn-finder/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="GitHub 中文发现器">
+<meta name="twitter:description" content="不懂英文也能轻松逛 GitHub：150+ 个精选项目全中文介绍 + 实时榜单。">
+<meta name="twitter:image" content="https://p0w3rd1n8.github.io/github-cn-finder/og-cover.png">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -137,6 +147,7 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .lang-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
 .tag{background:var(--card2);border:1px solid var(--border);padding:2px 8px;border-radius:6px;font-size:11px}
 .tag.src{background:rgba(88,166,255,.12);color:var(--accent);border-color:rgba(88,166,255,.3)}
+.tag.up{background:rgba(63,185,80,.14);color:#3fb950;border-color:rgba(63,185,80,.35);font-weight:700}
 .tag.en{background:rgba(247,129,102,.12);color:var(--accent2);border-color:rgba(247,129,102,.35)}
 .rank-tabs{padding:0 0 12px}
 /* 首页横幅 */
@@ -311,6 +322,14 @@ nav{
 </style>
 </head>
 <body>
+<noscript>
+  <div style="padding:24px 18px;font-size:15px;line-height:1.9">
+    <b>GitHub 中文发现器</b><br>
+    这个页面需要浏览器开启 JavaScript 才能使用。<br>
+    开启后即可浏览 150+ 个精选开源项目的中文介绍；也可以直接访问
+    <a href="https://github.com/P0w3rD1n8/github-cn-finder">项目仓库</a>了解详情。
+  </div>
+</noscript>
 
 <header>
   <div class="header-inner">
@@ -379,14 +398,13 @@ nav{
     <button class="dict-entry" id="dictEntry">GitHub 黑话大白话速查（Repository / PR / Fork…）<span class="dict-arrow">→</span></button>
     <div class="sec-title">ℹ️ 关于</div>
     <div class="about-box">
-      <b>GitHub 中文发现器</b><span class="ver">v1.16</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
+      <b>GitHub 中文发现器</b><span class="ver">v1.17</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
       · 内置 <b><span id="repoCount">152</span> 个精选项目</b>，每条都有大白话中文简介，专为英文小白翻译<br>
       · 星标等数据由 GitHub Actions <b>每小时自动抓取真实值</b>，不靠手填数字<br>
       · 搜索时会同时查询 <b>GitHub 官方接口</b>，网络不通时自动只展示本地精选<br>
       · 收藏保存在你的浏览器本地，不上传任何数据<br>
       · 📮 联系/合作：<b class="contact-mail" id="contactMail">11589839@qq.com</b>（点一下复制）<br>
-      · 🌐 项目主页：<a class="repo-link" href="https://github.com/P0w3rD1n8/github-cn-finder" target="_blank" rel="noopener">GitHub 仓库</a>（点⭐支持）<br>
-      · 💬 反馈/投稿：<a class="repo-link" href="https://github.com/P0w3rD1n8/github-cn-finder/issues/new/choose" target="_blank" rel="noopener">提 Issue</a>（推荐项目 / 纠错 / 建议，已配模板）<br>
+      · 🌐 项目主页：<a class="repo-link" href="https://github.com/P0w3rD1n8/github-cn-finder" target="_blank" rel="noopener">GitHub 仓库</a>（点⭐支持 / 反馈问题）<br>
       <br>
       项目还在成长中，我知道它还不够好：精选项目数量有限、部分中文介绍可能不够准确、功能也在不断完善中。<br>
       如果你有<b>好项目推荐、翻译修正或功能建议</b>，欢迎随时告诉我 📮，每一条建议我都会认真看。<br>
@@ -451,6 +469,18 @@ nav{
 </nav>
 
 <script src="data.js"></script>
+<script>
+/* data.js 加载失败兜底（v1.17）：数据没到就只剩白屏，这里换成一句人话 + 重试按钮。
+   data.js 正常时这里什么都不做。 */
+document.addEventListener("DOMContentLoaded", function(){
+  if(typeof REPOS !== "undefined" && Array.isArray(REPOS) && REPOS.length) return;
+  document.body.innerHTML = '<div style="max-width:520px;margin:0 auto;padding:56px 22px;font-family:-apple-system,\'PingFang SC\',\'Microsoft YaHei\',sans-serif;line-height:2;font-size:15px;text-align:center">'
+    + '<div style="font-size:44px">😵</div><b style="font-size:17px">数据没能加载出来</b><br>'
+    + '页面依赖的 <code>data.js</code> 没有取到，通常是网络波动，或被广告/脚本拦截插件挡住了。<br><br>'
+    + '<a href="./" style="display:inline-block;padding:10px 22px;border-radius:10px;background:#0969da;color:#fff;text-decoration:none">重新加载</a>'
+    + '<div style="margin-top:26px;font-size:12px;color:#8b949e">如果反复失败，可先访问 <a href="https://github.com/P0w3rD1n8/github-cn-finder" style="color:#0969da">GitHub 仓库</a> 反馈</div></div>';
+});
+</script>
 <script>
 let curUsage = "全部";
 
@@ -567,7 +597,7 @@ function linkAuthorWorks(owner, text){
 }
 
 /* 卡片渲染 */
-function cardHTML(r, src, rank){
+function cardHTML(r, src, rank, delta){
   KNOWN[r.n]=r;   // 登记快照：收藏时能存下完整信息
   const on = favs.has(r.n) ? " on" : "";
   const repoShort = r.n.split("/")[1];
@@ -598,6 +628,15 @@ function cardHTML(r, src, rank){
   if(detHTML) detHTML += `\n\n<div class="detail-tip">💡 提示：安装或搭建命令可能随版本更新而变化，具体以官方文档为准。</div>`;
   // 数据快照（复刻/反馈从卡片收进详情，避免卡片术语堆叠）
   if(detHTML) detHTML += `\n\n<div class="detail-tip">📊 数据快照：⭐ ${fmt(r.s)} 星标 · 🍴 ${fmt(forkOf(r))} 复刻 · 💬 ${fmt(issueOf(r))} 反馈（GitHub 实时统计）</div>`;
+  // 最近更新：小白判断"这项目还活着吗"的关键信息（repos.json 的 pushed_at，旧版采集了但没用上）
+  if(detHTML && r.pa){
+    let stale = "";
+    const days = Math.floor((Date.now() - new Date(r.pa + "T00:00:00").getTime()) / 86400000);
+    if(days >= 730) stale = "（已两年多没更新，基本停止维护，建议只用现成版本）";
+    else if(days >= 365) stale = "（一年多没更新，可能不再维护，入手前留意）";
+    else if(days >= 180) stale = "（半年多没更新，更新节奏较慢）";
+    detHTML += `\n\n<div class="detail-tip">🕒 最近更新：${esc(r.pa)}${stale}</div>`;
+  }
   // 如实告知 + 境内镜像直达（合规：只放境内公开镜像平台链接，不提供任何通道）
   if(detHTML){
     detHTML += `\n\n<div class="detail-tip">🌐 访问提示：GitHub 为境外站点，打开或加载速度受本地网络环境影响，属正常现象。</div>`;
@@ -635,6 +674,7 @@ function cardHTML(r, src, rank){
       <span class="meta-item" title="项目使用的编程语言"><span class="lang-dot" style="background:${LANG_COLORS[r.l]||"#8b949e"}"></span>${esc(r.l)||"多语言"}</span>
       <span class="tag" title="项目所属分类">${esc(r.c)}</span>
       ${r.en?`<span class="tag en" title="英文简介">EN</span>`:""}
+      ${typeof delta==="number"&&delta>0?`<span class="tag up" title="较上次快照新增的星标数">▲ ${fmt(delta)}</span>`:""}
       ${src?`<span class="tag src">${src}</span>`:""}
       ${favs.has(r.n)?`<span class="meta-item fav-count" title="你已收藏这个项目">🔖 <span class="lbl">已收藏</span></span>`:""}
     </div>
@@ -645,14 +685,21 @@ function renderList(el, list, src){
   el.innerHTML = list.length ? list.map(r=>cardHTML(r,src)).join("") : `<div class="empty"><span class="big">🌵</span>这里空空如也</div>`;
 }
 
-/* 无障碍增强：div 按钮（分类/排序/导航）补 role+tabindex，支持键盘 Enter/Space 触发（Review 无障碍项基础版） */
-document.querySelectorAll(".cat, .sort-tab, .nav-item").forEach(el=>{
-  if(!el.hasAttribute("role")) el.setAttribute("role","button");
-  if(!el.hasAttribute("tabindex")) el.setAttribute("tabindex","0");
-  el.addEventListener("keydown", e=>{
-    if(e.key==="Enter" || e.key===" "){ e.preventDefault(); el.click(); }
+/* 无障碍增强：div 按钮（分类/排序/导航/人群）补 role+tabindex，支持键盘 Enter/Space 触发。
+   注意：分类栏与人群面板是每次渲染后重建 DOM 的，所以在 renderCats/renderUsages 里也要重新套一遍，
+   否则首屏之后键盘就点不动分类了。 */
+function enhanceA11y(root){
+  (root||document).querySelectorAll(".cat, .sort-tab, .nav-item, .usage-toggle").forEach(el=>{
+    if(el.dataset.a11yReady==="1") return;   // 同一个元素只绑一次，避免重复监听
+    el.dataset.a11yReady = "1";
+    if(!el.hasAttribute("role")) el.setAttribute("role","button");
+    if(!el.hasAttribute("tabindex")) el.setAttribute("tabindex","0");
+    el.addEventListener("keydown", e=>{
+      if(e.key==="Enter" || e.key===" "){ e.preventDefault(); el.click(); }
+    });
   });
-});
+}
+enhanceA11y(document);
 
 /* 卡片点击：作者名 → 作者弹窗；分享按钮 → 分享弹窗；其余 a/fav 正常跳转；卡片展开 */
 document.querySelector("main").addEventListener("click", e=>{
@@ -703,7 +750,7 @@ $("#closeModal").addEventListener("click", ()=>$("#shareModal").classList.remove
 $("#shareModal").addEventListener("click", e=>{ if(e.target.id==="shareModal") $("#shareModal").classList.remove("show"); });
 /* 分享整个应用 */
 $("#appShareBtn").addEventListener("click", function(){
-  copyText(`推荐一个好东西「GitHub 中文发现器」：不懂英文也能轻松逛 GitHub，132 个优质项目全中文介绍，还有实时热门榜单和小白版详解。手机打开可以添加到主屏幕，像 App 一样用：${location.href}`, this);
+  copyText(`推荐一个好东西「GitHub 中文发现器」：不懂英文也能轻松逛 GitHub，${REPOS.length} 个优质项目全中文介绍，还有实时热门榜单和小白版详解。手机打开可以添加到主屏幕，像 App 一样用：${location.href}`, this);
 });
 
 /* ================= 作者详情弹窗 ================= */
@@ -811,6 +858,7 @@ function updateCatsScroll(){
 $("#catBar").addEventListener("scroll", updateCatsScroll);
 function renderCats(){
   $("#catBar").innerHTML = CATS.map(c=>`<div class="cat${c===curCat?" active":""}" data-cat="${c}">${c}</div>`).join("");
+  enhanceA11y($("#catBar"));   // 重建后重新补键盘可达性
   updateCatsScroll();
 }
 let curSort = "star";
@@ -826,6 +874,7 @@ function renderHome(){
 }
 function renderUsages(){
   $("#usagePanel").innerHTML = USAGES.map(u=>`<div class="cat${u===curUsage?" active":""}" data-usage="${u}">${u}</div>`).join("");
+  enhanceA11y($("#usagePanel"));
   $("#usageLabel").textContent = curUsage;
 }
 $("#sortTabs").addEventListener("click", e=>{
@@ -940,13 +989,30 @@ async function doSearch(){
       + (local.length? local.map(r=>cardHTML(r,"精选")).join("") : `<div class="empty"><span class="big">😅</span>精选库中也没有匹配项，换个关键词试试</div>`);
   }
 }
-$("#searchBtn").addEventListener("click", doSearch);
-$("#searchInput").addEventListener("keydown", e=>{ if(e.key==="Enter") doSearch(); });
-$("#searchInput").addEventListener("input", ()=>{ clearTimeout(searchTimer); searchTimer = setTimeout(doSearch, 600); });
+$("#searchBtn").addEventListener("click", ()=>{ clearTimeout(searchTimer); doSearch(); });
+$("#searchInput").addEventListener("keydown", e=>{ if(e.key==="Enter"){ clearTimeout(searchTimer); doSearch(); } });
+/* 输入防抖：GitHub 搜索接口未登录时限流 10 次/分钟，逐字触发很容易 403。
+   800ms 防抖 + 中文输入法合成期不触发 + 单个英文字符不发起请求。 */
+let imeComposing = false;
+function scheduleSearch(){
+  clearTimeout(searchTimer);
+  if(imeComposing) return;
+  const q = $("#searchInput").value.trim();
+  if(!q){ renderHome(); return; }              // 清空 → 立即回到精选列表
+  if(q.length < 2 && !isCN(q)) return;          // 单个英文字母搜不出有效结果，省一次请求
+  searchTimer = setTimeout(doSearch, 800);
+}
+$("#searchInput").addEventListener("compositionstart", ()=>{ imeComposing = true; });
+$("#searchInput").addEventListener("compositionend", ()=>{ imeComposing = false; scheduleSearch(); });
+$("#searchInput").addEventListener("input", scheduleSearch);
 
 /* ================= 榜单页 ================= */
 let rankLoaded = false, rankRange = "all";
 const RANK_TITLES = {day:"星标增速", week:"本周热榜", month:"本月热榜", year:"今年热榜", all:"全站总榜"};
+/* 违禁词黑名单：过滤破解/成人/灰产类仓库，避免把这类项目当热门推荐给用户。
+   用词边界约束，避免误杀 serial port、crack detection 这类正常技术项目（旧版裸 serial/crack 会误杀）。 */
+const BLOCK_RE = /\b(warez|keygen)\b|\bcrack(?:ed|s|ing)?\b(?!\s*(?:detection|down|width|growth|propagation|sealing|pattern))|\bserial\s?(key|number|code)\b|激活码|破解|免费.{0,6}(vip|会员)|成人|色情|\bporn\b|\badult\b|18\+/i;
+const isBlockedItem = it => BLOCK_RE.test((it.full_name||"")+" "+(it.description||""));
 /* 今日榜 v2：精选库星标增速榜（较上次快照的 star 增量，数据源 repos.json；无需 24h 历史数组，
    口径由标题注明「数据截至 X」） */
 function renderDayGrowthRank(box){
@@ -962,7 +1028,7 @@ function renderDayGrowthRank(box){
   const dl = r => r.s - r.ps;   // 较上次快照的星标增量
   const ranked = [...withPs].sort((a,b)=>(dl(b)-dl(a)) || (b.s-a.s)).slice(0,20);
   box.innerHTML = `<div class="notice">🔥 星标增速榜 · 较上次快照${stamp}</div>`
-    + ranked.map((r,i)=>cardHTML(r,"精选",i+1)).join("");
+    + ranked.map((r,i)=>cardHTML(r,"精选",i+1,dl(r))).join("");
 }
 function rangeSince(){
   const d = new Date();
@@ -989,9 +1055,8 @@ async function loadRank(){
       box.innerHTML = `<div class="notice warn">😅 ${RANK_TITLES[rankRange]}：这个时间段暂时没有符合条件的新项目，换个时间段看看</div>`;
       return;
     }
-    /* 违禁词黑名单：过滤破解/成人/灰产类仓库，避免把这类项目当热门推荐给用户 */
-    const BLOCK_RE = /crack|keygen|serial|激活码|破解|免费.{0,6}(vip|会员)|成人|色情|porn|adult|18\+/i;
-    const safe = data.items.filter(it=>!BLOCK_RE.test((it.full_name||"")+" "+(it.description||"")));
+    /* 违禁词过滤：破解/成人/灰产类仓库不进榜单 */
+    const safe = data.items.filter(it=>!isBlockedItem(it));
     const list = safe.map(it=>{
       const t = cnDesc(it.full_name, it.description);
       return {n:it.full_name, d:t.d, en:t.en, s:it.stargazers_count, fk:it.forks_count, iu:it.open_issues_count, av:it.owner&&it.owner.avatar_url, owner:it.owner&&it.owner.login, ownerType:it.owner&&(it.owner.type==="Organization"?"org":"user"), l:it.language||"", c:"GitHub 实时"};
@@ -1011,7 +1076,8 @@ async function loadRank(){
   }
 }
 $("#rankTabs").addEventListener("click", e=>{
-  const t = e.target.closest(".cat"); if(!t || t.dataset.range===rankRange) return;
+  const t = e.target.closest(".cat"); if(!t) return;
+  if(t.dataset.range===rankRange){ loadRank(); return; }   // 点当前标签 = 失败后重试（旧版这里直接 return，提示语无效）
   rankRange = t.dataset.range;
   document.querySelectorAll("#rankTabs .cat").forEach(c=>c.classList.toggle("active", c===t));
   loadRank();
@@ -1028,8 +1094,10 @@ async function loadNewStars(){
       {headers:{"Accept":"application/vnd.github+json"}});
     if(!res.ok) throw new Error(res.status);
     const data = await res.json();
-    if(!data.items || !data.items.length){ box.innerHTML = `<div class="ns-head" style="color:var(--text2);font-size:13px">🆕 近3天暂无新建黑马项目</div>`; return; }
-    const list = data.items.map(it=>{
+    /* 新星榜同样过违禁词（旧版只有大榜单过滤，新星榜会漏出灰产项目） */
+    const safe = (data.items||[]).filter(it=>!isBlockedItem(it)).slice(0,3);
+    if(!safe.length){ box.innerHTML = `<div class="ns-head" style="color:var(--text2);font-size:13px">🆕 近3天暂无新建黑马项目</div>`; return; }
+    const list = safe.map(it=>{
       const t = cnDesc(it.full_name, it.description);
       return {n:it.full_name, d:t.d, en:t.en, s:it.stargazers_count, fk:it.forks_count, iu:it.open_issues_count, av:it.owner&&it.owner.avatar_url, owner:it.owner&&it.owner.login, ownerType:it.owner&&(it.owner.type==="Organization"?"org":"user"), l:it.language||"", c:"GitHub 实时"};
     });
@@ -1164,6 +1232,7 @@ fetch("./repos.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{
       if(typeof d.iu==="number") r.iu = d.iu;  // 反馈
       if(d.lg) r.l = d.lg;                      // 语言（v1.6 起由采集脚本提供真实值）
       if(typeof d.ps==="number") r.ps = d.ps;   // 上次快照 star（v1.12 增速榜用）
+      if(d.pa) r.pa = d.pa;                     // 最近推送日期（v1.17 详情里显示"最近更新"）
     }
   }
   renderDailyPick();
