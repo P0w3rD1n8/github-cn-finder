@@ -1,7 +1,7 @@
 # GitHub 中文发现器 🧭
 
 > 不懂英文，也能轻松逛 GitHub
-> 当前版本：**v1.18**（2026-10-28）
+> 当前版本：**v1.19**（2026-10-28）
 
 一个面向中文用户的 GitHub 优质开源项目发现工具，把 GitHub 上最值得关注的项目翻译成大白话，让完全不懂英文、不懂编程的小白也能轻松找到好东西。
 
@@ -40,8 +40,11 @@
 | data.js | 精选库数据（项目、中文简介、详情、人群标签、镜像表） |
 | validate-data.js | 数据校验脚本（CI 每次 push 跑） |
 | fetch-data.py | 数据采集脚本（每小时抓真实 star/fork/issue/语言） |
+| build_pages.py | 静态页生成脚本（改 data.js 后自动生成 p/ 项目页 + list.html + sitemap.xml） |
+| p/ | 152 个精选项目的独立静态页（SEO / 分享落地页，由 build_pages.py 生成） |
+| list.html | 全部精选项目清单页（build_pages.py 生成） |
 | repos.json | 采集结果（前端启动时加载，覆盖内置兜底数据） |
-| .github/workflows/ | data-update.yml 定时采集；validate.yml 数据校验 |
+| .github/workflows/ | data-update.yml 定时采集；build-pages.yml 静态页生成；validate.yml 数据校验 |
 | manifest.json | PWA 配置（手机安装为 App） |
 | sw.js | 离线缓存服务（静态资源 SWR，数据文件 network-first） |
 | og-cover.png | 分享封面（1200×630，微信/X 外链预览） |
@@ -50,6 +53,14 @@
 | README.md | 项目说明 |
 
 ## 📜 版本历史
+
+**v1.19（2026-10-28）**
+- 静态项目页：新增 `build_pages.py`，为 152 个精选项目生成独立静态页（`p/` 目录）+ 全量清单 `list.html`，并更新 `sitemap.xml`——百度等搜索引擎和微信分享能直接引用单个项目页，中文介绍不再只存在于 JS 里
+- 生成自动化（B+ 方案）：`.github/workflows/build-pages.yml` 在修改 `data.js` 时自动重新生成并提交静态页，也可在 Actions 页面手动触发
+- 首屏分页：精选列表首屏只渲染 24 条 + 「加载更多」，切分类/排序/人群时自动回第一页，低端机首屏明显变快
+- 详情懒渲染：卡片详情改为第一次展开时才生成，不再把 152 段详情全部塞进首屏 DOM
+- 收藏导出/导入：我的页新增「导出」（下载 JSON 备份）与「导入」（文件/粘贴，自动合并去重），换电脑、换浏览器不再丢收藏；复制清单升级为带链接的 Markdown
+- 版本号统一为 v1.19（页面 / README / Service Worker 注释）
 
 **v1.18（2026-10-28）**
 - 今日榜升级为「近 24 小时」：采集脚本新增 `hist` 24 小时星标快照数组（每小时追加、保留最近 24 个），前端增速榜改算真实 24h 增量，标题注明口径
