@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://p0w3rd1n8.github.io/github-cn-finder/sitemap.xml
