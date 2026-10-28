@@ -339,22 +339,19 @@ __CSS__
 
 def build_sitemap(repos, ctx):
     urls = []
-    today = datetime.date.today().isoformat()
+    # v1.19.2：去掉 lastmod（每次构建标"今天"会让搜索引擎判定字段不可信）
     urls.append(
-        "  <url>\n    <loc>" + BASE_URL + "/</loc>\n    <lastmod>" + today
-        + "</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>"
+        "  <url>\n    <loc>" + BASE_URL + "/</loc>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>"
     )
     urls.append(
-        "  <url>\n    <loc>" + BASE_URL + "/list.html</loc>\n    <lastmod>" + today
-        + "</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>"
+        "  <url>\n    <loc>" + BASE_URL + "/list.html</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>"
     )
     for r in repos:
         n = r["n"]
         owner, repo = n.split("/")
         fname = owner + "-" + repo + ".html"
         urls.append(
-            "  <url>\n    <loc>" + BASE_URL + "/p/" + fname + "</loc>\n    <lastmod>" + today
-            + "</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>"
+            "  <url>\n    <loc>" + BASE_URL + "/p/" + fname + "</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>"
         )
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
