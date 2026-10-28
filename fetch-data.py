@@ -5,7 +5,9 @@ GitHub 中文发现器 · 精选库真实数据采集脚本
 从 index.html 解析精选库仓库清单 → 调 GitHub REST API 抓取真实字段
 → 输出 repos.json（前端 fetch 使用；手填伪指标 RATING/FAV_BASE/FORKS/ISSUES 由本文件取代）
 每次抓取会带上 ps（上一次快照的 star，来自 git 上一版或线上最新版），前端据此计算
-"较上次快照的星标增量"做今日星标增速榜（无需 24h 历史数组，口径由榜单标题注明）。
+"较上次快照的星标增量"做今日星标增速榜；
+同时维护 hist（最近 24 个 star 快照数组，每小时追加当前值、砍掉最早的），
+前端据此计算"近 24 小时增量"（hist 不足 2 个时回退用 ps）。
 用法：python fetch-data.py
 环境变量：GH_TOKEN（推荐，用户 PAT，额度 5000/h）或 GITHUB_TOKEN（Actions 自动注入）
 """
@@ -23,6 +25,7 @@ INDEX = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data.js")  # v
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "repos.json")
 API = "https://api.github.com"
 RAW_PREV = "https://raw.githubusercontent.com/P0w3rD1n8/github-cn-finder/main/repos.json"
+HIST_MAX = 24  # hist 快照上限：近 24 小时（每小时一个点）
 
 TOKEN = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or ""
 
@@ -132,23 +135,41 @@ def main():
         else:
             r["ps"] = None
 
+    # hist：最近 24 小时的 star 快照（前端据此算"近 24 小时"增量，标题写「近 24 小时」）
+    hist_hit = 0
+    for n, r in repos.items():
+        base = []
+        if prev and n in prev and isinstance(prev[n].get("hist"), list):
+            base = [x for x in prev[n]["hist"] if isinstance(x, (int, float))]
+        if isinstance(r.get("s"), (int, float)):
+            r["hist"] = (base + [r["s"]])[-HIST_MAX:]
+            hist_hit += 1
+        else:
+            r["hist"] = []
+
     data = {
         "updated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "repos": repos,
     }
 
-    # ETag 增量：与上一版快照相比全部真实字段未变 → 不覆盖文件，避免无意义提交
+    # 跳过写入条件：与上一版快照相比 s/fk/iu/lg 全未变，且 hist 已满 24（没有新的时点可累积）。
+    # 这样前 24 次运行必然写入（把 hist 快照攒满），之后只有数据变化才提交，避免每小时无意义 commit
     if prev and len(prev) >= ok:
-        def same_prev(n, r):
+        def need_write(n, r):
             p = prev.get(n)
-            return bool(p) and all(p.get(k) == r.get(k) for k in ("s", "fk", "iu", "lg"))
-        if all(same_prev(n, r) for n, r in repos.items()):
-            print(f"ℹ️ 与上一版快照完全一致（ETag 增量，{ok} 个仓库无变化），跳过写入")
+            if not p:
+                return True
+            if any(p.get(k) != r.get(k) for k in ("s", "fk", "iu", "lg")):
+                return True
+            ph = p.get("hist")
+            return not (isinstance(ph, list) and len(ph) >= HIST_MAX)
+        if not any(need_write(n, r) for n, r in repos.items()):
+            print(f"ℹ️ 与上一版快照完全一致且 24h 快照已满（{HIST_MAX}），跳过写入")
             return
 
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
-    print(f"✅ 已生成 {OUT}：{ok} 成功 / {fail} 失败 / 共 {len(names)}，ps 命中 {ps_hit}")
+    print(f"✅ 已生成 {OUT}：{ok} 成功 / {fail} 失败 / 共 {len(names)}，ps 命中 {ps_hit}，hist 命中 {hist_hit}")
 
 
 if __name__ == "__main__":
