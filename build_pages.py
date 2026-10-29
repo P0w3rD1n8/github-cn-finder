@@ -52,6 +52,10 @@ footer{text-align:center;font-size:12px;color:var(--text2);margin-top:32px}
 .list-item .nm{font-weight:600;font-size:14.5px}
 .list-item .ds{color:var(--text2);font-size:13px;flex:1}
 .list-item .st{color:var(--star);font-size:12px;white-space:nowrap}
+.related{margin:22px 0 4px;border-top:1px dashed var(--border);padding-top:16px}
+.related h2{font-size:16px;margin-bottom:8px}
+.related .list-item{padding:7px 0}
+.related-more{display:inline-block;margin-top:8px;font-size:13px}
 """
 
 
@@ -225,6 +229,49 @@ def build_project_page(n, r, ctx):
             + '" target="_blank" rel="noopener">⚡ Gitee 国内镜像</a>'
         )
 
+    # P0：JSON-LD（schema.org SoftwareApplication）。原始值不做 HTML 转义，
+    # 用 json.dumps 保证合法 JSON；转义 </ 防止 </script> 提前闭合标签。
+    ld = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": zh + " - GitHub 中文发现器",
+        "description": desc,
+        "url": BASE_URL + "/p/" + fname,
+        "applicationCategory": r.get("c", "") or "",
+        "inLanguage": "zh-CN",
+    }
+    ld_json = json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")
+    ld_html = '<script type="application/ld+json">' + ld_json + "</script>"
+
+    # P0：相关项目互链——同一 c 分类下的其他仓库，按星标降序取前 5，跳过自身
+    related_html = ""
+    cat = r.get("c") or ""
+    if cat:
+        siblings = [x for x in ctx["repos"] if x.get("c") == cat and x["n"] != n]
+        siblings.sort(key=lambda x: int(x.get("s") or 0), reverse=True)
+        rel_items = []
+        for x in siblings[:5]:
+            xn = x["n"]
+            xowner, xrepo = xn.split("/")
+            xf = xowner + "-" + xrepo + ".html"
+            xzh = ctx["repo_zh"].get(xn) or xrepo
+            rel_items.append(
+                '<div class="list-item"><span class="nm"><a href="'
+                + esc(BASE_URL + "/p/" + xf)
+                + '">'
+                + esc(xzh)
+                + '</a></span><span class="st">⭐ '
+                + esc("{:,}".format(int(x.get("s") or 0)))
+                + "</span></div>"
+            )
+        if rel_items:
+            related_html = (
+                '<section class="related"><h2>📚 相关项目（' + esc(cat) + '）</h2>'
+                + "".join(rel_items)
+                + '<a class="related-more" href="' + esc(BASE_URL + "/list.html")
+                + '">查看全部 →</a></section>'
+            )
+
     page = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -233,6 +280,7 @@ def build_project_page(n, r, ctx):
 <title>__TITLE__</title>
 <meta name="description" content="__DESC__">
 <link rel="canonical" href="__CANONICAL__">
+__LDJSON__
 <meta property="og:site_name" content="GitHub 中文发现器">
 <meta property="og:type" content="article">
 <meta property="og:title" content="__OGT__">
@@ -258,6 +306,7 @@ __CSS__
     __MIRROR__
   </div>
   __AUTHOR__
+  __RELATED__
   <div class="foot-note">💡 说明：中文介绍与星标数据由「GitHub 中文发现器」人工整理与自动采集，仅供学习参考；安装/使用请以项目官方文档为准。</div>
 </main>
 <footer>© GitHub 中文发现器 · <a href="__HOME__">返回全部精选</a></footer>
@@ -278,6 +327,8 @@ __CSS__
         .replace("__DETAIL__", detail_html)
         .replace("__MIRROR__", mirror_html)
         .replace("__AUTHOR__", author_html)
+        .replace("__LDJSON__", ld_html)
+        .replace("__RELATED__", related_html)
     ), fname
 
 
