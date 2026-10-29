@@ -150,6 +150,14 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .tag.src{background:rgba(88,166,255,.12);color:var(--accent);border-color:rgba(88,166,255,.3)}
 .tag.up{background:rgba(63,185,80,.14);color:#3fb950;border-color:rgba(63,185,80,.35);font-weight:700}
 .tag.en{background:rgba(247,129,102,.12);color:var(--accent2);border-color:rgba(247,129,102,.35)}
+/* 卡片操作按钮（去GitHub + 国内镜像）：首页卡片也一眼能看到跳转入口 */
+.card-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.card-actions .btn{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:8px;
+  font-size:11.5px;font-weight:600;text-decoration:none;transition:opacity .15s;line-height:1.5}
+.card-actions .btn:hover{opacity:.85;text-decoration:none}
+.card-actions .btn:active{opacity:.7}
+.card-actions .btn-main{background:var(--accent);color:#fff;border:1px solid var(--accent)}
+.card-actions .btn-ghost{background:transparent;color:var(--accent);border:1px solid var(--border)}
 .rank-tabs{padding:0 0 12px}
 /* 首页横幅 */
 .banner{background:linear-gradient(135deg,rgba(88,166,255,.14),rgba(163,113,247,.14));
@@ -678,6 +686,14 @@ function cardHTML(r, src, rank, delta){
     ? `<img class="repo-icon" src="${esc(r.av)}&s=96" loading="lazy" alt="">`
     : `<span class="repo-icon" style="background:${CAT_COLORS[r.c]||"var(--accent)"}">${esc(letter)}</span>`;
   const hasDet = !!(DETAIL[r.n] || r.en);   // 轻量预判是否有详情区（懒渲染：展开时才注入内容）
+  // 卡片直达按钮：GitHub 主按钮 + 国内镜像（GitCode 优先，其次 Gitee，无镜像只出主按钮）
+  const mkey2 = (r.n || "").toLowerCase();
+  const gcU = GC_MIRRORS[mkey2], gtU = GT_MIRRORS[mkey2];
+  const mirrorBtn = gcU
+    ? `<a class="btn btn-ghost" href="${esc(gcU)}" target="_blank" rel="noopener">⚡ GitCode 国内镜像</a>`
+    : gtU
+      ? `<a class="btn btn-ghost" href="${esc(gtU)}" target="_blank" rel="noopener">⚡ Gitee 国内镜像</a>`
+      : "";
   return `<div class="card" data-n="${esc(r.n)}">
     ${rank?`<span class="rank-badge${rank<=3?" top":""}">第${rank}名</span>`:""}
     <div class="card-top">
@@ -702,6 +718,10 @@ function cardHTML(r, src, rank, delta){
       ${favs.has(r.n)?`<span class="meta-item fav-count" title="你已收藏这个项目">🔖 <span class="lbl">已收藏</span></span>`:""}
     </div>
     ${hasDet?`<div class="expand-hint">了解详情 <span class="arr">▾</span></div><div class="repo-detail" data-det="1"></div>`:""}
+    <div class="card-actions">
+      <a class="btn btn-main" href="https://github.com/${esc(r.n)}" target="_blank" rel="noopener">去 GitHub 查看 ↗</a>
+      ${mirrorBtn}
+    </div>
   </div>`;
 }
 function renderList(el, list, src){

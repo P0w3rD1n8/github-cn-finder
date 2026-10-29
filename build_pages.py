@@ -198,15 +198,18 @@ def build_project_page(n, r, ctx):
 
     author_html = ""
     if author_bio:
-        author_html = (
-            '<div class="detail-tip">👤 维护者 <a href="https://github.com/'
-            + esc(owner)
-            + '" target="_blank" rel="noopener">'
-            + esc(owner)
-            + "</a>："
-            + esc(author_bio)
-            + "</div>"
-        )
+        # AUTHORS 条目是结构化对象 {t: 类型(org/user), b: 简介正文}，需取 b 字段，避免把对象原样渲染成 {'t':..., 'b':...}
+        bio = author_bio.get("b", "") if isinstance(author_bio, dict) else author_bio
+        if bio:
+            author_html = (
+                '<div class="detail-tip">👤 维护者 <a href="https://github.com/'
+                + esc(owner)
+                + '" target="_blank" rel="noopener">'
+                + esc(owner)
+                + "</a>："
+                + esc(bio)
+                + "</div>"
+            )
 
     mirror_html = ""
     if gc_url:
