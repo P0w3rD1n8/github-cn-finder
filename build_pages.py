@@ -302,12 +302,13 @@ def build_project_page(n, r, ctx):
 
     # P0：JSON-LD（schema.org SoftwareApplication）。原始值不做 HTML 转义，
     # 用 json.dumps 保证合法 JSON；转义 </ 防止 </script> 提前闭合标签。
+    # v1.21：name 用项目名本身（站点品牌已由 og:site_name 表达），url 指向仓库主页。
     ld = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": zh + " - GitHub 中文发现器",
+        "name": zh,
         "description": desc,
-        "url": BASE_URL + "/p/" + fname,
+        "url": "https://github.com/" + n,
         "applicationCategory": r.get("c", "") or "",
         "inLanguage": "zh-CN",
     }
@@ -345,6 +346,25 @@ def build_project_page(n, r, ctx):
 
     # P2：官方文档摘要（无条目则为空串，不渲染）
     docs_html = build_docs_summary(ctx["docs"].get(n))
+
+    # v1.21：星标实时化——repos.json 每小时由 Actions 更新，p 页构建时快照会被覆写为实时值，
+    # 并附"数据截至"时间戳（构建页时 star 元素已渲染，脚本放 body 尾部执行）。
+    star_script = (
+        "<script>(function(){var k=\""
+        + esc(n.lower())
+        + "\";var s=document.querySelector(\".star\");if(!s)return;"
+        + 'fetch("'
+        + esc(BASE_URL + "/repos.json")
+        + '",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(d){'
+        + "if(!d||!d.repos||!d.repos[k])return;var e=d.repos[k];if(typeof e.s!==\"number\")return;"
+        + 's.textContent="⭐ "+e.s.toLocaleString("en-US")+" 星标";'
+        + "var dt=new Date(d.updated);if(isNaN(dt))return;"
+        + 'var t=dt.toLocaleString("zh-CN",{hour12:false});'
+        + 's.title="数据截至 "+t;'
+        + 'var u=document.createElement("span");u.style.cssText="font-size:11px;color:#8b949e;font-weight:400";'
+        + 'u.textContent=" · 数据截至 "+t;s.appendChild(u);'
+        + "}).catch(function(){});})();</script>"
+    )
 
     page = """<!DOCTYPE html>
 <html lang="zh-CN">
@@ -385,6 +405,7 @@ __CSS__
   <div class="foot-note">💡 说明：中文介绍与星标数据由「GitHub 中文发现器」人工整理与自动采集，仅供学习参考；安装/使用请以项目官方文档为准。</div>
 </main>
 <footer>© GitHub 中文发现器 · <a href="__HOME__">返回全部精选</a></footer>
+__STARSCRIPT__
 </body>
 </html>
 """
@@ -405,6 +426,7 @@ __CSS__
         .replace("__LDJSON__", ld_html)
         .replace("__RELATED__", related_html)
         .replace("__DOCS__", docs_html)
+        .replace("__STARSCRIPT__", star_script)
     ), fname
 
 
