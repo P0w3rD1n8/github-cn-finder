@@ -1,880 +1,880 @@
 {
-  "public-apis/public-apis": {
-    "positioning": "由社区成员与 APILayer 共同手工维护的公共 API 大合集，收录各行各业可免费调用的公开 API，是开发者拿来给自己产品直接用的 API 宝库。",
-    "highlights": [
-      "收录 2,000+ 免费 API，分 50+ 个分类，与本仓库每日同步并自动测试可用性",
-      "每个 API 条目标注鉴权方式、是否支持 HTTPS、是否允许 CORS，便于直接选用",
-      "设有『无需密钥』专区，注册都不用，点开就能调用",
-      "配套 MCP Servers 目录，让 AI Agent（Claude、Cursor 等）把这些 API 当工具调用",
-      "官方检索站 publicapis.lol 支持按分类浏览、按条件筛选、查看 API 实时在线状态"
-    ],
-    "quickstart": [
-      "直接浏览仓库 README 里按分类组织的 API 大表，或打开官方检索站 https://publicapis.lol 搜索筛选",
-      "想找免注册即点即用的 API，访问 https://publicapis.lol/no-api-key",
-      "想看今天哪些 API 在线、变慢或宕机，访问 https://publicapis.lol/status",
-      "想贡献新 API：先读 CONTRIBUTING.md，再到 https://github.com/public-apis/public-apis/pulls 提交 PR"
-    ],
-    "support": "Discord 社区 https://discord.com/invite/hgjA78638n ；问题反馈走 GitHub Issues https://github.com/public-apis/public-apis/issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "EbookFoundation/free-programming-books": {
-    "positioning": "一份多语言免费编程学习资源清单，最初克隆自 StackOverflow 的『免费编程书单』帖子，现由非营利组织 Free Ebook Foundation 托管维护，以协作方式持续更新。",
-    "highlights": [
-      "免费编程书籍按编程语言和按主题两大主线分门别类整理",
-      "覆盖几十种语言版本，其中包含中文书单 books/free-programming-books-zh.md",
-      "除书籍外还延伸出免费课程、播客等配套资源清单",
-      "配套动态搜索站，可按书名或作者实时检索",
-      "内容以 CC BY 4.0 许可开放，欢迎社区按贡献指南增补"
-    ],
-    "quickstart": [
-      "在仓库 README 里按语言或主题点开对应清单文件（如中文见 books/free-programming-books-zh.md）",
-      "想按书名或作者搜索：打开 https://ebookfoundation.github.io/free-programming-books-search/",
-      "想要更好读的网页版浏览：访问 https://ebookfoundation.github.io/free-programming-books/",
-      "想贡献资源：先读 docs/CONTRIBUTING.md（新手先看 docs/HOWTO.md），并遵守行为准则"
-    ],
-    "support": "非营利组织主页 https://ebookfoundation.org ；问题反馈走 GitHub Issues https://github.com/EbookFoundation/free-programming-books/issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "RustDesk/RustDesk": {
-    "positioning": "又一个用 Rust 写的远程桌面方案，开箱即用、无需任何配置，数据完全由自己掌控；可以直接用官方中继服务器，也可以自建服务器，甚至自己写一个 rendezvous/relay 服务。",
-    "highlights": [
-      "开箱即用零配置，装上就能远程控制，强调用户对数据的完全掌控",
-      "服务端完全开放：可使用官方/自建中继服务器，也可参考 rustdesk-server-demo 自己写",
-      "支持文件传输、TCP 隧道等远程办公常用能力",
-      "桌面端 GUI 采用 Flutter（旧版 Sciter），覆盖 Windows / Linux / macOS 与移动端",
-      "官方发布正式版与 nightly 每日构建，并提供 F-Droid、Flathub 安装渠道"
-    ],
-    "quickstart": [
-      "普通用户直接从 Release 页下载安装包：https://github.com/rustdesk/rustdesk/releases （安卓也可装 F-Droid 版本）",
-      "开发者先准备好 Rust + C++ 构建环境，安装 vcpkg 并设置 VCPKG_ROOT，再执行 `vcpkg install libvpx libyuv opus aom`",
-      "克隆仓库后编译运行：`git clone --recurse-submodules https://github.com/rustdesk/rustdesk` 然后 `cargo run`",
-      "Docker 构建方式：`git clone https://github.com/rustdesk/rustdesk && cd rustdesk && git submodule update --init --recursive && docker build -t \"rustdesk-builder\" .`",
-      "之后每次构建执行：`docker run --rm -it -v $PWD:/home/user/rustdesk -v rustdesk-git-cache:/home/user/.cargo/git -v rustdesk-registry:/home/user/.cargo/registry -e PUID=\"$(id -u)\" -e PGID=\"$(id -g)\" rustdesk-builder`"
-    ],
-    "support": "官方文档 https://rustdesk.com/docs/en/dev/build/ （仓库内有中文版 docs/README-ZH.md）；FAQ Wiki https://github.com/rustdesk/rustdesk/wiki/FAQ ；Discord https://discord.gg/nDceKgxnkV",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "openai/whisper": {
-    "positioning": "OpenAI 开源的通用语音识别模型，在大规模多样化音频数据集上训练，是一个多任务模型，能同时做多种语言的语音识别、语音翻译和语种识别。",
-    "highlights": [
-      "基于 Transformer 序列到序列架构，用一个模型替代传统语音处理流水线的多个环节",
-      "提供 tiny / base / small / medium / large / turbo 六种尺寸，turbo 是 large-v3 的加速优化版，按显存和速度取舍",
-      "多语言模型可把非英语语音直接翻译成英文",
-      "同时提供命令行工具与 Python API，接入 Colab 示例可直接上手",
-      "代码与模型权重均以 MIT 许可发布"
-    ],
-    "quickstart": [
-      "安装最新版：`pip install -U openai-whisper`（或 `pip install git+https://github.com/openai/whisper.git` 装最新提交）",
-      "安装命令行依赖 ffmpeg，如 `sudo apt install ffmpeg`、`brew install ffmpeg` 或 `choco install ffmpeg`",
-      "命令行转录音频：`whisper audio.flac audio.mp3 audio.wav --model turbo`",
-      "指定语种转录：`whisper japanese.wav --language Japanese`",
-      "把语音翻译成英文：`whisper japanese.wav --model medium --language Japanese --task translate`",
-      "Python 调用：`import whisper; model = whisper.load_model(\"turbo\"); result = model.transcribe(\"audio.mp3\"); print(result[\"text\"])`"
-    ],
-    "support": "官方博客与论文见 README 顶部链接；示例分享走 GitHub Discussions 的 Show and tell 板块 https://github.com/openai/whisper/discussions/categories/show-and-tell ；Bug 反馈走仓库 Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "freeCodeCamp/freeCodeCamp": {
-    "positioning": "freeCodeCamp.org 的开源代码库与课程体系——一个友好的免费学编程社区，由捐赠支持的 501(c)(3) 慈善机构运营，帮助忙碌的成年人转行进入技术行业。",
-    "highlights": [
-      "全栈 Web 开发与机器学习课程完全免费、自定进度，包含数千个交互式编程挑战",
-      "提供多项免费开发者认证：响应式网页设计、JavaScript、前端库、Python、关系数据库、后端与 API 等",
-      "另设面向开发者的免费语言认证（英语 A2/B1、西班牙语、中文 A1），按国际水平分级",
-      "每门认证需完成 5 个必修项目并通过考试，证书永久有效可挂 LinkedIn",
-      "社区配套论坛、YouTube 免费课程频道、数千篇技术文章，帮助面试与实战"
-    ],
-    "quickstart": [
-      "直接访问 https://www.freecodecamp.org 注册账号开始学习",
-      "在 https://www.freecodecamp.org/learn 选择目标认证课程（如 Responsive Web Design、JavaScript）",
-      "按模块完成互动课程、练习与测验，做完 5 个必修项目后参加考试拿证",
-      "想为本项目贡献代码：阅读 https://contribute.freecodecamp.org 按指引提交 PR"
-    ],
-    "support": "官方论坛 https://forum.freecodecamp.org （通常数小时内有人解答）；Discord https://discord.gg/Z7Fm39aNtZ ；YouTube https://youtube.com/freecodecamp ；技术文章 https://www.freecodecamp.org/news",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "facebook/react-native": {
-    "positioning": "『Learn once, write anywhere』——用 React 来构建 Android、iOS 等平台的原生应用：JavaScript 写界面，底层用原生代码渲染。",
-    "highlights": [
-      "Native UI：组件直接渲染成各平台原生 UI，手势、文本缩放、无障碍行为都符合该系统用户的预期",
-      "React 处处可用：声明式 UI、组件、Hooks、Suspense 在 Android、iOS 及更多平台复用",
-      "Fast Refresh：改 JavaScript 代码几秒内即可看到效果，无需重新编译原生应用",
-      "Native Modules 让 JS 同步且类型安全地直接调用平台代码，也可复用社区数千个现成库",
-      "由 React Foundation 与众多公司及核心贡献者共同开发维护"
-    ],
-    "quickstart": [
-      "官方推荐通过框架起步：`npx create-expo-app@latest` 创建一个 Expo 项目",
-      "按 Expo 入门指南配置环境：https://docs.expo.dev/get-started/set-up-your-environment/",
-      "新应用也可参考官方 Getting Started 指南：https://reactnative.dev/docs/environment-setup",
-      "若不想用框架，再按 https://reactnative.dev/docs/getting-started-without-a-framework 自行搭建"
-    ],
-    "support": "官方文档 https://reactnative.dev/docs/getting-started ；社区支持页 https://reactnative.dev/help ；大讨论与提案在 https://github.com/react-native-community/discussions-and-proposals ；Bug 走本仓库 Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "immich-app/immich": {
-    "positioning": "高性能的自托管照片与视频管理方案，官方 README 自带简体中文版（readme_i18n/README_zh_CN.md）。",
-    "highlights": [
-      "手机端 App 打开即自动备份，支持后台备份、按相册选择性备份、防重复",
-      "多用户、相册与共享相册、伙伴共享、公开分享、归档与收藏一应俱全",
-      "支持 RAW 格式、EXIF/地图元数据查看、LivePhoto/MotionPhoto 备份与回放、360° 全景展示",
-      "人脸识别与聚类、按元数据/物体/人脸/CLIP 语义搜索、『几年前的今天』回忆、全局地图",
-      "支持 OAuth 登录与 API Key，可自定义存储结构，移动端支持离线浏览"
-    ],
-    "quickstart": [
-      "先读安装要求与指南：https://docs.immich.app/install/requirements",
-      "主文档站与更多入口：https://immich.app/",
-      "想先在线试用 Demo：打开 https://demo.immich.app ，账号 `demo@immich.app`，密码 `demo`",
-      "手机 App 连接 Demo 时，服务器地址填 `https://demo.immich.app`"
-    ],
-    "support": "官方文档 https://docs.immich.app/ ；路线图 https://immich.app/roadmap ；Discord https://discord.immich.app ；问题反馈走 GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "godotengine/godot": {
-    "positioning": "Godot Engine 是一款功能齐全的跨平台游戏引擎，从统一的编辑器界面出发制作 2D 和 3D 游戏。",
-    "highlights": [
-      "完全免费开源（MIT 许可），无版税、无附加条件，做出来的游戏完全归开发者自己",
-      "游戏可一键导出到 Linux / macOS / Windows、Android / iOS、Web 乃至主机平台",
-      "内置一整套常用工具链，开发者专注做游戏而不必重复造轮子",
-      "开发完全独立、由社区驱动，背后有 Godot Foundation 非营利组织支持",
-      "官方文档、类参考、演示项目与资源商店配套齐全"
-    ],
-    "quickstart": [
-      "从官网下载官方编辑器和导出模板：https://godotengine.org/download",
-      "想自己编译源码：参考官方编译文档 https://docs.godotengine.org/en/latest/engine_details/development/compiling",
-      "边学边查官方文档：https://docs.godotengine.org",
-      "跑官方示例项目：https://github.com/godotengine/godot-demo-projects ，素材也可逛资源商店 https://store.godotengine.org/"
-    ],
-    "support": "官方文档 https://docs.godotengine.org ；社区频道汇总 https://godotengine.org/community ；与核心开发者交流的 Contributors Chat https://chat.godotengine.org",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "mrdoob/three.js": {
-    "positioning": "一个 JavaScript 3D 库，目标是做一个易用、轻量、跨浏览器的通用 3D 库；当前版本内置 WebGL 和 WebGPU 渲染器。",
-    "highlights": [
-      "轻量、通用、跨浏览器，定位简单易用的 Web 3D 开发库",
-      "内置 WebGL 与 WebGPU 渲染器，SVG、CSS3D 渲染器作为 addon 提供",
-      "官方示例、文档、手册、迁移指南齐全，学习路径清晰",
-      "社区活跃：官方论坛、Discord、StackOverflow 标签一应俱全"
-    ],
-    "quickstart": [
-      "npm 安装后在代码里 `import * as THREE from 'three'`，创建场景、相机、几何体即可渲染一个会旋转的立方体",
-      "看效果与教程：官方示例 https://threejs.org/examples/ ；文档 https://threejs.org/docs/ ；手册 https://threejs.org/manual/",
-      "想克隆源码省时间：`git clone --depth=1 https://github.com/mrdoob/three.js.git`（不带历史记录，全量克隆约 2GB）"
-    ],
-    "support": "文档 https://threejs.org/docs/ ；官方论坛 https://discourse.threejs.org/ ；Discord https://discord.gg/56GBJwAnUS ；提问可带 StackOverflow 的 three.js 标签",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "yt-dlp/yt-dlp": {
-    "positioning": "功能丰富的命令行音视频下载器，支持数千个网站下载，是 youtube-dl 的衍生项目（基于已停止维护的 youtube-dlc）。",
-    "highlights": [
-      "支持数千个网站的音视频下载，站点列表见 supportedsites.md",
-      "提供 stable / nightly / master 三种发布渠道，可用 --update-to 随时切换版本或回退到指定 tag",
-      "内置 SponsorBlock 广告片段跳过、强大的格式选择（-f/--format）与丰富的后处理选项",
-      "支持插件扩展、配置文件、netrc 认证与高度自定义的输出模板"
-    ],
-    "quickstart": [
-      "从 Releases 下载对应平台的独立可执行文件：Windows 用 yt-dlp.exe、macOS 用 yt-dlp_macos、Linux/BSD 用 yt-dlp",
-      "或用 pip 安装：`python -m pip install -U \"yt-dlp[default]\"`；装 nightly 预发布：`python -m pip install -U --pre \"yt-dlp[default]\"`",
-      "基本用法：`yt-dlp [OPTIONS] [--] URL [URL...]`",
-      "更新：release 二进制运行 `yt-dlp -U`；pip 安装则重新执行安装命令；遇到 stable 版问题先 `yt-dlp --update-to nightly` 再报 bug",
-      "详细安装与依赖说明见官方 Wiki：https://github.com/yt-dlp/yt-dlp/wiki/Installation"
-    ],
-    "support": "官方 Wiki 与 FAQ（https://github.com/yt-dlp/yt-dlp/wiki）、Discord 社区（https://discord.gg/H5MNcFW63r）、GitHub Issues（按 CONTRIBUTING.md 指引提交）",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "codecrafters-io/build-your-own-x": {
-    "positioning": "一份精心整理的『从零动手造技术』分步教程合集，收录手把手重建数据库、Git、Docker、编程语言、Web 服务器等热门技术的优质指南，核心理念引自费曼：『我不能创造的，我就不能理解』。",
-    "highlights": [
-      "按近 30 个技术领域分类索引：3D 渲染器、AI 模型、区块链、数据库、Docker、Git、操作系统、神经网络、编程语言、Shell、Web 浏览器/服务器等",
-      "每篇教程标注所用语言（Python / Go / C++ / Rust / Java / TypeScript 等）与形式（图文 / 视频）",
-      "持续更新的社区合集，可在 Issues 中建议新增或改进教程"
-    ],
-    "quickstart": [
-      "直接在仓库 README 目录中按主题跳转（如 Build your own Database / Git / Docker）",
-      "点击某篇教程链接前往外部原文网站，按其步骤从零实现对应技术",
-      "想贡献新教程：在 Issues 中讨论或按仓库贡献说明提交 PR"
-    ],
-    "support": "官方主页与仓库 Issues（codecrafters-io/build-your-own-x）",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "nodejs/node": {
-    "positioning": "开源、跨平台的 JavaScript 运行时环境，由 OpenJS 基金会支持，项目采用开放治理模式（设技术指导委员会 TSC）。",
-    "highlights": [
-      "按语义化版本发布，每年 4 月推出新主版本；LTS 长期支持线提供 30 个月稳定与安全维护",
-      "区分 Alpha / Current / LTS / Nightly 多种发布类型，分别面向库作者、CI 与生产环境",
-      "官方提供各平台预编译二进制、安装包与源码 tarball，并附带可 GPG 校验的 SHASUMS256.txt.asc"
-    ],
-    "quickstart": [
-      "前往官网下载页获取二进制与安装包：https://nodejs.org/en/download/",
-      "查看最新 Current 版 API 文档：https://nodejs.org/api/（历史版本文档在各 release 目录的 docs 子目录）",
-      "校验下载包：用官方 release-keys 公钥导入后执行 `curl -fsO \"https://nodejs.org/dist/${VERSION}/SHASUMS256.txt.asc\"` 并用 gpgv + `shasum --check` 校验",
-      "从源码构建见 BUILDING.md"
-    ],
-    "support": "官方支持指引 .github/SUPPORT.md、nodejs.org 文档、GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "trekhleb/javascript-algorithms": {
-    "positioning": "用 JavaScript 实现的经典算法与数据结构示例合集，每个算法/数据结构都配有独立 README 讲解与延伸阅读（含 YouTube 视频），并提供简体中文等多语言版本。",
-    "highlights": [
-      "覆盖链表、双链表、队列、栈、哈希表、堆、优先队列、Trie、二叉搜索树、AVL/红黑树、线段树、图、并查集、布隆过滤器、LRU 缓存等数据结构",
-      "算法按数学、集合、字符串、排序、搜索、递归、动态规划等主题分类，并以 B（初级）/A（高级）标注难度",
-      "附带 Big O 增长曲线、数据结构操作复杂度表与各排序算法复杂度对照表"
-    ],
-    "quickstart": [
-      "clone 仓库后在 `./src/playground/playground.js` 中动手试验数据结构与算法",
-      "为自己的代码编写测试于 `./src/playground/__test__/playground.test.js`",
-      "运行 `npm test -- 'playground'` 验证 playground 代码是否按预期工作"
-    ],
-    "support": "GitHub Issues；README 指向作者站点 trekhleb.dev 与配套 YouTube 算法播放列表",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "ohmyzsh/ohmyzsh": {
-    "positioning": "开源、社区驱动的 zsh 配置管理框架，内置数百个插件与 150 多个主题，让终端提示符更强大也更好看。",
-    "highlights": [
-      "开箱即用的海量插件（git、macos、docker 等）与 150+ 内置主题，多数在 Wiki 附截图",
-      "支持自定义插件/主题、异步 git 提示符、终端屏保（`omz shellsaver`）等趣味功能",
-      "更新策略灵活：自动/提醒/禁用、检查频率与冷却期均可通过 zstyle 配置"
-    ],
-    "quickstart": [
-      "一键安装（curl）：`sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"`；被墙地区用镜像 `sh -c \"$(curl -fsSL https://install.ohmyz.sh/)\"`",
-      "编辑 `~/.zshrc`，在 `plugins=(git bundler dotenv ...)` 中按空白分隔启用插件",
-      "在 `~/.zshrc` 中把 `ZSH_THEME=\"robbyrussell\"` 改成想要的主题名（如 `agnoster`，部分主题需 Powerline/Nerd Font）",
-      "更新运行 `omz update`；卸载运行 `uninstall_oh_my_zsh`"
-    ],
-    "support": "官方站 ohmyz.sh、Discord（https://discord.gg/ohmyzsh）、Wiki FAQ（https://github.com/ohmyzsh/ohmyzsh/wiki/FAQ）、GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "mattpocock/skills": {
-    "positioning": "作者 Matt Pocock 日常用于『真工程』（而非 vibe coding）的 AI 编码代理技能（agent skills）合集，设计小巧、易改造、可组合，适配任意模型。",
-    "highlights": [
-      "工程类技能：grill-with-docs（需求拷问并生成领域术语表 GLOSSARY.md/ADR）、tdd（红绿重构循环）、diagnosing-bugs、code-review、improve-codebase-architecture 等",
-      "通用效率类技能：grill-me、handoff（会话交接文档）、teach、wait-what 等",
-      "覆盖 Claude Code、Codex、GitHub Copilot、Gemini CLI 及其他代理的多平台安装方式"
-    ],
-    "quickstart": [
-      "Claude Code 安装：`claude plugin install mattpocock-skills@claude-plugins-official`（自动更新）",
-      "其他代理通用安装：`npx skills@latest add mattpocock/skills -a <agent>`（如 cursor、opencode 等）",
-      "在每个仓库中运行一次 `/setup-matt-pocock-skills`，配置 issue 跟踪器、分诊标签与文档保存目录",
-      "之后按需使用 `/grill-me`、`/tdd`、`/implement`、`/code-review` 等技能"
-    ],
-    "support": "GitHub 仓库 Issues、作者邮件 newsletter（https://www.aihero.dev/s/skills-newsletter）、skills.sh 页面（https://skills.sh/mattpocock/skills）",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "kamranahmedse/developer-roadmap": {
-    "positioning": "roadmap.sh 背后的开源内容仓库，由社区驱动，为开发者提供交互式学习路线图、最佳实践与知识测验。",
-    "highlights": [
-      "覆盖前端、后端、DevOps、AI 工程师、云计算、各语言与框架等近百条交互式路线图，点击节点即可阅读该主题详解",
-      "提供后端性能、前端性能、代码审查、API 安全、AWS 等交互式最佳实践",
-      "提供 JavaScript / Node / React / 前后端问答，帮助检验、评估并提升自身知识"
-    ],
-    "quickstart": [
-      "直接访问 https://roadmap.sh 在线浏览交互式路线图，新手可先看 get-started 页选方向",
-      "想本地研究内容结构：`git clone git@github.com:nilbuild/developer-roadmap.git --depth 1` 后 `cd developer-roadmap`",
-      "贡献：阅读 contributing.md，在仓库中新增或修改 roadmap 内容，合并后自动同步到网站"
-    ],
-    "support": "roadmap.sh 网站、官方 YouTube 频道、GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "CyC2018/CS-Notes": {
-    "positioning": "一套中文计算机求职面试笔记，内容以原创为主，覆盖算法、操作系统、网络、数据库、Java、系统设计、大模型应用等方向，并提供按天排好的学习路线。",
-    "highlights": [
-      "四条按天学习路线：零基础、Java 后端、大模型应用开发、面试冲刺，每天 1~2 小时含笔记、面试真题与动手练习",
-      "知识体系完整：剑指 Offer/LeetCode 题解、操作系统、计算机网络、MySQL/Redis、Java 基础到虚拟机、Spring、分布式与系统设计",
-      "支持个人网站与飞书知识库在线阅读，采用 CC BY-NC-SA 4.0 知识共享协议"
-    ],
-    "quickstart": [
-      "在线阅读：个人网站 https://cyc2018.xyz 或飞书知识库在线版",
-      "在 README 顶部导航表格按学科（算法/操作系统/网络/数据库/Java/系统设计/工具）跳转对应目录笔记",
-      "按学习路线选择零基础 / Java 后端 / 大模型应用开发 / 面试冲刺，按每天的安排推进",
-      "贡献：阅读 CONTRIBUTING.md 后提交 Issue、PR 或配图"
-    ],
-    "support": "个人网站 cyc2018.xyz、飞书知识库在线阅读、GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "tensorflow/tensorflow": {
-    "positioning": "端到端开源机器学习平台，源于 Google Brain 团队，拥有全面灵活的工具、库与社区生态：研究者可用它推进 ML 前沿，开发者可轻松构建并部署 ML 应用。",
-    "highlights": [
-      "提供稳定的 Python 与 C++ API，以及其他语言非保证向后兼容的 API",
-      "支持 CUDA 加速 GPU（Ubuntu/Windows）、DirectX/macOS Metal 通过设备插件，另有 CPU-only 精简包",
-      "配套 TensorBoard 可视化、官方模型库、教程、Codelabs 与多门在线课程等完整资源"
-    ],
-    "quickstart": [
-      "安装：`pip install tensorflow`；CPU 精简版用 `pip install tensorflow-cpu`（升级加 --upgrade）",
-      "试用首个程序：进入 python 后 `import tensorflow as tf`，运行 `tf.add(1, 2).numpy()` 得到 3",
-      "更多示例见官方教程：https://www.tensorflow.org/tutorials/",
-      "安装指南（GPU / Docker / 源码构建）：https://www.tensorflow.org/install"
-    ],
-    "support": "TensorFlow 官方论坛 https://discuss.tensorflow.org/、Stack Overflow 标签 tensorflow、GitHub Issues（用于 bug 与需求跟踪）",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "microsoft/vscode": {
-    "positioning": "『Code - OSS』开源仓库，微软与社区共同开发 Visual Studio Code 的源代码，在 MIT 许可下对所有人开放；VS Code 产品是基于该仓库、带微软定制的发行版。",
-    "highlights": [
-      "兼顾代码编辑器的简洁与编辑-构建-调试核心循环：全面的代码编辑、导航与理解支持，轻量调试与丰富的扩展模型",
-      "每月更新新功能与缺陷修复，提供 Windows/macOS/Linux 稳定版与每日更新的 Insiders 版",
-      "内置多语言语法与 snippets 扩展，并支持 Dev Containers / GitHub Codespaces 开发容器"
-    ],
-    "quickstart": [
-      "普通用户直接在官网下载安装：https://code.visualstudio.com/Download",
-      "想每天体验最新版本：安装 Insiders 版 https://code.visualstudio.com/insiders",
-      "从源码构建与参与开发：参考 Wiki 的 How to Contribute（https://github.com/microsoft/vscode/wiki/How-to-Contribute）",
-      "可用命令 Dev Containers: Clone Repository in Container Volume... 一键把源码克隆进开发容器（建议 4 核 / 6GB 内存以上）"
-    ],
-    "support": "Stack Overflow 标签 vscode、GitHub Issues、GitHub Discussions 与 Slack 扩展作者社区",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "langchain-ai/langchain": {
-    "positioning": "智能体（Agent）工程平台，用于构建智能体与 LLM 驱动应用的框架，把可互操作组件与第三方集成串联起来，在底层技术快速演进时简化 AI 应用开发。",
-    "highlights": [
-      "通过模型、嵌入、向量库等统一抽象接口连接各类组件，模型可随时替换试验",
-      "实时数据增强：轻松把 LLM 接入多类数据源与内外部系统，集成生态丰富",
-      "生态完整：Deep Agents（高层智能体）、LangGraph（可控智能体工作流编排）、LangSmith（评估、可观测性、调试与部署）"
-    ],
-    "quickstart": [
-      "安装：`uv add langchain`",
-      "最小示例：`from langchain.chat_models import init_chat_model`，再 `model = init_chat_model(\"openai:gpt-5.5\")` 与 `result = model.invoke(\"Hello, world!\")`",
-      "完整文档：https://docs.langchain.com/oss/python/langchain/overview",
-      "需要高级智能体编排时改用 LangGraph；JS/TS 等价库见 LangChain.js"
-    ],
-    "support": "官方文档 docs.langchain.com、社区论坛 forum.langchain.com、LangChain Academy 免费课程（https://academy.langchain.com/）",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "kubernetes/kubernetes": {
-    "positioning": "开源系统，用于跨多台主机管理容器化应用，提供应用部署、维护与扩缩容的基本机制；源自 Google Borg 的大规模生产经验，由云原生计算基金会 CNCF 托管。",
-    "highlights": [
-      "跨主机统一管理容器化应用，覆盖部署、维护与水平扩缩容全流程",
-      "由 CNCF 托管，治理、社区会议与用户案例机制成熟",
-      "提供官方文档与免费入门课程，并列出可作为库引用的发布组件清单"
-    ],
-    "quickstart": [
-      "日常使用先读官方文档：https://kubernetes.io",
-      "免费课程：Udacity《Scalable Microservices with Kubernetes》",
-      "有 Go 环境从源码构建：`git clone https://github.com/kubernetes/kubernetes` → `cd kubernetes` → `make`",
-      "有 Docker 环境则改用 `make quick-release`；完整开发说明见 git.k8s.io/community"
-    ],
-    "support": "官方文档 kubernetes.io、故障排查指南 https://kubernetes.io/docs/tasks/debug/、社区沟通渠道 https://git.k8s.io/community/communication",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "vercel/next.js": {
-    "positioning": "由 Vercel 打造的 React 全栈 Web 应用框架，扩展最新 React 特性并集成基于 Rust 的 JavaScript 工具链以获得极快的构建速度，被全球多家大公司使用。",
-    "highlights": [
-      "基于最新 React 特性构建全栈 Web 应用",
-      "集成 Rust 编写的 JS 工具链，带来极快的构建速度",
-      "配套交互式 Learn 课程、Showcase 案例库与活跃的 GitHub Discussions / Discord 社区"
-    ],
-    "quickstart": [
-      "入门课程：https://nextjs.org/learn",
-      "查看完整文档：https://nextjs.org/docs",
-      "浏览真实建站案例：https://nextjs.org/showcase",
-      "新手贡献可从 good first issues 列表入手"
-    ],
-    "support": "官方文档 nextjs.org/docs、GitHub Discussions（https://github.com/vercel/next.js/discussions）、Discord（https://nextjs.org/discord）",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "jwasham/coding-interview-university": {
-    "positioning": "作者本人为进军大厂软件工程师岗位而整理的一份数月自学备考计划，按这套计划学完后作者入职了 Amazon；它把大学 CS 课程里面试真正用得上的约 75% 内容浓缩成一份路线图。",
-    "highlights": [
-      "面向 Amazon、Facebook、Google、Microsoft 等大厂技术面试准备，覆盖软件工程（而非前端/全栈）方向",
-      "主题齐全：Big-O 复杂度、数组/链表/栈/队列/哈希表、树、排序、图、递归、动态规划、设计模式、网络、系统设计等",
-      "配套每日学习计划、编程题练习清单、选书建议，以及更新简历、找工作、面试流程等求职指南",
-      "提供简体中文（translations/README-cn.md）等多语言翻译版本"
-    ],
-    "quickstart": [
-      "直接在仓库 README 里从「What is it?」「How to use it」开始通读学习计划，了解所需前置要求（一点编程基础、耐心和时间）",
-      "按「Choose a Programming Language」选定一门语言，配合数据结构与算法书目自学",
-      "按 The Daily Plan 推进各主题，并用 Coding Question Practice 章节刷编程题",
-      "学完后参考「Update Your Resume」「Find a Job」「Interview Process」章节准备面试与求职"
-    ],
-    "support": "官方主页即本仓库 README，求助与讨论走 GitHub Issues；简体中文版见 translations/README-cn.md",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "practical-tutorials/project-based-learning": {
-    "positioning": "一份「从实战项目学编程」的教程清单，汇集教初学者从零动手构建一个完整应用的教程，并按主要编程语言分门别类。",
-    "highlights": [
-      "按 C/C++、Python、JavaScript、Go、Rust、Java、Swift、Kotlin 等二十多种语言分类整理",
-      "每个教程都要求真刀真枪做出项目：写解释器、操作系统、编译器、数据库、Redis、游戏、TCP/IP 栈等",
-      "社区共同维护，并有 link-rot（死链巡检）自动化保障链接可用"
-    ],
-    "quickstart": [
-      "在 README 目录里按目标编程语言（如 Python、Go、Rust）找到对应小节",
-      "点击教程链接，跟随教程从零动手构建项目",
-      "想贡献新教程：fork 本仓库，按 CONTRIBUTING.md 提交 Pull Request"
-    ],
-    "support": "Gitter 社区聊天 https://gitter.im/practical-tutorials/community ；其他问题走 GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "justjavac/free-programming-books-zh_CN": {
-    "positioning": "免费的中文编程书籍索引，汇集大量可免费阅读的中文编程与计算机技术电子书，欢迎读者投稿补充。",
-    "highlights": [
-      "分「语言无关类」与「语言相关类」两大块，覆盖操作系统、AI、分布式系统、编译原理、Web、大数据、设计模式、算法等主题",
-      "语言相关类涵盖 Android、C/C++、Java、JavaScript、Python、Go、Rust、Swift、iOS 等几乎所有主流方向",
-      "收录了 StackOverflow 国外程序员必读书单的中文版，以及程序员应读的非编程类书籍书单"
-    ],
-    "quickstart": [
-      "在 README「目录」中按主题（如操作系统、算法）或按语言（如 Python、Go）浏览书单",
-      "点击书名链接即可在线阅读或下载免费电子书",
-      "发现打不开的链接可提 PR 并在其后加 :worried: 标记；推荐珍藏好书用 Pull Request 提交"
-    ],
-    "support": "官方主页即本仓库，交流与投稿走 GitHub Issues / Pull Request",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "morluto/rea": {
-    "positioning": "REA（Reverse Engineer Anything）是一个 MCP 工具，用一条 MCP 通道把 AI agent 接到逆向工程能力上，让它在没有源码的情况下分析二进制程序、应用和运行时行为，看懂别人功能是怎么实现的。",
-    "highlights": [
-      "可分析原生二进制、JavaScript/Electron 应用、.NET 程序集和网站，分析在本地运行并附带结论证据与局限说明",
-      "原生分析可复用你已有的 Hopper、Ghidra、IDA 或 Kuna 安装；纯 JS 静态分析无需额外反编译引擎",
-      "支持 Claude Code、Codex、Cursor、Gemini CLI、Grok Build 等多种 agent"
-    ],
-    "quickstart": [
-      "确保已安装 Node.js 与 npm，运行 `npx rea-agents setup`",
-      "选择要接入的 agent，审阅拟做的改动并批准，脚本会注册 MCP server 并备份旧配置，之后重启 agent",
-      "用自然语言向 agent 提需求，例如：`Understand how search works in the Notes app, show me the evidence, and build a similar feature for my project.`",
-      "也可直接在终端检查解包后的 JavaScript/Electron 目录或 ASAR 包"
-    ],
-    "support": "官网与图文指南 https://rea.tools/ （https://rea.tools/guides/）；社区 Discord https://discord.gg/GkcryMnJDM",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "ossu/computer-science": {
-    "positioning": "OSSU（Open Source Society University）提供一条完全免费、靠自学完成的计算机科学专业教育路径，按名校本科 CS 大纲组织课程，并由全球学习者社区互助支持。",
-    "highlights": [
-      "课程选自哈佛、MIT、普林斯顿等世界名校公开课，并对标 CS 2013 本科课程指南标准",
-      "结构分四阶段：Intro CS 入门、Core CS 核心必修、Advanced CS 方向选修、毕业项目同伴互评",
-      "规划得当、每周约 20 小时约 2 年可完成，绝大多数课程材料免费（部分平台 graded 作业可申请助学金）"
-    ],
-    "quickstart": [
-      "先修高中数学（代数、几何、预微积分），然后从 Intro CS 导论课（如 MIT 用 Python 讲的入门课）开始",
-      "按顺序完成 Core CS 全部必修课（编程、数学、系统、理论、安全、应用、伦理），可把数学课与入门课并行",
-      "在 Advanced CS 里选一个方向（如高级编程、系统、理论）修完该方向全部课程",
-      "最后完成毕业项目，交由全球同伴评审；可用官方 Google Sheet 预估完成时间",
-      "官网课程表见 https://cs.ossu.dev ，注意避开第三方仿冒/过时材料"
-    ],
-    "support": "官网 https://cs.ossu.dev ；学习者 Discord https://discord.gg/wuytwK5s9h ；课程与大纲问题走 GitHub Issues（HELP.md）",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "ollama/ollama": {
-    "positioning": "Ollama 让你用开源模型快速起步，在本地或云端以完全隐私的方式运行和管理最新发布的开源大模型。",
-    "highlights": [
-      "一行命令即可在本地拉取并运行开源大模型（如 Gemma 等），模型库见 ollama.com/library",
-      "内置 REST API，并有官方 Python（ollama-python）和 JS（ollama-js）SDK，方便接入自己的应用",
-      "可一键集成 Claude Code、Codex、Copilot CLI、OpenCode 等编程 agent，也能接 WhatsApp/Telegram/Slack/Discord 做个人 AI 助手",
-      "推理后端基于 Georgi Gerganov 发起的 llama.cpp 项目"
-    ],
-    "quickstart": [
-      "macOS/Linux 安装：`curl -fsSL https://ollama.com/install.sh | sh`；Windows 安装：`irm https://ollama.com/install.ps1 | iex`",
-      "运行 `ollama` 启动，或直接 `ollama run gemma4` 与模型对话",
-      "启动编程集成：`ollama launch claude`（也支持 openclaw 等助手）",
-      "用 REST API 调用：`curl http://localhost:11434/api/chat -d '{\"model\":\"gemma4\",\"messages\":[{\"role\":\"user\",\"content\":\"Why is the sky blue?\"}],\"stream\":false}'`",
-      "Python 接入：`pip install ollama`；JS 接入：`npm i ollama`"
-    ],
-    "support": "官方文档 https://docs.ollama.com （含 CLI/API/Modelfile 参考）；社区 Discord https://discord.gg/ollama ；Reddit https://reddit.com/r/ollama",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "huggingface/transformers": {
-    "positioning": "Hugging Face Transformers 是用于推理和训练的 SOTA 预训练模型框架，统一了文本、计算机视觉、音频、视频及多模态模型的定义，是整个 ML 生态里训练框架、推理引擎和周边库共同对接的模型定义枢纽。官方提供简体中文 README（i18n/README_zh-hans.md）。",
-    "highlights": [
-      "统一 API 使用所有预训练模型，面向用户只需学三个类，上手门槛低",
-      "覆盖 NLP、计算机视觉、音频、视频、多模态上千种模型架构，Hub 上有百万级模型 checkpoint 可直接用",
-      "同一份模型可在 PyTorch/JAX/TF2 之间自由迁移，3 行代码即可训练 SOTA 模型",
-      "与 Axolotl、Unsloth、DeepSpeed、vLLM、SGLang、TGI、llama.cpp、mlx 等主流训练/推理生态兼容"
-    ],
-    "quickstart": [
-      "要求 Python 3.11+ 与 PyTorch 2.6+，先建虚拟环境：`python -m venv .my-env` 再激活",
-      "安装：`pip install \"transformers[torch]\"`（或 uv pip install \"transformers[torch]\"）",
-      "用高层 Pipeline 一行跑推理：`from transformers import pipeline` → `pipeline(task=\"text-generation\", model=\"Qwen/Qwen2.5-1.5B\")`",
-      "命令行直接和模型聊天（需先 `transformers serve`）：`transformers chat Qwen/Qwen2.5-0.5B-Instruct`",
-      "从源码安装最新版：`git clone https://github.com/huggingface/transformers.git` 后 `pip install '.[torch]'`"
-    ],
-    "support": "官方文档 https://huggingface.co/docs/transformers ；简体中文说明见仓库 i18n/README_zh-hans.md ；报错与问题走 GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "twbs/bootstrap": {
-    "positioning": "Bootstrap 是一套简洁、直观、强大的前端框架，让更快、更轻松地做 Web 开发；仓库默认分支当前用于 Bootstrap 6 的开发（Bootstrap 5 见 v5-dev 分支）。",
-    "highlights": [
-      "提供编译与压缩版 CSS/JS，内含网格、重置（reboot）、工具类等完整前端资产",
-      "借助 CSS 逻辑属性原生支持 LTR/RTL 双向布局，只需在 HTML 上设置 dir=\"rtl\"",
-      "打包版 JS 内置 Floating UI 与 Vanilla Calendar Pro",
-      "同时支持 npm、yarn、bun、Composer、NuGet 等多种安装渠道"
-    ],
-    "quickstart": [
-      "任选一种方式安装：`npm install bootstrap@6.0.0-alpha.1`（或 `git clone https://github.com/twbs/bootstrap.git`、下载 release 压缩包）",
-      "阅读官方入门页了解框架内容、模板与示例：https://getbootstrap.com/docs/6.0/getting-started/",
-      "本地运行文档站：先 `npm install`，再 `npm run test`，然后在仓库根目录 `npm run docs-serve`",
-      "浏览器打开 http://localhost:9001 即可本地预览文档"
-    ],
-    "support": "官方文档 https://getbootstrap.com ；GitHub Discussions；社区 Discord https://discord.gg/bZUvakRU3M ；Stack Overflow（标签 bootstrap-5）；官方博客 https://blog.getbootstrap.com/",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "significant-gravitas/AutoGPT": {
-    "positioning": "AutoGPT 是你的一支 AI 专家团队：用大白话交代任务，由 Otto 统筹调度，把内容、销售、研究和重复性事务分派给各专职 AI 专家去完成。",
-    "highlights": [
-      "内置 Otto（AI 主管）、Maria（SEO 内容经理）、Max（客户经理）、Frankie（行政助理）等专家角色，可按自己的指令、上下文、技能和已连接应用定制",
-      "可视化工作流编排器：连线积木、加分支逻辑、控制执行步骤，可从市场模板复用或自建",
-      "提供 API 与 MCP server，可从自己的代码或 AI 编码 agent 直接调用工作流",
-      "既有托管付费平台，也支持单容器 Docker 自托管、自带模型凭据并自行管理运行"
-    ],
-    "quickstart": [
-      "自托管最快方式，用 Docker Hub 单容器镜像启动：`docker run -d --name autogpt --restart unless-stopped --shm-size 2g --ulimit nofile=65536:65536 -p 127.0.0.1:3000:3000 -e AUTOGPT_PUBLIC_URL=http://localhost:3000 -v autogpt-data:/data significantgravitas/autogpt:latest`",
-      "首次启动等待几分钟后打开 http://localhost:3000 注册账号",
-      "把自己提升为管理员：`docker exec autogpt autogpt-admin promote you@example.com`",
-      "或直接注册托管平台试用：https://platform.agpt.co/signup ；自托管细节见 https://agpt.co/docs/platform/self-hosting/single-container"
-    ],
-    "support": "官方文档 https://agpt.co/docs ；社区与支持 Discord https://discord.gg/autogpt ；Bug/功能请求走 GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "ggerganov/llama.cpp": {
-    "positioning": "用纯 C/C++ 实现的大语言模型（及视觉语言模型）推理引擎，目标是以最少的配置、在本地和云端各种硬件上都实现 SOTA 级别的推理性能。",
-    "highlights": [
-      "纯 C/C++ 实现、零依赖，构建在 ggml 库之上",
-      "Apple Silicon 一级优化（ARM NEON、Accelerate、Metal）；x86 支持 AVX/AVX2/AVX512/AMX；RISC-V 也有支持",
-      "支持 1.5/2/3/4/5/6/8 bit 整数量化，推理更快、内存更省",
-      "CUDA 自研 kernel，另支持 HIP（AMD）、MUSA（摩尔线程）、Vulkan、SYCL、Metal 等后端，并支持 CPU+GPU 混合推理跑下超过显存容量的模型"
-    ],
-    "quickstart": [
-      "安装（Linux/macOS）：`curl -LsSf https://llama.app/install.sh | sh`；Windows PowerShell：`irm https://llama.app/install.ps1 | iex`",
-      "其他途径：访问 https://llama.app 按指引操作，或从 releases 页下载预编译二进制，或按 docs/build.md 从源码编译",
-      "装好后直接从 Hugging Face 拉模型跑 CLI：`llama cli -hf ggml-org/Qwen3.5-0.8B-GGUF`",
-      "启动 OpenAI 兼容 API 服务：`llama serve -hf ggml-org/Qwen3.5-0.8B-GGUF`"
-    ],
-    "support": "官网 https://llama.app ；文档见仓库 docs/ 目录（docs/build.md、docs/docker.md、tools/server/README.md 等）；问题走 GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "flutter/flutter": {
-    "positioning": "Flutter 是 Google 出品的 SDK，用一套代码库就能为移动、Web 和桌面端打造精美、流畅的用户体验，可与现有代码协同使用，完全免费开源。",
-    "highlights": [
-      "一套代码同时构建 iOS、Android、Web、Windows、macOS、Linux 应用，也可作为任意平台的 UI 工具包嵌入",
-      "由硬件加速的 Skia/Impeller 渲染引擎驱动，Dart 可编译为 ARM 机器码、WebAssembly、x64/ARM 桌面码，达到原生速度",
-      "有状态热重载（hot reload），改完代码立即看到效果且不丢失应用状态",
-      "生态开放：VS Code/IntelliJ 插件、pub.dev 上数万个包，支持 FFI 与 platform channels 调用原生代码"
-    ],
-    "quickstart": [
-      "按官方文档安装 Flutter SDK：https://docs.flutter.dev/get-started",
-      "首次运行 flutter 工具会自动从 Google 服务器下载 Dart SDK；升级用 `flutter upgrade`",
-      "查阅 widget 目录 https://docs.flutter.dev/ui/widgets 开始构建界面（Cupertino/Material 双套风格）",
-      "官方发布公告可订阅 flutter-announce 邮件列表，破坏性变更见 docs.flutter.dev/release/breaking-changes"
-    ],
-    "support": "官方文档 https://docs.flutter.dev ；开发 wiki 见仓库 docs/README.md；社区 Discord（加入方式见 docs/contributing/Chat.md）；公告邮件列表 https://groups.google.com/g/flutter-announce",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "521xueweihan/HelloGitHub": {
-    "positioning": "HelloGitHub 分享 GitHub 上有趣、入门级的开源项目，每月 28 号以月刊形式更新发布，口号是「兴趣是最好的老师，帮你找到开源的乐趣」。",
-    "highlights": [
-      "月刊内容涵盖有趣入门级开源项目、开源书籍、实战项目、企业级项目，让你短时间感受开源魅力",
-      "提供官网与微信公众号，获得更好阅读体验",
-      "开放推荐/自荐项目入口，人人都能成为月刊贡献者"
-    ],
-    "quickstart": [
-      "在仓库 README 内容表格里按期号直接阅读（如第 127 期 /content/HelloGitHub127.md）",
-      "访问官网 https://hellogithub.com/ 获得更佳阅读体验",
-      "想推荐或自荐项目：前往 https://hellogithub.com/periodical 提交"
-    ],
-    "support": "官网 https://hellogithub.com/ ；微信读者群（见 README 顶部微信群徽章）；微博 @hellogithub；其他问题走 GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "n8n-io/n8n": {
-    "positioning": "n8n 是面向 AI agent 与工作流自动化的 fair-code 平台：把可视化画布和自定义代码结合，可自托管或用云端版，连接 1500+ 集成，从原型一路用到生产。",
-    "highlights": [
-      "AI 原生自动化：用你自己的数据、模型和工具构建并落地多步 AI 工作流与 agent",
-      "模型不锁定：可接 OpenAI、Anthropic、Google 或开源模型，换厂商不用改架构",
-      "可视化搭建 + JavaScript/Python/npm 代码混用，支持逻辑分支、人工审批与全链路可观测",
-      "1500+ 集成与 9000+ 工作流模板，企业级自带 RBAC、审计日志，适合处理敏感数据"
-    ],
-    "quickstart": [
-      "一键脚本安装（需已装 Docker）：`curl -fsSL https://get.n8n.io | sh`",
-      "或手动用 Docker：`docker volume create n8n_data` 再执行 `docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n`",
-      "浏览器打开 http://localhost:5678 进入编辑器开始编排工作流",
-      "也可直接使用云端版 https://app.n8n.cloud/login"
-    ],
-    "support": "官方文档 https://docs.n8n.io ；社区论坛 https://community.n8n.io （求助首选）；AI/LangChain 指南 https://docs.n8n.io/advanced-ai/",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "Stirling-Tools/Stirling-PDF": {
-    "positioning": "Stirling PDF 是一个强大的开源 PDF 处理平台：可当个人桌面应用、浏览器网页应用运行，也可自托管成带私有 API 的服务器，全程不用把文件交给外部服务。",
-    "highlights": [
-      "50+ PDF 工具：编辑、合并、拆分、签名、脱敏、转换、OCR、压缩等一应俱全",
-      "可视化无代码自动化流水线，几乎所有工具都开放 REST API，可批量处理海量 PDF",
-      "企业级能力：SSO 单点登录、操作审计、灵活的本地部署；界面支持 40+ 种语言",
-      "三种使用形态：桌面客户端、浏览器 UI、自托管服务器+私有 API"
-    ],
-    "quickstart": [
-      "Docker 一键启动：`docker run -p 8080:8080 docker.stirlingpdf.com/stirlingtools/stirling-pdf`",
-      "浏览器打开 http://localhost:8080 即可使用",
-      "桌面版、Kubernetes 等完整安装选项见文档指南 https://docs.stirlingpdf.com/#documentation-guide"
-    ],
-    "support": "官方文档 https://docs.stirlingpdf.com ；API 文档见 registry.scalar.com/@stirlingpdf/apis/stirling-pdf-processing-api/ ；社区 Discord https://discord.gg/HYmhKj45pU ；Bug 报告走 GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "shadcn-ui/ui": {
-    "positioning": "shadcn/ui 是一套设计精美、可自定义、可扩展、可在此基础上继续构建的开源组件库——开源、开放代码，用来搭建你自己的组件库。官方文档站 https://ui.shadcn.com/docs 。",
-    "degraded": true,
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "affaan-m/ECC": {
-    "positioning": "给 AI 编程助手（Agent）装上一套协调一致的工程系统与工具箱：先规划再写码、用测试验证改动、从全新上下文审查自己的工作、记住要点，并把重复的成功经验沉淀为可复用的技能和工作流。MIT 开源，今天在 Claude Code 上体验最好，同时提供 Codex、Qoder 原生插件路径，以及 Cursor、OpenCode、Gemini、Zed、GitHub Copilot 等工具的能力适配。",
-    "highlights": [
-      "内置 71 个专职 Agent（规划、审查、构建修复、安全、架构、领域工作）和 311 个技能（TDD、调研、安全、文档、前端、数据、ML、运维等）",
-      "97 个命令入口，加上 Hooks、规则、持久记忆与持续学习，把 plan→test→implement→review→verify→remember→improve 固化成 Agent 的默认工作方式",
-      "内置 AgentShield 安全扫描，检查 prompts、hooks、MCP 配置、权限、密钥与 agent 文件",
-      "一次安装即可跨多种主流 AI 编程工具使用，无需在每个 prompt 里重复搭建流程"
-    ],
-    "quickstart": [
-      "准备依赖：安装 Node.js 18+、Git 和 Claude Code 2.1+，在 PowerShell 中用 `node --version`、`git --version`、`claude --version` 确认可用",
-      "运行引导式安装：`npx ecc-universal@2.2.3 setup`",
-      "个人典型配置选 Global user、Standard hooks 并确认",
-      "新开一个 Claude Code 会话，运行 `/plugin list` 确认 `ecc@ecc` 已启用"
-    ],
-    "support": "Discord 社区 https://discord.gg/36yGMHGFbR；项目官网 https://ecc.tools；GitHub 仓库 Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "donnemartin/system-design-primer": {
-    "positioning": "一个把散落在网络各处的系统设计资料整理成册的开源教程，教你如何设计大规模可扩展系统，同时为技术面试中的系统设计环节做准备。",
-    "highlights": [
-      "覆盖性能 vs 可扩展性、延迟 vs 吞吐、CAP 定理、一致性/可用性模式、DNS、CDN、负载均衡、微服务、数据库（RDBMS/NoSQL/分片）、缓存、消息队列、安全等完整主题",
-      "每个主题都讲清优缺点与取舍并附深入学习链接，核心理念是 Everything is a trade-off",
-      "配套 Anki 间隔重复闪卡：系统设计、系统设计练习、面向对象设计练习三套",
-      "收录常见系统设计面试题与面向对象设计面试题及参考答案（讨论、代码、图示）",
-      "多语言维护，含简体中文 README-zh-Hans.md"
-    ],
-    "quickstart": [
-      "第一步：观看可扩展性（scalability）视频讲座",
-      "第二步：阅读可扩展性主题文章",
-      "然后按 Index of system design topics 逐章学习各主题，每节都附深入资源链接",
-      "做系统设计面试题，并与 sample solutions（讨论、代码、图示）对照比较",
-      "用配套 Anki 闪卡碎片时间复习核心概念"
-    ],
-    "support": "GitHub 仓库 Issues 与 Pull Requests（多语言翻译通过 Issues 协作）；官方主页与仓库 Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "jackfrued/Python-100-Days": {
-    "positioning": "骆昊编写的中文开源教程《Python - 100天从新手到大师》，按天规划从零基础到实战项目的 Python 学习路径，并附 Python 应用领域与职业发展分析。",
-    "highlights": [
-      "Day01~20 Python 语言基础：环境搭建、变量、分支与循环、列表/元组/字符串等常用数据结构",
-      "后续阶段覆盖面向对象、异常与模块、正则、网络编程、Web 开发、数据分析、爬虫、机器学习等实战内容",
-      "每个知识点配例题与实战小项目（如猜数字、CRAPS 赌博游戏、百钱百鸡问题等）",
-      "给出后端、运维、数据分析、数据科学等 Python 就业方向分析和给初学者的五条建议",
-      "部分配套视频已同步到 Bilibili"
-    ],
-    "quickstart": [
-      "从 Day01《初识Python》开始，按天顺序阅读仓库内教程，如 `./Day01-20/01.初识Python.md`",
-      "按教程指引在本机安装 Python（内含 Windows / macOS 环境搭建说明）",
-      "跟着每天的小节边学边敲代码，完成配套练习与实战项目"
-    ],
-    "support": "作者知乎账号 Python-Jack 及专栏（https://www.zhihu.com/people/jackfrued）；Bilibili 视频（https://space.bilibili.com/1177252794）；官方主页与仓库 Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "comfyanonymous/ComfyUI": {
-    "positioning": "官方自称最强大、最模块化的 AI 内容创作引擎，用可视化节点图界面让创作者无需写代码即可生成图像、视频、3D 模型、音频等内容，面向对每个模型、每个参数、每个输出都要掌控的视觉专业人士。",
-    "highlights": [
-      "可视化节点图构建与复用图像/视频/音频/3D/文本工作流，支持可复用子图、工作流模板、App Mode 和本地 API",
-      "原生支持最新开源 SOTA 模型（SD1.5/SDXL/SD3.5、Flux.1/2、Qwen Image、Wan、HunyuanVideo、Hunyuan3D 等），并通过 partner nodes 接入 Nano Banana、Seedance 等闭源模型",
-      "针对本地消费级硬件深度优化，异步权重流式技术可在低至 4GB 显存 + 8GB 内存上较快运行大模型",
-      "智能 VRAM/RAM 管理、异步队列、部分图重算、模型卸载、量化模型支持；核心可完全离线运行（`--offline`）",
-      "Windows / Linux / macOS 全平台，提供桌面应用、便携包与官方 Comfy Cloud"
-    ],
-    "quickstart": [
-      "新手推荐从官网下载桌面应用：https://www.comfy.org/download （Windows & macOS）",
-      "Windows NVIDIA 显卡用户也可下载便携包 `https://github.com/comfyanonymous/ComfyUI/releases/latest/download/ComfyUI_windows_portable_nvidia.7z`，用 7-Zip 解压后直接运行",
-      "把模型权重放到 `ComfyUI\\models\\checkpoints`（大模型按类型放到对应子目录）",
-      "手动安装支持全部操作系统与 GPU 类型（NVIDIA、AMD、Intel、Apple Silicon、Ascend）"
-    ],
-    "support": "官方文档 https://docs.comfy.org/；Discord https://discord.com/invite/comfyorg；Matrix 房间 #comfyui_space:matrix.org；GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "microsoft/generative-ai-for-beginners": {
-    "positioning": "微软 Cloud Advocates 出品的 21 课开源课程（Generative AI for Beginners 第 3 版），教你从零开始构建生成式 AI 应用。",
-    "highlights": [
-      "21 节课分 Learn 概念课与 Build 实战课，每课配书面讲义、短视频、Python 和 TypeScript 代码示例",
-      "内容覆盖 LLM 基础、提示工程、文本生成/聊天/搜索/图像应用、函数调用、RAG 与向量数据库、AI Agent、模型微调、SLM、Mistral 与 Meta 模型等",
-      "支持 Azure OpenAI、Microsoft Foundry Models、OpenAI API、Foundry Local 本地离线模型多种运行方式",
-      "50+ 语言翻译（含简体中文 translations/zh-CN），并提供稀疏检出克隆方式跳过翻译目录加速下载"
-    ],
-    "quickstart": [
-      "（可选）稀疏检出克隆以跳过翻译目录：`git clone --filter=blob:none --sparse https://github.com/microsoft/generative-ai-for-beginners.git`，然后 `cd generative-ai-for-beginners` 并 `git sparse-checkout set --no-cone '/*' '!translations' '!translated_images'`",
-      "先读 `./00-course-setup/README.md` 完成开发环境搭建",
-      "按 21 课顺序学习，每课可配合 Python 或 TypeScript 代码动手实践"
-    ],
-    "support": "官方 Microsoft Foundry Discord（https://aka.ms/genai-discord）；Microsoft Foundry Developer Forum（GitHub）；仓库 Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "open-webui/open-webui": {
-    "positioning": "自托管 AI 平台，官方口号 a home for AI——可扩展、功能丰富、易用，能完全离线运行，对接 Ollama 与 OpenAI 兼容 API，提供与厂商无关的本地 + 云端模型统一界面。",
-    "highlights": [
-      "部署简单：支持 pip、Docker、Kubernetes（kubectl/kustomize/helm），提供 `:ollama`、`:cuda` 标签镜像",
-      "广泛模型接入：任意 OpenAI 兼容 API 加本地 Ollama，可对接 LMStudio、GroqCloud、OpenRouter、vLLM 等",
-      "本地 RAG：支持 9 种向量数据库、BM25+向量混合搜索与重排，多种文档解析引擎，用 `#` 命令加载文档或网页",
-      "细粒度 RBAC 角色与分组权限，插件系统（Filters/Actions/Pipes/Tools/Skills）与 MCP/OpenAPI 工具接入",
-      "内置 AI 笔记、频道协作、持久记忆、语音视频通话、多模型对话、企业级 LDAP/SSO/SCIM 等能力"
-    ],
-    "quickstart": [
-      "pip 安装（需 Python 3.12）：`pip install open-webui`，然后 `open-webui serve`，访问 http://localhost:8080",
-      "Docker 运行（本机有 Ollama 时）：`docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main`",
-      "若 Ollama 在另一台服务器，加 `-e OLLAMA_BASE_URL=https://example.com` 指定地址",
-      "仅用 OpenAI API 时加 `-e OPENAI_API_KEY=your_secret_key`；启动后访问 http://localhost:3000"
-    ],
-    "support": "官方文档 https://docs.openwebui.com/；Discord https://discord.gg/5rJgQTnV4s；GitHub Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "AUTOMATIC1111/stable-diffusion-webui": {
-    "positioning": "用 Gradio 库实现的 Stable Diffusion 网页图形界面。",
-    "highlights": [
-      "原版 txt2img / img2img 模式，支持 Outpainting、Inpainting、Prompt Matrix、循环采样、X/Y/Z 参数对比图",
-      "注意力权重控制、负面提示词、不限 token 长度的提示词、CLIP interrogator 反推提示词",
-      "集成 GFPGAN/CodeFormer 人脸修复、RealESRGAN/ESRGAN/SwinIR 等放大模型，支持 Textual Inversion、Hypernetwork、LoRA",
-      "一键安装脚本、支持低至 4GB 显存显卡（2GB 也有报告可用）、提供 API 接口与丰富的社区扩展生态"
-    ],
-    "quickstart": [
-      "Windows + NVIDIA 显卡自动安装：先装 Python 3.10.6（安装时勾选 Add Python to PATH）和 git",
-      "克隆仓库：`git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git`",
-      "以普通用户身份双击运行 `webui-user.bat`",
-      "Linux 用户先装依赖，再 `wget -q https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui/master/webui.sh` 并执行 `webui.sh`"
-    ],
-    "support": "项目 Wiki https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki；官方主页与仓库 Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "microsoft/PowerToys": {
-    "positioning": "微软出品的 Windows 系统实用工具集，帮助用户自定义 Windows 并简化日常操作，内置 30 多个小工具。",
-    "highlights": [
-      "30+ 组件：FancyZones 窗口布局、PowerToys Run 快捷启动、颜色选择器、图像批量缩放、PowerRename 批量重命名、键盘管理器、窗口始终置顶、Awake 防休眠等",
-      "进阶工具：文本提取（OCR）、屏幕标尺、Mouse Without Borders 跨机鼠标共享、Hosts 文件编辑器、环境变量管理、高级粘贴、Workspaces 工作区等",
-      "微软官方维护，持续用 WinUI 3 现代化改造各工具"
-    ],
-    "quickstart": [
-      "用户范围安装：`winget install Microsoft.PowerToys -s winget`",
-      "全机范围安装：`winget install --scope machine Microsoft.PowerToys -s winget`",
-      "也可从 GitHub Releases（https://aka.ms/installPowerToys）下载对应架构的 .exe，或从 Microsoft Store 安装",
-      "安装后在 PowerToys 设置面板中按需开启和配置各工具"
-    ],
-    "support": "官方文档 https://aka.ms/powertoys-docs；发布说明见 GitHub Releases；官方主页与仓库 Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "Genymobile/scrcpy": {
-    "positioning": "把 Android 设备画面（视频+音频）通过 USB 或 TCP/IP 投屏到电脑、并用电脑键鼠控制的免费开源工具，不需要 root、不需要在手机上装 App，支持 Linux、Windows、macOS。",
-    "highlights": [
-      "轻量原生、低延迟（35~70ms）、约 1 秒启动首帧，支持 30~120fps、1920×1080 以上画质",
-      "支持音频转发（Android 11+）、屏幕录制、虚拟显示屏、息屏投屏、双向复制粘贴、摄像头投屏与 V4L2 网络摄像头（仅 Linux）",
-      "HID 物理键鼠模拟、游戏手柄支持、OTG 模式（无需 USB 调试即可控制设备）",
-      "无账号、无广告、无需联网；Android 5.0（API 21）起支持"
-    ],
-    "quickstart": [
-      "在 Android 设备上开启 USB 调试（小米等机型还需额外开启 USB 调试（安全设置）并重启）",
-      "按平台下载安装：Linux / Windows / macOS 分别见项目 doc 文档页",
-      "连接设备后直接运行 `scrcpy` 开始投屏",
-      "常用示例：`scrcpy --video-codec=h265 -m1920 --max-fps=60` 限分辨率帧率；`scrcpy --otg` OTG 纯控制模式；`scrcpy --gamepad=uhid` 用手柄控制"
-    ],
-    "support": "FAQ.md；GitHub Issues https://github.com/Genymobile/scrcpy/issues；Reddit r/scrcpy、BlueSky @scrcpy.bsky.social、Twitter @scrcpy_app",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "multica-ai/andrej-karpathy-skills": {
-    "positioning": "一个单文件 CLAUDE.md 项目，把 Andrej Karpathy 对 LLM 编程缺陷的观察提炼成四条行为准则，用于改善 Claude Code 的输出表现。",
-    "highlights": [
-      "准则一 先思考再编码：明确陈述假设、给出多种解读、该反驳就反驳、困惑时停下来提问",
-      "准则二 简洁优先：只写解决问题所需的最少代码，不做投机性抽象、不写没要求的配置项和不可能场景的错误处理",
-      "准则三 外科手术式改动：只动该动的代码，不顺手改进相邻代码/注释/格式，只清理自己改动产生的死代码",
-      "准则四 目标驱动执行：把命令式任务改写成带验证标准的目标（先写复现测试再修 bug），让 LLM 自主循环到通过",
-      "仓库自带 Cursor 规则文件，同一套准则在 Cursor 中同样生效"
-    ],
-    "quickstart": [
-      "推荐方式（Claude Code 插件）：在 Claude Code 内先执行 `/plugin marketplace add forrestchang/andrej-karpathy-skills`",
-      "再执行 `/plugin install andrej-karpathy-skills@karpathy-skills`，准则即作为插件跨所有项目生效",
-      "单项目使用：新项目执行 `curl -o CLAUDE.md https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md`",
-      "已有项目追加：`echo \"\" >> CLAUDE.md` 后 `curl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md`"
-    ],
-    "support": "官方主页与仓库 Issues（README 未列 Discord/论坛；作者 X：@jiayuan_jy）",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "torvalds/linux": {
-    "positioning": "Linux 内核——所有 Linux 操作系统的核心，负责管理硬件与系统资源，为其他所有软件提供基础服务。",
-    "highlights": [
-      "为内核开发者、学术研究者、安全专家、稳定版维护者、系统管理员、硬件厂商、发行版维护者乃至 AI 编码助手等不同角色提供专属文档入口",
-      "文档体系完整：开发流程、首个补丁、编码规范、构建系统（kbuild）、内存管理、调度器、网络栈、文件系统、RCU、锁机制等",
-      "安全文档齐全：LSM 开发、自保护、漏洞上报流程、CVE 流程与禁运硬件问题处理"
-    ],
-    "quickstart": [
-      "获取最新内核：https://kernel.org",
-      "报告 bug 前先看 Documentation/admin-guide/reporting-issues.rst",
-      "按官方文档编译内核：Documentation/admin-guide/quickly-build-trimmed-linux.rst",
-      "文档可用 `make htmldocs` 本地构建，或在线浏览 https://www.kernel.org/doc/html/latest/"
-    ],
-    "support": "邮件列表 https://lore.kernel.org/；IRC #kernelnewbies @ irc.oftc.net；Bugzilla https://bugzilla.kernel.org/；MAINTAINERS 文件列出各子系统维护者",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "facebook/react": {
-    "positioning": "用于构建用户界面的 JavaScript 库。",
-    "highlights": [
-      "声明式：为每个状态设计简单视图，数据变化时 React 高效更新并渲染正确的组件",
-      "组件化：构建封装了自身状态的组件再组合成复杂 UI，组件逻辑用 JavaScript 编写而非模板",
-      "学一次，到处用：不绑定技术栈，可用 Node 在服务端渲染，用 React Native 开发移动应用",
-      "从一开始就为渐进式采用设计，可在既有项目中按需引入任意多/少的 React"
-    ],
-    "quickstart": [
-      "新手先按官方 Quick Start 上手：https://react.dev/learn",
-      "在已有项目中引入 React：https://react.dev/learn/add-react-to-an-existing-project",
-      "新建项目：https://react.dev/learn/start-a-new-react-project",
-      "第一个示例：用 `import { createRoot } from 'react-dom/client'` 创建根节点并 `root.render(<HelloMessage name=\"Taylor\" />)`"
-    ],
-    "support": "官方文档 https://react.dev/（含 Where to Get Support 页面）；GitHub Issues；贡献指南 https://legacy.reactjs.org/docs/how-to-contribute.html",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  },
-  "TheAlgorithms/Python": {
-    "positioning": "The Algorithms 项目的 Python 实现库——用 Python 实现的各类算法，面向教学用途；README 特别说明实现仅为学习目的，效率可能不及 Python 标准库，使用需自行斟酌。",
-    "highlights": [
-      "为学习目的实现的全品类算法集合，通过 DIRECTORY.md 目录方便导航浏览",
-      "贡献友好：有贡献指南、pre-commit 钩子、CI 检查和 ruff 代码规范",
-      "提供 Gitpod Ready-to-Code 一键在线编程环境"
-    ],
-    "quickstart": [
-      "贡献前先阅读 CONTRIBUTING.md 贡献指南",
-      "通过 DIRECTORY.md 目录查找感兴趣的算法实现",
-      "用 Gitpod 一键打开在线环境直接运行：https://gitpod.io/#https://github.com/TheAlgorithms/Python"
-    ],
-    "support": "Discord https://the-algorithms.com/discord；官方主页与仓库 Issues",
-    "date": "2026-10-29",
-    "note": "译自官方 README，非官方产物"
-  }
+ "public-apis/public-apis": {
+  "positioning": "由社区成员与 APILayer 共同手工维护的公共 API 大合集，收录各行各业可免费调用的公开 API，是开发者拿来给自己产品直接用的 API 宝库。",
+  "highlights": [
+   "收录 2,000+ 免费 API，分 50+ 个分类，与本仓库每日同步并自动测试可用性",
+   "每个 API 条目标注鉴权方式、是否支持 HTTPS、是否允许 CORS，便于直接选用",
+   "设有『无需密钥』专区，注册都不用，点开就能调用",
+   "配套 MCP Servers 目录，让 AI Agent（Claude、Cursor 等）把这些 API 当工具调用",
+   "官方检索站 publicapis.lol 支持按分类浏览、按条件筛选、查看 API 实时在线状态"
+  ],
+  "quickstart": [
+   "直接浏览仓库 README 里按分类组织的 API 大表，或打开官方检索站 https://publicapis.lol 搜索筛选",
+   "想找免注册即点即用的 API，访问 https://publicapis.lol/no-api-key",
+   "想看今天哪些 API 在线、变慢或宕机，访问 https://publicapis.lol/status",
+   "想贡献新 API：先读 CONTRIBUTING.md，再到 https://github.com/public-apis/public-apis/pulls 提交 PR"
+  ],
+  "support": "Discord 社区 https://discord.com/invite/hgjA78638n ；问题反馈走 GitHub Issues https://github.com/public-apis/public-apis/issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "EbookFoundation/free-programming-books": {
+  "positioning": "一份多语言免费编程学习资源清单，最初克隆自 StackOverflow 的『免费编程书单』帖子，现由非营利组织 Free Ebook Foundation 托管维护，以协作方式持续更新。",
+  "highlights": [
+   "免费编程书籍按编程语言和按主题两大主线分门别类整理",
+   "覆盖几十种语言版本，其中包含中文书单 books/free-programming-books-zh.md",
+   "除书籍外还延伸出免费课程、播客等配套资源清单",
+   "配套动态搜索站，可按书名或作者实时检索",
+   "内容以 CC BY 4.0 许可开放，欢迎社区按贡献指南增补"
+  ],
+  "quickstart": [
+   "在仓库 README 里按语言或主题点开对应清单文件（如中文见 books/free-programming-books-zh.md）",
+   "想按书名或作者搜索：打开 https://ebookfoundation.github.io/free-programming-books-search/",
+   "想要更好读的网页版浏览：访问 https://ebookfoundation.github.io/free-programming-books/",
+   "想贡献资源：先读 docs/CONTRIBUTING.md（新手先看 docs/HOWTO.md），并遵守行为准则"
+  ],
+  "support": "非营利组织主页 https://ebookfoundation.org ；问题反馈走 GitHub Issues https://github.com/EbookFoundation/free-programming-books/issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "RustDesk/RustDesk": {
+  "positioning": "又一个用 Rust 写的远程桌面方案，开箱即用、无需任何配置，数据完全由自己掌控；可以直接用官方中继服务器，也可以自建服务器，甚至自己写一个 rendezvous/relay 服务。",
+  "highlights": [
+   "开箱即用零配置，装上就能远程控制，强调用户对数据的完全掌控",
+   "服务端完全开放：可使用官方/自建中继服务器，也可参考 rustdesk-server-demo 自己写",
+   "支持文件传输、TCP 隧道等远程办公常用能力",
+   "桌面端 GUI 采用 Flutter（旧版 Sciter），覆盖 Windows / Linux / macOS 与移动端",
+   "官方发布正式版与 nightly 每日构建，并提供 F-Droid、Flathub 安装渠道"
+  ],
+  "quickstart": [
+   "普通用户直接从 Release 页下载安装包：https://github.com/rustdesk/rustdesk/releases （安卓也可装 F-Droid 版本）",
+   "开发者先准备好 Rust + C++ 构建环境，安装 vcpkg 并设置 VCPKG_ROOT，再执行 `vcpkg install libvpx libyuv opus aom`",
+   "克隆仓库后编译运行：`git clone --recurse-submodules https://github.com/rustdesk/rustdesk` 然后 `cargo run`",
+   "Docker 构建方式：`git clone https://github.com/rustdesk/rustdesk && cd rustdesk && git submodule update --init --recursive && docker build -t \"rustdesk-builder\" .`",
+   "之后每次构建执行：`docker run --rm -it -v $PWD:/home/user/rustdesk -v rustdesk-git-cache:/home/user/.cargo/git -v rustdesk-registry:/home/user/.cargo/registry -e PUID=\"$(id -u)\" -e PGID=\"$(id -g)\" rustdesk-builder`"
+  ],
+  "support": "官方文档 https://rustdesk.com/docs/en/dev/build/ （仓库内有中文版 docs/README-ZH.md）；FAQ Wiki https://github.com/rustdesk/rustdesk/wiki/FAQ ；Discord https://discord.gg/nDceKgxnkV",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "openai/whisper": {
+  "positioning": "OpenAI 开源的通用语音识别模型，在大规模多样化音频数据集上训练，是一个多任务模型，能同时做多种语言的语音识别、语音翻译和语种识别。",
+  "highlights": [
+   "基于 Transformer 序列到序列架构，用一个模型替代传统语音处理流水线的多个环节",
+   "提供 tiny / base / small / medium / large / turbo 六种尺寸，turbo 是 large-v3 的加速优化版，按显存和速度取舍",
+   "多语言模型可把非英语语音直接翻译成英文",
+   "同时提供命令行工具与 Python API，接入 Colab 示例可直接上手",
+   "代码与模型权重均以 MIT 许可发布"
+  ],
+  "quickstart": [
+   "安装最新版：`pip install -U openai-whisper`（或 `pip install git+https://github.com/openai/whisper.git` 装最新提交）",
+   "安装命令行依赖 ffmpeg，如 `sudo apt install ffmpeg`、`brew install ffmpeg` 或 `choco install ffmpeg`",
+   "命令行转录音频：`whisper audio.flac audio.mp3 audio.wav --model turbo`",
+   "指定语种转录：`whisper japanese.wav --language Japanese`",
+   "把语音翻译成英文：`whisper japanese.wav --model medium --language Japanese --task translate`",
+   "Python 调用：`import whisper; model = whisper.load_model(\"turbo\"); result = model.transcribe(\"audio.mp3\"); print(result[\"text\"])`"
+  ],
+  "support": "官方博客与论文见 README 顶部链接；示例分享走 GitHub Discussions 的 Show and tell 板块 https://github.com/openai/whisper/discussions/categories/show-and-tell ；Bug 反馈走仓库 Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "freeCodeCamp/freeCodeCamp": {
+  "positioning": "freeCodeCamp.org 的开源代码库与课程体系——一个友好的免费学编程社区，由捐赠支持的 501(c)(3) 慈善机构运营，帮助忙碌的成年人转行进入技术行业。",
+  "highlights": [
+   "全栈 Web 开发与机器学习课程完全免费、自定进度，包含数千个交互式编程挑战",
+   "提供多项免费开发者认证：响应式网页设计、JavaScript、前端库、Python、关系数据库、后端与 API 等",
+   "另设面向开发者的免费语言认证（英语 A2/B1、西班牙语、中文 A1），按国际水平分级",
+   "每门认证需完成 5 个必修项目并通过考试，证书永久有效可挂 LinkedIn",
+   "社区配套论坛、YouTube 免费课程频道、数千篇技术文章，帮助面试与实战"
+  ],
+  "quickstart": [
+   "直接访问 https://www.freecodecamp.org 注册账号开始学习",
+   "在 https://www.freecodecamp.org/learn 选择目标认证课程（如 Responsive Web Design、JavaScript）",
+   "按模块完成互动课程、练习与测验，做完 5 个必修项目后参加考试拿证",
+   "想为本项目贡献代码：阅读 https://contribute.freecodecamp.org 按指引提交 PR"
+  ],
+  "support": "官方论坛 https://forum.freecodecamp.org （通常数小时内有人解答）；Discord https://discord.gg/Z7Fm39aNtZ ；YouTube https://youtube.com/freecodecamp ；技术文章 https://www.freecodecamp.org/news",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "facebook/react-native": {
+  "positioning": "『Learn once, write anywhere』——用 React 来构建 Android、iOS 等平台的原生应用：JavaScript 写界面，底层用原生代码渲染。",
+  "highlights": [
+   "Native UI：组件直接渲染成各平台原生 UI，手势、文本缩放、无障碍行为都符合该系统用户的预期",
+   "React 处处可用：声明式 UI、组件、Hooks、Suspense 在 Android、iOS 及更多平台复用",
+   "Fast Refresh：改 JavaScript 代码几秒内即可看到效果，无需重新编译原生应用",
+   "Native Modules 让 JS 同步且类型安全地直接调用平台代码，也可复用社区数千个现成库",
+   "由 React Foundation 与众多公司及核心贡献者共同开发维护"
+  ],
+  "quickstart": [
+   "官方推荐通过框架起步：`npx create-expo-app@latest` 创建一个 Expo 项目",
+   "按 Expo 入门指南配置环境：https://docs.expo.dev/get-started/set-up-your-environment/",
+   "新应用也可参考官方 Getting Started 指南：https://reactnative.dev/docs/environment-setup",
+   "若不想用框架，再按 https://reactnative.dev/docs/getting-started-without-a-framework 自行搭建"
+  ],
+  "support": "官方文档 https://reactnative.dev/docs/getting-started ；社区支持页 https://reactnative.dev/help ；大讨论与提案在 https://github.com/react-native-community/discussions-and-proposals ；Bug 走本仓库 Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "immich-app/immich": {
+  "positioning": "高性能的自托管照片与视频管理方案，官方 README 自带简体中文版（readme_i18n/README_zh_CN.md）。",
+  "highlights": [
+   "手机端 App 打开即自动备份，支持后台备份、按相册选择性备份、防重复",
+   "多用户、相册与共享相册、伙伴共享、公开分享、归档与收藏一应俱全",
+   "支持 RAW 格式、EXIF/地图元数据查看、LivePhoto/MotionPhoto 备份与回放、360° 全景展示",
+   "人脸识别与聚类、按元数据/物体/人脸/CLIP 语义搜索、『几年前的今天』回忆、全局地图",
+   "支持 OAuth 登录与 API Key，可自定义存储结构，移动端支持离线浏览"
+  ],
+  "quickstart": [
+   "先读安装要求与指南：https://docs.immich.app/install/requirements",
+   "主文档站与更多入口：https://immich.app/",
+   "想先在线试用 Demo：打开 https://demo.immich.app ，账号 `demo@immich.app`，密码 `demo`",
+   "手机 App 连接 Demo 时，服务器地址填 `https://demo.immich.app`"
+  ],
+  "support": "官方文档 https://docs.immich.app/ ；路线图 https://immich.app/roadmap ；Discord https://discord.immich.app ；问题反馈走 GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "godotengine/godot": {
+  "positioning": "Godot Engine 是一款功能齐全的跨平台游戏引擎，从统一的编辑器界面出发制作 2D 和 3D 游戏。",
+  "highlights": [
+   "完全免费开源（MIT 许可），无版税、无附加条件，做出来的游戏完全归开发者自己",
+   "游戏可一键导出到 Linux / macOS / Windows、Android / iOS、Web 乃至主机平台",
+   "内置一整套常用工具链，开发者专注做游戏而不必重复造轮子",
+   "开发完全独立、由社区驱动，背后有 Godot Foundation 非营利组织支持",
+   "官方文档、类参考、演示项目与资源商店配套齐全"
+  ],
+  "quickstart": [
+   "从官网下载官方编辑器和导出模板：https://godotengine.org/download",
+   "想自己编译源码：参考官方编译文档 https://docs.godotengine.org/en/latest/engine_details/development/compiling",
+   "边学边查官方文档：https://docs.godotengine.org",
+   "跑官方示例项目：https://github.com/godotengine/godot-demo-projects ，素材也可逛资源商店 https://store.godotengine.org/"
+  ],
+  "support": "官方文档 https://docs.godotengine.org ；社区频道汇总 https://godotengine.org/community ；与核心开发者交流的 Contributors Chat https://chat.godotengine.org",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "mrdoob/three.js": {
+  "positioning": "一个 JavaScript 3D 库，目标是做一个易用、轻量、跨浏览器的通用 3D 库；当前版本内置 WebGL 和 WebGPU 渲染器。",
+  "highlights": [
+   "轻量、通用、跨浏览器，定位简单易用的 Web 3D 开发库",
+   "内置 WebGL 与 WebGPU 渲染器，SVG、CSS3D 渲染器作为 addon 提供",
+   "官方示例、文档、手册、迁移指南齐全，学习路径清晰",
+   "社区活跃：官方论坛、Discord、StackOverflow 标签一应俱全"
+  ],
+  "quickstart": [
+   "npm 安装后在代码里 `import * as THREE from 'three'`，创建场景、相机、几何体即可渲染一个会旋转的立方体",
+   "看效果与教程：官方示例 https://threejs.org/examples/ ；文档 https://threejs.org/docs/ ；手册 https://threejs.org/manual/",
+   "想克隆源码省时间：`git clone --depth=1 https://github.com/mrdoob/three.js.git`（不带历史记录，全量克隆约 2GB）"
+  ],
+  "support": "文档 https://threejs.org/docs/ ；官方论坛 https://discourse.threejs.org/ ；Discord https://discord.gg/56GBJwAnUS ；提问可带 StackOverflow 的 three.js 标签",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "yt-dlp/yt-dlp": {
+  "positioning": "功能丰富的命令行音视频下载器，支持数千个网站下载，是 youtube-dl 的衍生项目（基于已停止维护的 youtube-dlc）。",
+  "highlights": [
+   "支持数千个网站的音视频下载，站点列表见 supportedsites.md",
+   "提供 stable / nightly / master 三种发布渠道，可用 --update-to 随时切换版本或回退到指定 tag",
+   "内置 SponsorBlock 广告片段跳过、强大的格式选择（-f/--format）与丰富的后处理选项",
+   "支持插件扩展、配置文件、netrc 认证与高度自定义的输出模板"
+  ],
+  "quickstart": [
+   "从 Releases 下载对应平台的独立可执行文件：Windows 用 yt-dlp.exe、macOS 用 yt-dlp_macos、Linux/BSD 用 yt-dlp",
+   "或用 pip 安装：`python -m pip install -U \"yt-dlp[default]\"`；装 nightly 预发布：`python -m pip install -U --pre \"yt-dlp[default]\"`",
+   "基本用法：`yt-dlp [OPTIONS] [--] URL [URL...]`",
+   "更新：release 二进制运行 `yt-dlp -U`；pip 安装则重新执行安装命令；遇到 stable 版问题先 `yt-dlp --update-to nightly` 再报 bug",
+   "详细安装与依赖说明见官方 Wiki：https://github.com/yt-dlp/yt-dlp/wiki/Installation"
+  ],
+  "support": "官方 Wiki 与 FAQ（https://github.com/yt-dlp/yt-dlp/wiki）、Discord 社区（https://discord.gg/H5MNcFW63r）、GitHub Issues（按 CONTRIBUTING.md 指引提交）",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "codecrafters-io/build-your-own-x": {
+  "positioning": "一份精心整理的『从零动手造技术』分步教程合集，收录手把手重建数据库、Git、Docker、编程语言、Web 服务器等热门技术的优质指南，核心理念引自费曼：『我不能创造的，我就不能理解』。",
+  "highlights": [
+   "按近 30 个技术领域分类索引：3D 渲染器、AI 模型、区块链、数据库、Docker、Git、操作系统、神经网络、编程语言、Shell、Web 浏览器/服务器等",
+   "每篇教程标注所用语言（Python / Go / C++ / Rust / Java / TypeScript 等）与形式（图文 / 视频）",
+   "持续更新的社区合集，可在 Issues 中建议新增或改进教程"
+  ],
+  "quickstart": [
+   "直接在仓库 README 目录中按主题跳转（如 Build your own Database / Git / Docker）",
+   "点击某篇教程链接前往外部原文网站，按其步骤从零实现对应技术",
+   "想贡献新教程：在 Issues 中讨论或按仓库贡献说明提交 PR"
+  ],
+  "support": "官方主页与仓库 Issues（codecrafters-io/build-your-own-x）",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "nodejs/node": {
+  "positioning": "开源、跨平台的 JavaScript 运行时环境，由 OpenJS 基金会支持，项目采用开放治理模式（设技术指导委员会 TSC）。",
+  "highlights": [
+   "按语义化版本发布，每年 4 月推出新主版本；LTS 长期支持线提供 30 个月稳定与安全维护",
+   "区分 Alpha / Current / LTS / Nightly 多种发布类型，分别面向库作者、CI 与生产环境",
+   "官方提供各平台预编译二进制、安装包与源码 tarball，并附带可 GPG 校验的 SHASUMS256.txt.asc"
+  ],
+  "quickstart": [
+   "前往官网下载页获取二进制与安装包：https://nodejs.org/en/download/",
+   "查看最新 Current 版 API 文档：https://nodejs.org/api/（历史版本文档在各 release 目录的 docs 子目录）",
+   "校验下载包：用官方 release-keys 公钥导入后执行 `curl -fsO \"https://nodejs.org/dist/${VERSION}/SHASUMS256.txt.asc\"` 并用 gpgv + `shasum --check` 校验",
+   "从源码构建见 BUILDING.md"
+  ],
+  "support": "官方支持指引 .github/SUPPORT.md、nodejs.org 文档、GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "trekhleb/javascript-algorithms": {
+  "positioning": "用 JavaScript 实现的经典算法与数据结构示例合集，每个算法/数据结构都配有独立 README 讲解与延伸阅读（含 YouTube 视频），并提供简体中文等多语言版本。",
+  "highlights": [
+   "覆盖链表、双链表、队列、栈、哈希表、堆、优先队列、Trie、二叉搜索树、AVL/红黑树、线段树、图、并查集、布隆过滤器、LRU 缓存等数据结构",
+   "算法按数学、集合、字符串、排序、搜索、递归、动态规划等主题分类，并以 B（初级）/A（高级）标注难度",
+   "附带 Big O 增长曲线、数据结构操作复杂度表与各排序算法复杂度对照表"
+  ],
+  "quickstart": [
+   "clone 仓库后在 `./src/playground/playground.js` 中动手试验数据结构与算法",
+   "为自己的代码编写测试于 `./src/playground/__test__/playground.test.js`",
+   "运行 `npm test -- 'playground'` 验证 playground 代码是否按预期工作"
+  ],
+  "support": "GitHub Issues；README 指向作者站点 trekhleb.dev 与配套 YouTube 算法播放列表",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "ohmyzsh/ohmyzsh": {
+  "positioning": "开源、社区驱动的 zsh 配置管理框架，内置数百个插件与 150 多个主题，让终端提示符更强大也更好看。",
+  "highlights": [
+   "开箱即用的海量插件（git、macos、docker 等）与 150+ 内置主题，多数在 Wiki 附截图",
+   "支持自定义插件/主题、异步 git 提示符、终端屏保（`omz shellsaver`）等趣味功能",
+   "更新策略灵活：自动/提醒/禁用、检查频率与冷却期均可通过 zstyle 配置"
+  ],
+  "quickstart": [
+   "一键安装（curl）：`sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"`；被墙地区用镜像 `sh -c \"$(curl -fsSL https://install.ohmyz.sh/)\"`",
+   "编辑 `~/.zshrc`，在 `plugins=(git bundler dotenv ...)` 中按空白分隔启用插件",
+   "在 `~/.zshrc` 中把 `ZSH_THEME=\"robbyrussell\"` 改成想要的主题名（如 `agnoster`，部分主题需 Powerline/Nerd Font）",
+   "更新运行 `omz update`；卸载运行 `uninstall_oh_my_zsh`"
+  ],
+  "support": "官方站 ohmyz.sh、Discord（https://discord.gg/ohmyzsh）、Wiki FAQ（https://github.com/ohmyzsh/ohmyzsh/wiki/FAQ）、GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "mattpocock/skills": {
+  "positioning": "作者 Matt Pocock 日常用于『真工程』（而非 vibe coding）的 AI 编码代理技能（agent skills）合集，设计小巧、易改造、可组合，适配任意模型。",
+  "highlights": [
+   "工程类技能：grill-with-docs（需求拷问并生成领域术语表 GLOSSARY.md/ADR）、tdd（红绿重构循环）、diagnosing-bugs、code-review、improve-codebase-architecture 等",
+   "通用效率类技能：grill-me、handoff（会话交接文档）、teach、wait-what 等",
+   "覆盖 Claude Code、Codex、GitHub Copilot、Gemini CLI 及其他代理的多平台安装方式"
+  ],
+  "quickstart": [
+   "Claude Code 安装：`claude plugin install mattpocock-skills@claude-plugins-official`（自动更新）",
+   "其他代理通用安装：`npx skills@latest add mattpocock/skills -a <agent>`（如 cursor、opencode 等）",
+   "在每个仓库中运行一次 `/setup-matt-pocock-skills`，配置 issue 跟踪器、分诊标签与文档保存目录",
+   "之后按需使用 `/grill-me`、`/tdd`、`/implement`、`/code-review` 等技能"
+  ],
+  "support": "GitHub 仓库 Issues、作者邮件 newsletter（https://www.aihero.dev/s/skills-newsletter）、skills.sh 页面（https://skills.sh/mattpocock/skills）",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "kamranahmedse/developer-roadmap": {
+  "positioning": "roadmap.sh 背后的开源内容仓库，由社区驱动，为开发者提供交互式学习路线图、最佳实践与知识测验。",
+  "highlights": [
+   "覆盖前端、后端、DevOps、AI 工程师、云计算、各语言与框架等近百条交互式路线图，点击节点即可阅读该主题详解",
+   "提供后端性能、前端性能、代码审查、API 安全、AWS 等交互式最佳实践",
+   "提供 JavaScript / Node / React / 前后端问答，帮助检验、评估并提升自身知识"
+  ],
+  "quickstart": [
+   "直接访问 https://roadmap.sh 在线浏览交互式路线图，新手可先看 get-started 页选方向",
+   "想本地研究内容结构：`git clone git@github.com:nilbuild/developer-roadmap.git --depth 1` 后 `cd developer-roadmap`",
+   "贡献：阅读 contributing.md，在仓库中新增或修改 roadmap 内容，合并后自动同步到网站"
+  ],
+  "support": "roadmap.sh 网站、官方 YouTube 频道、GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "CyC2018/CS-Notes": {
+  "positioning": "一套中文计算机求职面试笔记，内容以原创为主，覆盖算法、操作系统、网络、数据库、Java、系统设计、大模型应用等方向，并提供按天排好的学习路线。",
+  "highlights": [
+   "四条按天学习路线：零基础、Java 后端、大模型应用开发、面试冲刺，每天 1~2 小时含笔记、面试真题与动手练习",
+   "知识体系完整：剑指 Offer/LeetCode 题解、操作系统、计算机网络、MySQL/Redis、Java 基础到虚拟机、Spring、分布式与系统设计",
+   "支持个人网站与飞书知识库在线阅读，采用 CC BY-NC-SA 4.0 知识共享协议"
+  ],
+  "quickstart": [
+   "在线阅读：个人网站 https://cyc2018.xyz 或飞书知识库在线版",
+   "在 README 顶部导航表格按学科（算法/操作系统/网络/数据库/Java/系统设计/工具）跳转对应目录笔记",
+   "按学习路线选择零基础 / Java 后端 / 大模型应用开发 / 面试冲刺，按每天的安排推进",
+   "贡献：阅读 CONTRIBUTING.md 后提交 Issue、PR 或配图"
+  ],
+  "support": "个人网站 cyc2018.xyz、飞书知识库在线阅读、GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "tensorflow/tensorflow": {
+  "positioning": "端到端开源机器学习平台，源于 Google Brain 团队，拥有全面灵活的工具、库与社区生态：研究者可用它推进 ML 前沿，开发者可轻松构建并部署 ML 应用。",
+  "highlights": [
+   "提供稳定的 Python 与 C++ API，以及其他语言非保证向后兼容的 API",
+   "支持 CUDA 加速 GPU（Ubuntu/Windows）、DirectX/macOS Metal 通过设备插件，另有 CPU-only 精简包",
+   "配套 TensorBoard 可视化、官方模型库、教程、Codelabs 与多门在线课程等完整资源"
+  ],
+  "quickstart": [
+   "安装：`pip install tensorflow`；CPU 精简版用 `pip install tensorflow-cpu`（升级加 --upgrade）",
+   "试用首个程序：进入 python 后 `import tensorflow as tf`，运行 `tf.add(1, 2).numpy()` 得到 3",
+   "更多示例见官方教程：https://www.tensorflow.org/tutorials/",
+   "安装指南（GPU / Docker / 源码构建）：https://www.tensorflow.org/install"
+  ],
+  "support": "TensorFlow 官方论坛 https://discuss.tensorflow.org/、Stack Overflow 标签 tensorflow、GitHub Issues（用于 bug 与需求跟踪）",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "microsoft/vscode": {
+  "positioning": "『Code - OSS』开源仓库，微软与社区共同开发 Visual Studio Code 的源代码，在 MIT 许可下对所有人开放；VS Code 产品是基于该仓库、带微软定制的发行版。",
+  "highlights": [
+   "兼顾代码编辑器的简洁与编辑-构建-调试核心循环：全面的代码编辑、导航与理解支持，轻量调试与丰富的扩展模型",
+   "每月更新新功能与缺陷修复，提供 Windows/macOS/Linux 稳定版与每日更新的 Insiders 版",
+   "内置多语言语法与 snippets 扩展，并支持 Dev Containers / GitHub Codespaces 开发容器"
+  ],
+  "quickstart": [
+   "普通用户直接在官网下载安装：https://code.visualstudio.com/Download",
+   "想每天体验最新版本：安装 Insiders 版 https://code.visualstudio.com/insiders",
+   "从源码构建与参与开发：参考 Wiki 的 How to Contribute（https://github.com/microsoft/vscode/wiki/How-to-Contribute）",
+   "可用命令 Dev Containers: Clone Repository in Container Volume... 一键把源码克隆进开发容器（建议 4 核 / 6GB 内存以上）"
+  ],
+  "support": "Stack Overflow 标签 vscode、GitHub Issues、GitHub Discussions 与 Slack 扩展作者社区",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "langchain-ai/langchain": {
+  "positioning": "智能体（Agent）工程平台，用于构建智能体与 LLM 驱动应用的框架，把可互操作组件与第三方集成串联起来，在底层技术快速演进时简化 AI 应用开发。",
+  "highlights": [
+   "通过模型、嵌入、向量库等统一抽象接口连接各类组件，模型可随时替换试验",
+   "实时数据增强：轻松把 LLM 接入多类数据源与内外部系统，集成生态丰富",
+   "生态完整：Deep Agents（高层智能体）、LangGraph（可控智能体工作流编排）、LangSmith（评估、可观测性、调试与部署）"
+  ],
+  "quickstart": [
+   "安装：`uv add langchain`",
+   "最小示例：`from langchain.chat_models import init_chat_model`，再 `model = init_chat_model(\"openai:gpt-5.5\")` 与 `result = model.invoke(\"Hello, world!\")`",
+   "完整文档：https://docs.langchain.com/oss/python/langchain/overview",
+   "需要高级智能体编排时改用 LangGraph；JS/TS 等价库见 LangChain.js"
+  ],
+  "support": "官方文档 docs.langchain.com、社区论坛 forum.langchain.com、LangChain Academy 免费课程（https://academy.langchain.com/）",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "kubernetes/kubernetes": {
+  "positioning": "开源系统，用于跨多台主机管理容器化应用，提供应用部署、维护与扩缩容的基本机制；源自 Google Borg 的大规模生产经验，由云原生计算基金会 CNCF 托管。",
+  "highlights": [
+   "跨主机统一管理容器化应用，覆盖部署、维护与水平扩缩容全流程",
+   "由 CNCF 托管，治理、社区会议与用户案例机制成熟",
+   "提供官方文档与免费入门课程，并列出可作为库引用的发布组件清单"
+  ],
+  "quickstart": [
+   "日常使用先读官方文档：https://kubernetes.io",
+   "免费课程：Udacity《Scalable Microservices with Kubernetes》",
+   "有 Go 环境从源码构建：`git clone https://github.com/kubernetes/kubernetes` → `cd kubernetes` → `make`",
+   "有 Docker 环境则改用 `make quick-release`；完整开发说明见 git.k8s.io/community"
+  ],
+  "support": "官方文档 kubernetes.io、故障排查指南 https://kubernetes.io/docs/tasks/debug/、社区沟通渠道 https://git.k8s.io/community/communication",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "vercel/next.js": {
+  "positioning": "由 Vercel 打造的 React 全栈 Web 应用框架，扩展最新 React 特性并集成基于 Rust 的 JavaScript 工具链以获得极快的构建速度，被全球多家大公司使用。",
+  "highlights": [
+   "基于最新 React 特性构建全栈 Web 应用",
+   "集成 Rust 编写的 JS 工具链，带来极快的构建速度",
+   "配套交互式 Learn 课程、Showcase 案例库与活跃的 GitHub Discussions / Discord 社区"
+  ],
+  "quickstart": [
+   "入门课程：https://nextjs.org/learn",
+   "查看完整文档：https://nextjs.org/docs",
+   "浏览真实建站案例：https://nextjs.org/showcase",
+   "新手贡献可从 good first issues 列表入手"
+  ],
+  "support": "官方文档 nextjs.org/docs、GitHub Discussions（https://github.com/vercel/next.js/discussions）、Discord（https://nextjs.org/discord）",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "jwasham/coding-interview-university": {
+  "positioning": "作者本人为进军大厂软件工程师岗位而整理的一份数月自学备考计划，按这套计划学完后作者入职了 Amazon；它把大学 CS 课程里面试真正用得上的约 75% 内容浓缩成一份路线图。",
+  "highlights": [
+   "面向 Amazon、Facebook、Google、Microsoft 等大厂技术面试准备，覆盖软件工程（而非前端/全栈）方向",
+   "主题齐全：Big-O 复杂度、数组/链表/栈/队列/哈希表、树、排序、图、递归、动态规划、设计模式、网络、系统设计等",
+   "配套每日学习计划、编程题练习清单、选书建议，以及更新简历、找工作、面试流程等求职指南",
+   "提供简体中文（translations/README-cn.md）等多语言翻译版本"
+  ],
+  "quickstart": [
+   "直接在仓库 README 里从「What is it?」「How to use it」开始通读学习计划，了解所需前置要求（一点编程基础、耐心和时间）",
+   "按「Choose a Programming Language」选定一门语言，配合数据结构与算法书目自学",
+   "按 The Daily Plan 推进各主题，并用 Coding Question Practice 章节刷编程题",
+   "学完后参考「Update Your Resume」「Find a Job」「Interview Process」章节准备面试与求职"
+  ],
+  "support": "官方主页即本仓库 README，求助与讨论走 GitHub Issues；简体中文版见 translations/README-cn.md",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "practical-tutorials/project-based-learning": {
+  "positioning": "一份「从实战项目学编程」的教程清单，汇集教初学者从零动手构建一个完整应用的教程，并按主要编程语言分门别类。",
+  "highlights": [
+   "按 C/C++、Python、JavaScript、Go、Rust、Java、Swift、Kotlin 等二十多种语言分类整理",
+   "每个教程都要求真刀真枪做出项目：写解释器、操作系统、编译器、数据库、Redis、游戏、TCP/IP 栈等",
+   "社区共同维护，并有 link-rot（死链巡检）自动化保障链接可用"
+  ],
+  "quickstart": [
+   "在 README 目录里按目标编程语言（如 Python、Go、Rust）找到对应小节",
+   "点击教程链接，跟随教程从零动手构建项目",
+   "想贡献新教程：fork 本仓库，按 CONTRIBUTING.md 提交 Pull Request"
+  ],
+  "support": "Gitter 社区聊天 https://gitter.im/practical-tutorials/community ；其他问题走 GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "justjavac/free-programming-books-zh_CN": {
+  "positioning": "免费的中文编程书籍索引，汇集大量可免费阅读的中文编程与计算机技术电子书，欢迎读者投稿补充。",
+  "highlights": [
+   "分「语言无关类」与「语言相关类」两大块，覆盖操作系统、AI、分布式系统、编译原理、Web、大数据、设计模式、算法等主题",
+   "语言相关类涵盖 Android、C/C++、Java、JavaScript、Python、Go、Rust、Swift、iOS 等几乎所有主流方向",
+   "收录了 StackOverflow 国外程序员必读书单的中文版，以及程序员应读的非编程类书籍书单"
+  ],
+  "quickstart": [
+   "在 README「目录」中按主题（如操作系统、算法）或按语言（如 Python、Go）浏览书单",
+   "点击书名链接即可在线阅读或下载免费电子书",
+   "发现打不开的链接可提 PR 并在其后加 :worried: 标记；推荐珍藏好书用 Pull Request 提交"
+  ],
+  "support": "官方主页即本仓库，交流与投稿走 GitHub Issues / Pull Request",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "morluto/rea": {
+  "positioning": "REA（Reverse Engineer Anything）是一个 MCP 工具，用一条 MCP 通道把 AI agent 接到逆向工程能力上，让它在没有源码的情况下分析二进制程序、应用和运行时行为，看懂别人功能是怎么实现的。",
+  "highlights": [
+   "可分析原生二进制、JavaScript/Electron 应用、.NET 程序集和网站，分析在本地运行并附带结论证据与局限说明",
+   "原生分析可复用你已有的 Hopper、Ghidra、IDA 或 Kuna 安装；纯 JS 静态分析无需额外反编译引擎",
+   "支持 Claude Code、Codex、Cursor、Gemini CLI、Grok Build 等多种 agent"
+  ],
+  "quickstart": [
+   "确保已安装 Node.js 与 npm，运行 `npx rea-agents setup`",
+   "选择要接入的 agent，审阅拟做的改动并批准，脚本会注册 MCP server 并备份旧配置，之后重启 agent",
+   "用自然语言向 agent 提需求，例如：`Understand how search works in the Notes app, show me the evidence, and build a similar feature for my project.`",
+   "也可直接在终端检查解包后的 JavaScript/Electron 目录或 ASAR 包"
+  ],
+  "support": "官网与图文指南 https://rea.tools/ （https://rea.tools/guides/）；社区 Discord https://discord.gg/GkcryMnJDM",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "ossu/computer-science": {
+  "positioning": "OSSU（Open Source Society University）提供一条完全免费、靠自学完成的计算机科学专业教育路径，按名校本科 CS 大纲组织课程，并由全球学习者社区互助支持。",
+  "highlights": [
+   "课程选自哈佛、MIT、普林斯顿等世界名校公开课，并对标 CS 2013 本科课程指南标准",
+   "结构分四阶段：Intro CS 入门、Core CS 核心必修、Advanced CS 方向选修、毕业项目同伴互评",
+   "规划得当、每周约 20 小时约 2 年可完成，绝大多数课程材料免费（部分平台 graded 作业可申请助学金）"
+  ],
+  "quickstart": [
+   "先修高中数学（代数、几何、预微积分），然后从 Intro CS 导论课（如 MIT 用 Python 讲的入门课）开始",
+   "按顺序完成 Core CS 全部必修课（编程、数学、系统、理论、安全、应用、伦理），可把数学课与入门课并行",
+   "在 Advanced CS 里选一个方向（如高级编程、系统、理论）修完该方向全部课程",
+   "最后完成毕业项目，交由全球同伴评审；可用官方 Google Sheet 预估完成时间",
+   "官网课程表见 https://cs.ossu.dev ，注意避开第三方仿冒/过时材料"
+  ],
+  "support": "官网 https://cs.ossu.dev ；学习者 Discord https://discord.gg/wuytwK5s9h ；课程与大纲问题走 GitHub Issues（HELP.md）",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "ollama/ollama": {
+  "positioning": "Ollama 让你用开源模型快速起步，在本地或云端以完全隐私的方式运行和管理最新发布的开源大模型。",
+  "highlights": [
+   "一行命令即可在本地拉取并运行开源大模型（如 Gemma 等），模型库见 ollama.com/library",
+   "内置 REST API，并有官方 Python（ollama-python）和 JS（ollama-js）SDK，方便接入自己的应用",
+   "可一键集成 Claude Code、Codex、Copilot CLI、OpenCode 等编程 agent，也能接 WhatsApp/Telegram/Slack/Discord 做个人 AI 助手",
+   "推理后端基于 Georgi Gerganov 发起的 llama.cpp 项目"
+  ],
+  "quickstart": [
+   "macOS/Linux 安装：`curl -fsSL https://ollama.com/install.sh | sh`；Windows 安装：`irm https://ollama.com/install.ps1 | iex`",
+   "运行 `ollama` 启动，或直接 `ollama run gemma4` 与模型对话",
+   "启动编程集成：`ollama launch claude`（也支持 openclaw 等助手）",
+   "用 REST API 调用：`curl http://localhost:11434/api/chat -d '{\"model\":\"gemma4\",\"messages\":[{\"role\":\"user\",\"content\":\"Why is the sky blue?\"}],\"stream\":false}'`",
+   "Python 接入：`pip install ollama`；JS 接入：`npm i ollama`"
+  ],
+  "support": "官方文档 https://docs.ollama.com （含 CLI/API/Modelfile 参考）；社区 Discord https://discord.gg/ollama ；Reddit https://reddit.com/r/ollama",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "huggingface/transformers": {
+  "positioning": "Hugging Face Transformers 是用于推理和训练的 SOTA 预训练模型框架，统一了文本、计算机视觉、音频、视频及多模态模型的定义，是整个 ML 生态里训练框架、推理引擎和周边库共同对接的模型定义枢纽。官方提供简体中文 README（i18n/README_zh-hans.md）。",
+  "highlights": [
+   "统一 API 使用所有预训练模型，面向用户只需学三个类，上手门槛低",
+   "覆盖 NLP、计算机视觉、音频、视频、多模态上千种模型架构，Hub 上有百万级模型 checkpoint 可直接用",
+   "同一份模型可在 PyTorch/JAX/TF2 之间自由迁移，3 行代码即可训练 SOTA 模型",
+   "与 Axolotl、Unsloth、DeepSpeed、vLLM、SGLang、TGI、llama.cpp、mlx 等主流训练/推理生态兼容"
+  ],
+  "quickstart": [
+   "要求 Python 3.11+ 与 PyTorch 2.6+，先建虚拟环境：`python -m venv .my-env` 再激活",
+   "安装：`pip install \"transformers[torch]\"`（或 uv pip install \"transformers[torch]\"）",
+   "用高层 Pipeline 一行跑推理：`from transformers import pipeline` → `pipeline(task=\"text-generation\", model=\"Qwen/Qwen2.5-1.5B\")`",
+   "命令行直接和模型聊天（需先 `transformers serve`）：`transformers chat Qwen/Qwen2.5-0.5B-Instruct`",
+   "从源码安装最新版：`git clone https://github.com/huggingface/transformers.git` 后 `pip install '.[torch]'`"
+  ],
+  "support": "官方文档 https://huggingface.co/docs/transformers ；简体中文说明见仓库 i18n/README_zh-hans.md ；报错与问题走 GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "twbs/bootstrap": {
+  "positioning": "Bootstrap 是一套简洁、直观、强大的前端框架，让更快、更轻松地做 Web 开发；仓库默认分支当前用于 Bootstrap 6 的开发（Bootstrap 5 见 v5-dev 分支）。",
+  "highlights": [
+   "提供编译与压缩版 CSS/JS，内含网格、重置（reboot）、工具类等完整前端资产",
+   "借助 CSS 逻辑属性原生支持 LTR/RTL 双向布局，只需在 HTML 上设置 dir=\"rtl\"",
+   "打包版 JS 内置 Floating UI 与 Vanilla Calendar Pro",
+   "同时支持 npm、yarn、bun、Composer、NuGet 等多种安装渠道"
+  ],
+  "quickstart": [
+   "任选一种方式安装：`npm install bootstrap@6.0.0-alpha.1`（或 `git clone https://github.com/twbs/bootstrap.git`、下载 release 压缩包）",
+   "阅读官方入门页了解框架内容、模板与示例：https://getbootstrap.com/docs/6.0/getting-started/",
+   "本地运行文档站：先 `npm install`，再 `npm run test`，然后在仓库根目录 `npm run docs-serve`",
+   "浏览器打开 http://localhost:9001 即可本地预览文档"
+  ],
+  "support": "官方文档 https://getbootstrap.com ；GitHub Discussions；社区 Discord https://discord.gg/bZUvakRU3M ；Stack Overflow（标签 bootstrap-5）；官方博客 https://blog.getbootstrap.com/",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "significant-gravitas/AutoGPT": {
+  "positioning": "AutoGPT 是你的一支 AI 专家团队：用大白话交代任务，由 Otto 统筹调度，把内容、销售、研究和重复性事务分派给各专职 AI 专家去完成。",
+  "highlights": [
+   "内置 Otto（AI 主管）、Maria（SEO 内容经理）、Max（客户经理）、Frankie（行政助理）等专家角色，可按自己的指令、上下文、技能和已连接应用定制",
+   "可视化工作流编排器：连线积木、加分支逻辑、控制执行步骤，可从市场模板复用或自建",
+   "提供 API 与 MCP server，可从自己的代码或 AI 编码 agent 直接调用工作流",
+   "既有托管付费平台，也支持单容器 Docker 自托管、自带模型凭据并自行管理运行"
+  ],
+  "quickstart": [
+   "自托管最快方式，用 Docker Hub 单容器镜像启动：`docker run -d --name autogpt --restart unless-stopped --shm-size 2g --ulimit nofile=65536:65536 -p 127.0.0.1:3000:3000 -e AUTOGPT_PUBLIC_URL=http://localhost:3000 -v autogpt-data:/data significantgravitas/autogpt:latest`",
+   "首次启动等待几分钟后打开 http://localhost:3000 注册账号",
+   "把自己提升为管理员：`docker exec autogpt autogpt-admin promote you@example.com`",
+   "或直接注册托管平台试用：https://platform.agpt.co/signup ；自托管细节见 https://agpt.co/docs/platform/self-hosting/single-container"
+  ],
+  "support": "官方文档 https://agpt.co/docs ；社区与支持 Discord https://discord.gg/autogpt ；Bug/功能请求走 GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "ggerganov/llama.cpp": {
+  "positioning": "用纯 C/C++ 实现的大语言模型（及视觉语言模型）推理引擎，目标是以最少的配置、在本地和云端各种硬件上都实现 SOTA 级别的推理性能。",
+  "highlights": [
+   "纯 C/C++ 实现、零依赖，构建在 ggml 库之上",
+   "Apple Silicon 一级优化（ARM NEON、Accelerate、Metal）；x86 支持 AVX/AVX2/AVX512/AMX；RISC-V 也有支持",
+   "支持 1.5/2/3/4/5/6/8 bit 整数量化，推理更快、内存更省",
+   "CUDA 自研 kernel，另支持 HIP（AMD）、MUSA（摩尔线程）、Vulkan、SYCL、Metal 等后端，并支持 CPU+GPU 混合推理跑下超过显存容量的模型"
+  ],
+  "quickstart": [
+   "安装（Linux/macOS）：`curl -LsSf https://llama.app/install.sh | sh`；Windows PowerShell：`irm https://llama.app/install.ps1 | iex`",
+   "其他途径：访问 https://llama.app 按指引操作，或从 releases 页下载预编译二进制，或按 docs/build.md 从源码编译",
+   "装好后直接从 Hugging Face 拉模型跑 CLI：`llama cli -hf ggml-org/Qwen3.5-0.8B-GGUF`",
+   "启动 OpenAI 兼容 API 服务：`llama serve -hf ggml-org/Qwen3.5-0.8B-GGUF`"
+  ],
+  "support": "官网 https://llama.app ；文档见仓库 docs/ 目录（docs/build.md、docs/docker.md、tools/server/README.md 等）；问题走 GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "flutter/flutter": {
+  "positioning": "Flutter 是 Google 出品的 SDK，用一套代码库就能为移动、Web 和桌面端打造精美、流畅的用户体验，可与现有代码协同使用，完全免费开源。",
+  "highlights": [
+   "一套代码同时构建 iOS、Android、Web、Windows、macOS、Linux 应用，也可作为任意平台的 UI 工具包嵌入",
+   "由硬件加速的 Skia/Impeller 渲染引擎驱动，Dart 可编译为 ARM 机器码、WebAssembly、x64/ARM 桌面码，达到原生速度",
+   "有状态热重载（hot reload），改完代码立即看到效果且不丢失应用状态",
+   "生态开放：VS Code/IntelliJ 插件、pub.dev 上数万个包，支持 FFI 与 platform channels 调用原生代码"
+  ],
+  "quickstart": [
+   "按官方文档安装 Flutter SDK：https://docs.flutter.dev/get-started",
+   "首次运行 flutter 工具会自动从 Google 服务器下载 Dart SDK；升级用 `flutter upgrade`",
+   "查阅 widget 目录 https://docs.flutter.dev/ui/widgets 开始构建界面（Cupertino/Material 双套风格）",
+   "官方发布公告可订阅 flutter-announce 邮件列表，破坏性变更见 docs.flutter.dev/release/breaking-changes"
+  ],
+  "support": "官方文档 https://docs.flutter.dev ；开发 wiki 见仓库 docs/README.md；社区 Discord（加入方式见 docs/contributing/Chat.md）；公告邮件列表 https://groups.google.com/g/flutter-announce",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "521xueweihan/HelloGitHub": {
+  "positioning": "HelloGitHub 分享 GitHub 上有趣、入门级的开源项目，每月 28 号以月刊形式更新发布，口号是「兴趣是最好的老师，帮你找到开源的乐趣」。",
+  "highlights": [
+   "月刊内容涵盖有趣入门级开源项目、开源书籍、实战项目、企业级项目，让你短时间感受开源魅力",
+   "提供官网与微信公众号，获得更好阅读体验",
+   "开放推荐/自荐项目入口，人人都能成为月刊贡献者"
+  ],
+  "quickstart": [
+   "在仓库 README 内容表格里按期号直接阅读（如第 127 期 /content/HelloGitHub127.md）",
+   "访问官网 https://hellogithub.com/ 获得更佳阅读体验",
+   "想推荐或自荐项目：前往 https://hellogithub.com/periodical 提交"
+  ],
+  "support": "官网 https://hellogithub.com/ ；微信读者群（见 README 顶部微信群徽章）；微博 @hellogithub；其他问题走 GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "n8n-io/n8n": {
+  "positioning": "n8n 是面向 AI agent 与工作流自动化的 fair-code 平台：把可视化画布和自定义代码结合，可自托管或用云端版，连接 1500+ 集成，从原型一路用到生产。",
+  "highlights": [
+   "AI 原生自动化：用你自己的数据、模型和工具构建并落地多步 AI 工作流与 agent",
+   "模型不锁定：可接 OpenAI、Anthropic、Google 或开源模型，换厂商不用改架构",
+   "可视化搭建 + JavaScript/Python/npm 代码混用，支持逻辑分支、人工审批与全链路可观测",
+   "1500+ 集成与 9000+ 工作流模板，企业级自带 RBAC、审计日志，适合处理敏感数据"
+  ],
+  "quickstart": [
+   "一键脚本安装（需已装 Docker）：`curl -fsSL https://get.n8n.io | sh`",
+   "或手动用 Docker：`docker volume create n8n_data` 再执行 `docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n`",
+   "浏览器打开 http://localhost:5678 进入编辑器开始编排工作流",
+   "也可直接使用云端版 https://app.n8n.cloud/login"
+  ],
+  "support": "官方文档 https://docs.n8n.io ；社区论坛 https://community.n8n.io （求助首选）；AI/LangChain 指南 https://docs.n8n.io/advanced-ai/",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "Stirling-Tools/Stirling-PDF": {
+  "positioning": "Stirling PDF 是一个强大的开源 PDF 处理平台：可当个人桌面应用、浏览器网页应用运行，也可自托管成带私有 API 的服务器，全程不用把文件交给外部服务。",
+  "highlights": [
+   "50+ PDF 工具：编辑、合并、拆分、签名、脱敏、转换、OCR、压缩等一应俱全",
+   "可视化无代码自动化流水线，几乎所有工具都开放 REST API，可批量处理海量 PDF",
+   "企业级能力：SSO 单点登录、操作审计、灵活的本地部署；界面支持 40+ 种语言",
+   "三种使用形态：桌面客户端、浏览器 UI、自托管服务器+私有 API"
+  ],
+  "quickstart": [
+   "Docker 一键启动：`docker run -p 8080:8080 docker.stirlingpdf.com/stirlingtools/stirling-pdf`",
+   "浏览器打开 http://localhost:8080 即可使用",
+   "桌面版、Kubernetes 等完整安装选项见文档指南 https://docs.stirlingpdf.com/#documentation-guide"
+  ],
+  "support": "官方文档 https://docs.stirlingpdf.com ；API 文档见 registry.scalar.com/@stirlingpdf/apis/stirling-pdf-processing-api/ ；社区 Discord https://discord.gg/HYmhKj45pU ；Bug 报告走 GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "shadcn-ui/ui": {
+  "positioning": "shadcn/ui 是一套设计精美、可自定义、可扩展、可在此基础上继续构建的开源组件库——开源、开放代码，用来搭建你自己的组件库。官方文档站 https://ui.shadcn.com/docs 。",
+  "degraded": true,
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "affaan-m/ECC": {
+  "positioning": "给 AI 编程助手（Agent）装上一套协调一致的工程系统与工具箱：先规划再写码、用测试验证改动、从全新上下文审查自己的工作、记住要点，并把重复的成功经验沉淀为可复用的技能和工作流。MIT 开源，今天在 Claude Code 上体验最好，同时提供 Codex、Qoder 原生插件路径，以及 Cursor、OpenCode、Gemini、Zed、GitHub Copilot 等工具的能力适配。",
+  "highlights": [
+   "内置 71 个专职 Agent（规划、审查、构建修复、安全、架构、领域工作）和 311 个技能（TDD、调研、安全、文档、前端、数据、ML、运维等）",
+   "97 个命令入口，加上 Hooks、规则、持久记忆与持续学习，把 plan→test→implement→review→verify→remember→improve 固化成 Agent 的默认工作方式",
+   "内置 AgentShield 安全扫描，检查 prompts、hooks、MCP 配置、权限、密钥与 agent 文件",
+   "一次安装即可跨多种主流 AI 编程工具使用，无需在每个 prompt 里重复搭建流程"
+  ],
+  "quickstart": [
+   "准备依赖：安装 Node.js 18+、Git 和 Claude Code 2.1+，在 PowerShell 中用 `node --version`、`git --version`、`claude --version` 确认可用",
+   "运行引导式安装：`npx ecc-universal@2.2.3 setup`",
+   "个人典型配置选 Global user、Standard hooks 并确认",
+   "新开一个 Claude Code 会话，运行 `/plugin list` 确认 `ecc@ecc` 已启用"
+  ],
+  "support": "Discord 社区 https://discord.gg/36yGMHGFbR；项目官网 https://ecc.tools；GitHub 仓库 Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "donnemartin/system-design-primer": {
+  "positioning": "一个把散落在网络各处的系统设计资料整理成册的开源教程，教你如何设计大规模可扩展系统，同时为技术面试中的系统设计环节做准备。",
+  "highlights": [
+   "覆盖性能 vs 可扩展性、延迟 vs 吞吐、CAP 定理、一致性/可用性模式、DNS、CDN、负载均衡、微服务、数据库（RDBMS/NoSQL/分片）、缓存、消息队列、安全等完整主题",
+   "每个主题都讲清优缺点与取舍并附深入学习链接，核心理念是 Everything is a trade-off",
+   "配套 Anki 间隔重复闪卡：系统设计、系统设计练习、面向对象设计练习三套",
+   "收录常见系统设计面试题与面向对象设计面试题及参考答案（讨论、代码、图示）",
+   "多语言维护，含简体中文 README-zh-Hans.md"
+  ],
+  "quickstart": [
+   "第一步：观看可扩展性（scalability）视频讲座",
+   "第二步：阅读可扩展性主题文章",
+   "然后按 Index of system design topics 逐章学习各主题，每节都附深入资源链接",
+   "做系统设计面试题，并与 sample solutions（讨论、代码、图示）对照比较",
+   "用配套 Anki 闪卡碎片时间复习核心概念"
+  ],
+  "support": "GitHub 仓库 Issues 与 Pull Requests（多语言翻译通过 Issues 协作）；官方主页与仓库 Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "jackfrued/Python-100-Days": {
+  "positioning": "骆昊编写的中文开源教程《Python - 100天从新手到大师》，按天规划从零基础到实战项目的 Python 学习路径，并附 Python 应用领域与职业发展分析。",
+  "highlights": [
+   "Day01~20 Python 语言基础：环境搭建、变量、分支与循环、列表/元组/字符串等常用数据结构",
+   "后续阶段覆盖面向对象、异常与模块、正则、网络编程、Web 开发、数据分析、爬虫、机器学习等实战内容",
+   "每个知识点配例题与实战小项目（如猜数字、CRAPS 赌博游戏、百钱百鸡问题等）",
+   "给出后端、运维、数据分析、数据科学等 Python 就业方向分析和给初学者的五条建议",
+   "部分配套视频已同步到 Bilibili"
+  ],
+  "quickstart": [
+   "从 Day01《初识Python》开始，按天顺序阅读仓库内教程，如 `./Day01-20/01.初识Python.md`",
+   "按教程指引在本机安装 Python（内含 Windows / macOS 环境搭建说明）",
+   "跟着每天的小节边学边敲代码，完成配套练习与实战项目"
+  ],
+  "support": "作者知乎账号 Python-Jack 及专栏（https://www.zhihu.com/people/jackfrued）；Bilibili 视频（https://space.bilibili.com/1177252794）；官方主页与仓库 Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "comfyanonymous/ComfyUI": {
+  "positioning": "官方自称最强大、最模块化的 AI 内容创作引擎，用可视化节点图界面让创作者无需写代码即可生成图像、视频、3D 模型、音频等内容，面向对每个模型、每个参数、每个输出都要掌控的视觉专业人士。",
+  "highlights": [
+   "可视化节点图构建与复用图像/视频/音频/3D/文本工作流，支持可复用子图、工作流模板、App Mode 和本地 API",
+   "原生支持最新开源 SOTA 模型（SD1.5/SDXL/SD3.5、Flux.1/2、Qwen Image、Wan、HunyuanVideo、Hunyuan3D 等），并通过 partner nodes 接入 Nano Banana、Seedance 等闭源模型",
+   "针对本地消费级硬件深度优化，异步权重流式技术可在低至 4GB 显存 + 8GB 内存上较快运行大模型",
+   "智能 VRAM/RAM 管理、异步队列、部分图重算、模型卸载、量化模型支持；核心可完全离线运行（`--offline`）",
+   "Windows / Linux / macOS 全平台，提供桌面应用、便携包与官方 Comfy Cloud"
+  ],
+  "quickstart": [
+   "新手推荐从官网下载桌面应用：https://www.comfy.org/download （Windows & macOS）",
+   "Windows NVIDIA 显卡用户也可下载便携包 `https://github.com/comfyanonymous/ComfyUI/releases/latest/download/ComfyUI_windows_portable_nvidia.7z`，用 7-Zip 解压后直接运行",
+   "把模型权重放到 `ComfyUI\\models\\checkpoints`（大模型按类型放到对应子目录）",
+   "手动安装支持全部操作系统与 GPU 类型（NVIDIA、AMD、Intel、Apple Silicon、Ascend）"
+  ],
+  "support": "官方文档 https://docs.comfy.org/；Discord https://discord.com/invite/comfyorg；Matrix 房间 #comfyui_space:matrix.org；GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "microsoft/generative-ai-for-beginners": {
+  "positioning": "微软 Cloud Advocates 出品的 21 课开源课程（Generative AI for Beginners 第 3 版），教你从零开始构建生成式 AI 应用。",
+  "highlights": [
+   "21 节课分 Learn 概念课与 Build 实战课，每课配书面讲义、短视频、Python 和 TypeScript 代码示例",
+   "内容覆盖 LLM 基础、提示工程、文本生成/聊天/搜索/图像应用、函数调用、RAG 与向量数据库、AI Agent、模型微调、SLM、Mistral 与 Meta 模型等",
+   "支持 Azure OpenAI、Microsoft Foundry Models、OpenAI API、Foundry Local 本地离线模型多种运行方式",
+   "50+ 语言翻译（含简体中文 translations/zh-CN），并提供稀疏检出克隆方式跳过翻译目录加速下载"
+  ],
+  "quickstart": [
+   "（可选）稀疏检出克隆以跳过翻译目录：`git clone --filter=blob:none --sparse https://github.com/microsoft/generative-ai-for-beginners.git`，然后 `cd generative-ai-for-beginners` 并 `git sparse-checkout set --no-cone '/*' '!translations' '!translated_images'`",
+   "先读 `./00-course-setup/README.md` 完成开发环境搭建",
+   "按 21 课顺序学习，每课可配合 Python 或 TypeScript 代码动手实践"
+  ],
+  "support": "官方 Microsoft Foundry Discord（https://aka.ms/genai-discord）；Microsoft Foundry Developer Forum（GitHub）；仓库 Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "open-webui/open-webui": {
+  "positioning": "自托管 AI 平台，官方口号 a home for AI——可扩展、功能丰富、易用，能完全离线运行，对接 Ollama 与 OpenAI 兼容 API，提供与厂商无关的本地 + 云端模型统一界面。",
+  "highlights": [
+   "部署简单：支持 pip、Docker、Kubernetes（kubectl/kustomize/helm），提供 `:ollama`、`:cuda` 标签镜像",
+   "广泛模型接入：任意 OpenAI 兼容 API 加本地 Ollama，可对接 LMStudio、GroqCloud、OpenRouter、vLLM 等",
+   "本地 RAG：支持 9 种向量数据库、BM25+向量混合搜索与重排，多种文档解析引擎，用 `#` 命令加载文档或网页",
+   "细粒度 RBAC 角色与分组权限，插件系统（Filters/Actions/Pipes/Tools/Skills）与 MCP/OpenAPI 工具接入",
+   "内置 AI 笔记、频道协作、持久记忆、语音视频通话、多模型对话、企业级 LDAP/SSO/SCIM 等能力"
+  ],
+  "quickstart": [
+   "pip 安装（需 Python 3.12）：`pip install open-webui`，然后 `open-webui serve`，访问 http://localhost:8080",
+   "Docker 运行（本机有 Ollama 时）：`docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main`",
+   "若 Ollama 在另一台服务器，加 `-e OLLAMA_BASE_URL=https://example.com` 指定地址",
+   "仅用 OpenAI API 时加 `-e OPENAI_API_KEY=your_secret_key`；启动后访问 http://localhost:3000"
+  ],
+  "support": "官方文档 https://docs.openwebui.com/；Discord https://discord.gg/5rJgQTnV4s；GitHub Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "AUTOMATIC1111/stable-diffusion-webui": {
+  "positioning": "用 Gradio 库实现的 Stable Diffusion 网页图形界面。",
+  "highlights": [
+   "原版 txt2img / img2img 模式，支持 Outpainting、Inpainting、Prompt Matrix、循环采样、X/Y/Z 参数对比图",
+   "注意力权重控制、负面提示词、不限 token 长度的提示词、CLIP interrogator 反推提示词",
+   "集成 GFPGAN/CodeFormer 人脸修复、RealESRGAN/ESRGAN/SwinIR 等放大模型，支持 Textual Inversion、Hypernetwork、LoRA",
+   "一键安装脚本、支持低至 4GB 显存显卡（2GB 也有报告可用）、提供 API 接口与丰富的社区扩展生态"
+  ],
+  "quickstart": [
+   "Windows + NVIDIA 显卡自动安装：先装 Python 3.10.6（安装时勾选 Add Python to PATH）和 git",
+   "克隆仓库：`git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git`",
+   "以普通用户身份双击运行 `webui-user.bat`",
+   "Linux 用户先装依赖，再 `wget -q https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui/master/webui.sh` 并执行 `webui.sh`"
+  ],
+  "support": "项目 Wiki https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki；官方主页与仓库 Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "microsoft/PowerToys": {
+  "positioning": "微软出品的 Windows 系统实用工具集，帮助用户自定义 Windows 并简化日常操作，内置 30 多个小工具。",
+  "highlights": [
+   "30+ 组件：FancyZones 窗口布局、PowerToys Run 快捷启动、颜色选择器、图像批量缩放、PowerRename 批量重命名、键盘管理器、窗口始终置顶、Awake 防休眠等",
+   "进阶工具：文本提取（OCR）、屏幕标尺、Mouse Without Borders 跨机鼠标共享、Hosts 文件编辑器、环境变量管理、高级粘贴、Workspaces 工作区等",
+   "微软官方维护，持续用 WinUI 3 现代化改造各工具"
+  ],
+  "quickstart": [
+   "用户范围安装：`winget install Microsoft.PowerToys -s winget`",
+   "全机范围安装：`winget install --scope machine Microsoft.PowerToys -s winget`",
+   "也可从 GitHub Releases（https://aka.ms/installPowerToys）下载对应架构的 .exe，或从 Microsoft Store 安装",
+   "安装后在 PowerToys 设置面板中按需开启和配置各工具"
+  ],
+  "support": "官方文档 https://aka.ms/powertoys-docs；发布说明见 GitHub Releases；官方主页与仓库 Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "Genymobile/scrcpy": {
+  "positioning": "把 Android 设备画面（视频+音频）通过 USB 或 TCP/IP 投屏到电脑、并用电脑键鼠控制的免费开源工具，不需要 root、不需要在手机上装 App，支持 Linux、Windows、macOS。",
+  "highlights": [
+   "轻量原生、低延迟（35~70ms）、约 1 秒启动首帧，支持 30~120fps、1920×1080 以上画质",
+   "支持音频转发（Android 11+）、屏幕录制、虚拟显示屏、息屏投屏、双向复制粘贴、摄像头投屏与 V4L2 网络摄像头（仅 Linux）",
+   "HID 物理键鼠模拟、游戏手柄支持、OTG 模式（无需 USB 调试即可控制设备）",
+   "无账号、无广告、无需联网；Android 5.0（API 21）起支持"
+  ],
+  "quickstart": [
+   "在 Android 设备上开启 USB 调试（小米等机型还需额外开启 USB 调试（安全设置）并重启）",
+   "按平台下载安装：Linux / Windows / macOS 分别见项目 doc 文档页",
+   "连接设备后直接运行 `scrcpy` 开始投屏",
+   "常用示例：`scrcpy --video-codec=h265 -m1920 --max-fps=60` 限分辨率帧率；`scrcpy --otg` OTG 纯控制模式；`scrcpy --gamepad=uhid` 用手柄控制"
+  ],
+  "support": "FAQ.md；GitHub Issues https://github.com/Genymobile/scrcpy/issues；Reddit r/scrcpy、BlueSky @scrcpy.bsky.social、Twitter @scrcpy_app",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "multica-ai/andrej-karpathy-skills": {
+  "positioning": "一个单文件 CLAUDE.md 项目，把 Andrej Karpathy 对 LLM 编程缺陷的观察提炼成四条行为准则，用于改善 Claude Code 的输出表现。",
+  "highlights": [
+   "准则一 先思考再编码：明确陈述假设、给出多种解读、该反驳就反驳、困惑时停下来提问",
+   "准则二 简洁优先：只写解决问题所需的最少代码，不做投机性抽象、不写没要求的配置项和不可能场景的错误处理",
+   "准则三 外科手术式改动：只动该动的代码，不顺手改进相邻代码/注释/格式，只清理自己改动产生的死代码",
+   "准则四 目标驱动执行：把命令式任务改写成带验证标准的目标（先写复现测试再修 bug），让 LLM 自主循环到通过",
+   "仓库自带 Cursor 规则文件，同一套准则在 Cursor 中同样生效"
+  ],
+  "quickstart": [
+   "推荐方式（Claude Code 插件）：在 Claude Code 内先执行 `/plugin marketplace add forrestchang/andrej-karpathy-skills`",
+   "再执行 `/plugin install andrej-karpathy-skills@karpathy-skills`，准则即作为插件跨所有项目生效",
+   "单项目使用：新项目执行 `curl -o CLAUDE.md https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md`",
+   "已有项目追加：`echo \"\" >> CLAUDE.md` 后 `curl https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md >> CLAUDE.md`"
+  ],
+  "support": "官方主页与仓库 Issues（README 未列 Discord/论坛；作者 X：@jiayuan_jy）",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "torvalds/linux": {
+  "positioning": "Linux 内核——所有 Linux 操作系统的核心，负责管理硬件与系统资源，为其他所有软件提供基础服务。",
+  "highlights": [
+   "为内核开发者、学术研究者、安全专家、稳定版维护者、系统管理员、硬件厂商、发行版维护者乃至 AI 编码助手等不同角色提供专属文档入口",
+   "文档体系完整：开发流程、首个补丁、编码规范、构建系统（kbuild）、内存管理、调度器、网络栈、文件系统、RCU、锁机制等",
+   "安全文档齐全：LSM 开发、自保护、漏洞上报流程、CVE 流程与禁运硬件问题处理"
+  ],
+  "quickstart": [
+   "获取最新内核：https://kernel.org",
+   "报告 bug 前先看 Documentation/admin-guide/reporting-issues.rst",
+   "按官方文档编译内核：Documentation/admin-guide/quickly-build-trimmed-linux.rst",
+   "文档可用 `make htmldocs` 本地构建，或在线浏览 https://www.kernel.org/doc/html/latest/"
+  ],
+  "support": "邮件列表 https://lore.kernel.org/；IRC #kernelnewbies @ irc.oftc.net；Bugzilla https://bugzilla.kernel.org/；MAINTAINERS 文件列出各子系统维护者",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "facebook/react": {
+  "positioning": "用于构建用户界面的 JavaScript 库。",
+  "highlights": [
+   "声明式：为每个状态设计简单视图，数据变化时 React 高效更新并渲染正确的组件",
+   "组件化：构建封装了自身状态的组件再组合成复杂 UI，组件逻辑用 JavaScript 编写而非模板",
+   "学一次，到处用：不绑定技术栈，可用 Node 在服务端渲染，用 React Native 开发移动应用",
+   "从一开始就为渐进式采用设计，可在既有项目中按需引入任意多/少的 React"
+  ],
+  "quickstart": [
+   "新手先按官方 Quick Start 上手：https://react.dev/learn",
+   "在已有项目中引入 React：https://react.dev/learn/add-react-to-an-existing-project",
+   "新建项目：https://react.dev/learn/start-a-new-react-project",
+   "第一个示例：用 `import { createRoot } from 'react-dom/client'` 创建根节点并 `root.render(<HelloMessage name=\"Taylor\" />)`"
+  ],
+  "support": "官方文档 https://react.dev/（含 Where to Get Support 页面）；GitHub Issues；贡献指南 https://legacy.reactjs.org/docs/how-to-contribute.html",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ },
+ "TheAlgorithms/Python": {
+  "positioning": "The Algorithms 项目的 Python 实现库——用 Python 实现的各类算法，面向教学用途；README 特别说明实现仅为学习目的，效率可能不及 Python 标准库，使用需自行斟酌。",
+  "highlights": [
+   "为学习目的实现的全品类算法集合，通过 DIRECTORY.md 目录方便导航浏览",
+   "贡献友好：有贡献指南、pre-commit 钩子、CI 检查和 ruff 代码规范",
+   "提供 Gitpod Ready-to-Code 一键在线编程环境"
+  ],
+  "quickstart": [
+   "贡献前先阅读 CONTRIBUTING.md 贡献指南",
+   "通过 DIRECTORY.md 目录查找感兴趣的算法实现",
+   "用 Gitpod 一键打开在线环境直接运行：https://gitpod.io/#https://github.com/TheAlgorithms/Python"
+  ],
+  "support": "Discord https://the-algorithms.com/discord；官方主页与仓库 Issues",
+  "date": "2026-10-29",
+  "note": "内容翻译整理自官方 README，非官方发布，仅供参考"
+ }
 }
