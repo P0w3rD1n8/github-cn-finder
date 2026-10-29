@@ -21,6 +21,7 @@ import html as html_mod
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA_JS = os.path.join(ROOT, "data.js")
+DOCS_SUMMARY_JSON = os.path.join(ROOT, "docs_summary.json")
 OUT_DIR = os.path.join(ROOT, "p")
 BASE_URL = "https://p0w3rd1n8.github.io/github-cn-finder"
 OG_IMAGE = "https://cdn.jsdelivr.net/gh/P0w3rD1n8/github-cn-finder@main/og-cover.png"
@@ -56,6 +57,16 @@ footer{text-align:center;font-size:12px;color:var(--text2);margin-top:32px}
 .related h2{font-size:16px;margin-bottom:8px}
 .related .list-item{padding:7px 0}
 .related-more{display:inline-block;margin-top:8px;font-size:13px}
+.docs{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:18px 0}
+.docs h2{font-size:16px;margin-bottom:10px}
+.docs .blk{margin-bottom:12px}
+.docs .blk:last-of-type{margin-bottom:0}
+.docs .lbl{font-size:12px;color:var(--text2);font-weight:600;margin-bottom:4px}
+.docs p{font-size:13.5px}
+.docs ul,.docs ol{padding-left:20px;font-size:13.5px}
+.docs li{margin:3px 0}
+.docs code{background:#1f2630;border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:12.5px;color:#7ee787}
+.docs .foot{font-size:12px;color:var(--text2);border-top:1px dashed var(--border);padding-top:8px;margin-top:8px}
 """
 
 
@@ -159,6 +170,11 @@ def load_data():
     authors = parse_obj(read_const(text, "AUTHORS"))
     gc = parse_obj(read_const(text, "GC_MIRRORS"))
     gt = parse_obj(read_const(text, "GT_MIRRORS"))
+    # 官方文档摘要：文件缺失时优雅降级为空 dict，不报错
+    docs = {}
+    if os.path.exists(DOCS_SUMMARY_JSON):
+        with open(DOCS_SUMMARY_JSON, "r", encoding="utf-8") as f:
+            docs = json.load(f)
     return {
         "repos": repos,
         "detail": detail,
@@ -167,11 +183,66 @@ def load_data():
         "authors": authors,
         "gc": gc,
         "gt": gt,
+        "docs": docs,
     }
 
 
 def esc(s):
     return html_mod.escape(str(s), quote=True)
+
+
+def inline_code(s):
+    """先 HTML 转义，再把 `反引号命令` 包成行内 <code>"""
+    return re.sub(r"`([^`]+)`", r"<code>\1</code>", esc(s))
+
+
+def build_docs_summary(ds):
+    """渲染「官方文档摘要」区块；ds 为空（无条目）返回空串；降级条目只渲染定位+日期免责。"""
+    if not ds:
+        return ""
+    parts = ['<section class="docs"><h2>📖 官方文档摘要</h2>']
+    positioning = ds.get("positioning") or ""
+    if positioning:
+        parts.append(
+            '<div class="blk"><div class="lbl">官方定位</div><p>'
+            + esc(positioning)
+            + "</p></div>"
+        )
+    if not ds.get("degraded"):
+        highlights = ds.get("highlights") or []
+        if highlights:
+            lis = "".join("<li>" + inline_code(h) + "</li>" for h in highlights)
+            parts.append(
+                '<div class="blk"><div class="lbl">亮点特性</div><ul>'
+                + lis
+                + "</ul></div>"
+            )
+        steps = ds.get("quickstart") or []
+        if steps:
+            lis = "".join("<li>" + inline_code(s) + "</li>" for s in steps)
+            parts.append(
+                '<div class="blk"><div class="lbl">快速开始</div><ol>'
+                + lis
+                + "</ol></div>"
+            )
+        support = ds.get("support") or ""
+        if support:
+            parts.append(
+                '<div class="blk"><div class="lbl">求助渠道</div><p>'
+                + esc(support)
+                + "</p></div>"
+            )
+    date = ds.get("date") or ""
+    note = ds.get("note") or ""
+    parts.append(
+        '<div class="foot">整理日期：'
+        + esc(date)
+        + " · "
+        + esc(note)
+        + "</div>"
+    )
+    parts.append("</section>")
+    return "".join(parts)
 
 
 def build_project_page(n, r, ctx):
@@ -272,6 +343,9 @@ def build_project_page(n, r, ctx):
                 + '">查看全部 →</a></section>'
             )
 
+    # P2：官方文档摘要（无条目则为空串，不渲染）
+    docs_html = build_docs_summary(ctx["docs"].get(n))
+
     page = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -305,6 +379,7 @@ __CSS__
     <a class="btn" href="https://github.com/__N__" target="_blank" rel="noopener">去 GitHub 查看 ↗</a>
     __MIRROR__
   </div>
+  __DOCS__
   __AUTHOR__
   __RELATED__
   <div class="foot-note">💡 说明：中文介绍与星标数据由「GitHub 中文发现器」人工整理与自动采集，仅供学习参考；安装/使用请以项目官方文档为准。</div>
@@ -329,6 +404,7 @@ __CSS__
         .replace("__AUTHOR__", author_html)
         .replace("__LDJSON__", ld_html)
         .replace("__RELATED__", related_html)
+        .replace("__DOCS__", docs_html)
     ), fname
 
 
