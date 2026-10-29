@@ -1,9 +1,8 @@
 /* Service Worker：stale-while-revalidate + 超时兜底
    首页/清单立即从缓存渲染（秒开 + 离线可开），网络更新在后台进行，下次打开即新内容；
    缓存未命中（首次访问）走网络，5 秒超时兜底，避免网络卡死时白等。
-   版本 v8（v1.19.3）：list.html 加入预缓存（离线/网络差也能打开全部清单），缓存名升级顺带清旧缓存；
-   repos.json 仍走 network-first（3 秒超时回退缓存），保证星标不慢一版。 */
-const CACHE = "gh-cn-v8";
+   版本 v9（v1.21）：首页标题改链静态落地页后，升级缓存版本强制旧缓存失效（cache-first 策略下旧 index.html 会一直优先渲染）。 */
+const CACHE = "gh-cn-v9";
 const ASSETS = ["./", "./index.html", "./data.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html"];
