@@ -384,6 +384,16 @@ __LDJSON__
 <style>
 __CSS__
 </style>
+<!-- 百度统计（v1.22）：全站访问统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d5056cee7f456be4851294452cc1e765";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
 </head>
 <body>
 <header class="site-head">
@@ -462,6 +472,16 @@ def build_list_page(repos, ctx):
 <style>
 __CSS__
 </style>
+<!-- 百度统计（v1.22）：全站访问统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d5056cee7f456be4851294452cc1e765";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
 </head>
 <body>
 <header class="site-head">
