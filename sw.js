@@ -1,14 +1,35 @@
 /* Service Worker：stale-while-revalidate + 超时兜底
    首页/清单立即从缓存渲染（秒开 + 离线可开），网络更新在后台进行，下次打开即新内容；
    缓存未命中（首次访问）走网络，5 秒超时兜底，避免网络卡死时白等。
-   版本 v9（v1.21）：首页标题改链静态落地页后，升级缓存版本强制旧缓存失效（cache-first 策略下旧 index.html 会一直优先渲染）。 */
-const CACHE = "gh-cn-v9";
+   版本 v10（v1.21.2）：install 改为逐个容错缓存（addAll 任一资源失败会让整个 SW 不激活，
+   data.js/index.html 因此长期不在缓存 → 返回首页时 data.js 加载失败 → 白屏），并先继承旧缓存已有资源。 */
+const CACHE = "gh-cn-v10";
 const ASSETS = ["./", "./index.html", "./data.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html"];
 
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  e.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    // 先继承旧缓存里已有的同一资源（避免升级后短暂丢资源），没有的再走网络
+    const oldCaches = await caches.keys();
+    await Promise.allSettled(ASSETS.map(async asset => {
+      let got = false;
+      for (const old of oldCaches){
+        if (old === CACHE) continue;
+        try{
+          const hit = await caches.match(new Request(asset), {cacheName: old});
+          if (hit){ await cache.put(asset, hit); got = true; break; }
+        }catch(err){}
+      }
+      if (got) return;
+      try{
+        const res = await fetchWithTimeout(asset, 8000);
+        if (res && res.ok) await cache.put(asset, res);
+      }catch(err){ /* 单个资源失败不阻断整个 SW 激活 */ }
+    }));
+    self.skipWaiting();
+  })());
 });
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys().then(keys =>

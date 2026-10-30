@@ -490,16 +490,19 @@ a.nav-item{text-decoration:none;color:inherit}
 
 <script src="data.js"></script>
 <script>
-/* data.js 加载失败兜底（v1.17）：数据没到就只剩白屏，这里换成一句人话 + 重试按钮。
-   data.js 正常时这里什么都不做。 */
-document.addEventListener("DOMContentLoaded", function(){
-  if(typeof REPOS !== "undefined" && Array.isArray(REPOS) && REPOS.length) return;
+/* 数据加载失败兜底（v1.21.2）：data.js 加载失败 → REPOS 未定义。
+   不再依赖 DOMContentLoaded 事件（脚本在 body 尾部执行时该事件可能已错过，兜底会永远不触发 → 白屏且无提示）。
+   立即检查 + 渲染链 try/catch 双重保护：任何异常都显示人话 + 重试按钮，绝不黑屏。 */
+function showDataError(){
+  if (document.body.dataset.dataErrorShown) return;
+  document.body.dataset.dataErrorShown = "1";
   document.body.innerHTML = '<div style="max-width:520px;margin:0 auto;padding:56px 22px;font-family:-apple-system,\'PingFang SC\',\'Microsoft YaHei\',sans-serif;line-height:2;font-size:15px;text-align:center">'
     + '<div style="font-size:44px">😵</div><b style="font-size:17px">数据没能加载出来</b><br>'
     + '页面依赖的 <code>data.js</code> 没有取到，通常是网络波动，或被广告/脚本拦截插件挡住了。<br><br>'
     + '<a href="./" style="display:inline-block;padding:10px 22px;border-radius:10px;background:#0969da;color:#fff;text-decoration:none">重新加载</a>'
     + '<div style="margin-top:26px;font-size:12px;color:#8b949e">如果反复失败，可先访问 <a href="https://github.com/P0w3rD1n8/github-cn-finder" style="color:#0969da">GitHub 仓库</a> 反馈</div></div>';
-});
+}
+if (typeof REPOS === "undefined" || !Array.isArray(REPOS) || !REPOS.length) showDataError();
 </script>
 <script>
 let curUsage = "全部";
@@ -1323,10 +1326,12 @@ $("#dictSearch").addEventListener("input", e=>renderDict(e.target.value));
 /* ================= 导航 & 主题 ================= */
 document.querySelectorAll(".nav-item").forEach(item=>{
   item.addEventListener("click", ()=>{
+    if(!item.dataset.page) return;   // 纯链接项（顶部"全部"→list.html）不参与页面切换，避免 #page-undefined 报错
     document.querySelectorAll(".nav-item").forEach(i=>i.classList.remove("active"));
     item.classList.add("active");
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
-    $("#page-"+item.dataset.page).classList.add("show");
+    const pg = $("#page-"+item.dataset.page);
+    if(pg) pg.classList.add("show");
     window.scrollTo(0,0);
     if(item.dataset.page==="me") renderFavs();
     if(item.dataset.page==="rank" && !rankLoaded){ rankLoaded = true; loadRank(); loadNewStars(); }
@@ -1373,11 +1378,23 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
   navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
 
-/* 初始化 */
-const repoCountEl = document.getElementById("repoCount");
-if(repoCountEl) repoCountEl.textContent = REPOS.length;
-renderCats(); renderUsages(); renderHome(true); renderMirrorStats(); renderDailyPick(); renderFavs();
-measureHeader(); window.addEventListener("resize", measureHeader);
+/* 初始化（v1.21.2）：整链 try/catch——任一渲染环节异常都显示提示而不是黑屏 */
+if (typeof REPOS !== "undefined" && Array.isArray(REPOS) && REPOS.length){
+  const repoCountEl = document.getElementById("repoCount");
+  if(repoCountEl) repoCountEl.textContent = REPOS.length;
+  try{
+    renderCats(); renderUsages(); renderHome(true); renderMirrorStats(); renderDailyPick(); renderFavs();
+  }catch(err){
+    showDataError();
+  }
+  measureHeader(); window.addEventListener("resize", measureHeader);
+}
+/* bfcache 恢复兜底：浏览器返回首页时若列表区为空（冻结快照异常），自动重新渲染 */
+window.addEventListener("pageshow", e=>{
+  if(e.persisted && typeof REPOS !== "undefined" && $("#homeList") && $("#homeList").childElementCount === 0){
+    try{ renderHome(true); }catch(err){}
+  }
+});
 </script>
 </body>
 </html>
