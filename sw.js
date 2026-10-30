@@ -4,9 +4,10 @@
    版本 v10（v1.21.2）：install 改为逐个容错缓存（addAll 任一资源失败会让整个 SW 不激活，
    data.js/index.html 因此长期不在缓存 → 返回首页时 data.js 加载失败 → 白屏），并先继承旧缓存已有资源。
    版本 v11（v1.22.2）：activate 后通知所有已打开页面（postMessage APP_UPDATED），
-   页面收到后弹出「网站已更新，点刷新」提示——解决用户不知道要刷新、一直看旧缓存的问题。 */
-const CACHE = "gh-cn-v11";
-const ASSETS = ["./", "./index.html", "./data.js", "./manifest.json", "./icon.svg",
+   页面收到后弹出「网站已更新，点刷新」提示——解决用户不知道要刷新、一直看旧缓存的问题。
+   版本 v12（v1.23.0）：缓存清单新增 qrcode.min.js（海报功能本地二维码库）。 */
+const CACHE = "gh-cn-v12";
+const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html"];
 
