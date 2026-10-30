@@ -36,7 +36,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.23.0";
+window.GH_VER = "v1.23.1";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -344,10 +344,13 @@ a.nav-item{text-decoration:none;color:inherit}
   .search-wrap input{font-size:15px}
   .cats{gap:8px}
 }
-/* 更新提示 toast（v1.22.2）：SW 安装新版后提示用户刷新，解决"永远看不到最新版" */
-.update-toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--text);box-shadow:0 4px 16px rgba(0,0,0,.35);font-size:13px;max-width:90vw}
+/* 更新提示 toast（v1.22.2 / v1.23.1 修复）：SW 安装新版后提示用户刷新。
+   注意：不能给 .update-toast 直接设 display:flex——会覆盖 [hidden] 导致关不掉；
+   用 .show class 控制显示，且放底部避免压住吸顶分类栏。 */
+.update-toast{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:9999;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:var(--card);border:1px solid var(--border);color:var(--text);box-shadow:0 4px 16px rgba(0,0,0,.45);font-size:13px;max-width:90vw}
+.update-toast.show{display:flex}
 .update-toast button{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:12px}
-.update-toast .update-dismiss{background:transparent;color:var(--text2)}
+.update-toast .update-dismiss{background:transparent;color:var(--text2);padding:5px 8px}
 /* 项目海报（v1.23.0） */
 .poster-btn{display:inline-flex;align-items:center;gap:5px;margin-top:10px;background:var(--card2);border:1px dashed var(--accent);color:var(--accent);border-radius:10px;padding:8px 14px;font-size:12.5px;cursor:pointer}
 .poster-btn:active{transform:scale(1.03);background:var(--chip)}
@@ -866,6 +869,9 @@ function posterRepo(r){
     stars: r.s || 0,
     lang: r.l || "",
     cat: r.c || "",
+    owner: r.owner || (r.n||"").split("/")[0],
+    ownerType: r.ownerType || "",
+    pa: r.pa || "",
     forks: (typeof forkOf==="function") ? forkOf(r) : (r.f||0),
     issues: (typeof issueOf==="function") ? issueOf(r) : (r.i||0),
     url: "https://github.com/" + r.n
@@ -886,97 +892,130 @@ function buildPosterCanvas(r){
     ctx.moveTo(x+rr, y); ctx.arcTo(x+w, y, x+w, y+h, rr); ctx.arcTo(x+w, y+h, x, y+h, rr);
     ctx.arcTo(x, y+h, x, y, rr); ctx.arcTo(x, y, x+w, y, rr); ctx.closePath();
   }
-  /* 背景：深蓝黑渐变 */
+  /* 背景：深蓝黑渐变 + 光晕 + 圆角边框 */
   const bg = ctx.createLinearGradient(0, 0, 0, H);
   bg.addColorStop(0, "#0d1117"); bg.addColorStop(1, "#0b1e33");
   ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  /* 装饰光晕 */
   const glow = (x, y, rad, col) => {
     const g = ctx.createRadialGradient(x, y, 0, x, y, rad);
     g.addColorStop(0, col); g.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = g; ctx.fillRect(x-rad, y-rad, rad*2, rad*2);
   };
   glow(150, 140, 260, "rgba(75,225,236,.18)");
-  glow(W-200, 320, 300, "rgba(88,166,255,.16)");
-  glow(W/2, H-160, 330, "rgba(88,166,255,.12)");
+  glow(W-200, 300, 300, "rgba(88,166,255,.16)");
+  glow(W/2, H-140, 330, "rgba(88,166,255,.12)");
   const P = 56, cx = W/2;
   roundPath(P, P, W-P*2, H-P*2, 28);
   ctx.strokeStyle = "rgba(88,166,255,.35)"; ctx.lineWidth = 2; ctx.stroke();
-  /* 品牌行 */
   ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
-  ctx.font = font(26); ctx.fillStyle = "#4be1ec";
-  ctx.fillText("🧭 GitHub 中文发现器", cx, 148);
-  ctx.font = font(19); ctx.fillStyle = "rgba(230,243,255,.55)";
-  ctx.fillText("不懂英文也能轻松逛 GitHub", cx, 186);
-  /* 分类标签 */
-  if(r.cat){
-    ctx.font = font(23);
-    const tw = ctx.measureText(r.cat).width, chipW = tw + 42, chipX = cx - chipW/2, chipY = 226, chipH = 46;
-    roundPath(chipX, chipY, chipW, chipH, 23);
-    ctx.fillStyle = "rgba(75,225,236,.12)"; ctx.fill();
-    ctx.strokeStyle = "rgba(75,225,236,.6)"; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.fillStyle = "#4be1ec"; ctx.textBaseline = "middle";
-    ctx.fillText(r.cat, cx, chipY + chipH/2 + 1);
+  /* ---- 预计算：简介行数 / 标题是否两行（先测字，再定内容块位置） ---- */
+  const desc = r.desc || "GitHub 上的优质开源项目";
+  const maxW = W - P*2 - 40, descFontSize = 32;
+  ctx.font = font(descFontSize);
+  const descLines = [];
+  {
+    let cur = "";
+    const pushLine = s => { if(descLines.length < 8) descLines.push(s); };
+    for(let i = 0; i < desc.length && descLines.length < 8; i++){
+      const ch = desc[i];
+      if(ch === "\n"){ pushLine(cur); cur = ""; continue; }
+      if(ctx.measureText(cur + ch).width > maxW){ pushLine(cur); cur = ch; }
+      else cur += ch;
+    }
+    if(cur && descLines.length < 8) pushLine(cur);
   }
-  /* 项目中文名：自适应字号，超长拆两行 */
   const zh = r.zh || "未知项目";
-  let titleSize = 68;
+  let titleSize = 66, titleTwo = false, t1 = zh, t2 = "";
   ctx.font = font(titleSize, "bold");
-  const maxTitleW = W - P*2 - 40;
-  while(titleSize > 40 && ctx.measureText(zh).width > maxTitleW){ titleSize -= 4; ctx.font = font(titleSize, "bold"); }
-  ctx.textBaseline = "alphabetic";
-  const tGrad = ctx.createLinearGradient(cx-300, 0, cx+300, 0);
-  tGrad.addColorStop(0, "#e6edf3"); tGrad.addColorStop(1, "#7ee7f5");
-  ctx.fillStyle = tGrad;
-  let titleY = 320;
-  if(ctx.measureText(zh).width > maxTitleW){
-    /* 拆两行：按字符宽度平分 */
-    let cut = Math.floor(zh.length/2), best = cut, diff = 1e9;
+  while(titleSize > 40 && ctx.measureText(zh).width > maxW){ titleSize -= 4; ctx.font = font(titleSize, "bold"); }
+  if(ctx.measureText(zh).width > maxW){
+    titleTwo = true;
+    let best = 1, diff = 1e9;
     for(let i = 1; i < zh.length; i++){
       const d = Math.abs(ctx.measureText(zh.slice(0,i)).width - ctx.measureText(zh.slice(i)).width);
       if(d < diff){ diff = d; best = i; }
     }
-    const l1 = zh.slice(0, best), l2 = zh.slice(best);
-    while(titleSize > 36 && (ctx.measureText(l1).width > maxTitleW || ctx.measureText(l2).width > maxTitleW)){ titleSize -= 4; ctx.font = font(titleSize, "bold"); }
-    ctx.fillText(l1, cx, 322);
-    ctx.fillText(l2, cx, 322 + titleSize + 14);
-    titleY = 322 + titleSize + 14 + 40;
-  }else{
-    ctx.fillText(zh, cx, 322);
-    titleY = 400;
+    t1 = zh.slice(0, best); t2 = zh.slice(best);
+    while(titleSize > 34 && (ctx.measureText(t1).width > maxW || ctx.measureText(t2).width > maxW)){ titleSize -= 4; ctx.font = font(titleSize, "bold"); }
   }
-  /* repo 路径 */
-  ctx.font = font(24); ctx.fillStyle = "#8b949e";
-  ctx.fillText(r.n, cx, titleY);
-  /* 星标 + 语言 */
-  ctx.font = font(44, "bold"); ctx.fillStyle = "#e3b341";
-  ctx.fillText("⭐ " + (r.stars>=10000 ? (r.stars/10000).toFixed(1).replace(/\.0$/,"")+" 万" : r.stars), cx, titleY + 96);
-  if(r.lang){
-    ctx.font = font(20); ctx.fillStyle = "rgba(230,243,255,.6)";
-    ctx.fillText("主要语言：" + r.lang, cx, titleY + 138);
-  }
-  /* 一句话简介：自动换行，最多 6 行 */
-  const desc = r.desc || "GitHub 上的优质开源项目";
-  ctx.font = font(30); ctx.fillStyle = "#c9d1d9"; ctx.textAlign = "left";
-  const maxW = W - P*2 - 40, lineH = 44;
-  let lines = [], cur = "", lx = P + 20, ly0 = titleY + 210;
-  const push = (s, y) => { ctx.fillText(s, lx, y); };
-  for(let i = 0; i < desc.length && lines.length < 6; i++){
-    const ch = desc[i];
-    if(ch === "\n"){ lines.push(cur); cur = ""; continue; }
-    if(ctx.measureText(cur + ch).width > maxW){ lines.push(cur); cur = ch; }
-    else cur += ch;
-  }
-  if(cur && lines.length < 6) lines.push(cur);
-  for(let j = 0; j < lines.length; j++) push(lines[j], ly0 + j*lineH);
-  /* 数据快照行（简介短时填补中部空白） */
   const w2 = x => x>=10000 ? (x/10000).toFixed(1).replace(/\.0$/,"")+" 万" : x;
-  if(r.forks || r.issues){
-    ctx.font = font(22); ctx.fillStyle = "rgba(230,243,255,.55)"; ctx.textAlign = "left";
-    ctx.fillText("🍴 复刻 " + w2(r.forks||0) + " · 💬 反馈 " + w2(r.issues||0), lx, ly0 + Math.min(6, lines.length) * lineH + 22);
+  const starText = r.stars>=10000 ? (r.stars/10000).toFixed(1).replace(/\.0$/,"")+" 万" : r.stars;
+  const metaBits = [];
+  if(r.lang) metaBits.push(r.lang);
+  if(r.forks) metaBits.push("🍴 复刻 " + w2(r.forks));
+  if(r.issues) metaBits.push("💬 反馈 " + w2(r.issues));
+  const metaText = metaBits.join(" · ");
+  const ownerText = r.owner ? ("👤 作者：" + r.owner + (r.ownerType==="org" ? "（组织）" : "")) : "";
+  const updText = r.pa ? ("📅 最近更新：" + r.pa) : "";
+  /* 内容块总高 → 垂直居中（简介行距留弹性，简介短时放大行距撑满中部） */
+  const headerH = 34 + 30 + (r.cat ? 60 : 10)
+    + (titleTwo ? titleSize*2 + 26 : titleSize + 18)
+    + 46 + 64 + (metaText ? 46 : 0) + (ownerText ? 46 : 0) + (updText ? 40 : 0) + 56;
+  const QR_TOP = 1052;
+  const baseLineH = descLines.length ? 52 : 0;
+  const contentH = headerH + descLines.length * baseLineH + 26;
+  const topY = 122 + Math.max(0, Math.floor((QR_TOP - 40 - 122 - contentH) / 2));
+  let y = topY;
+  /* 品牌行 + slogan */
+  ctx.font = font(24); ctx.fillStyle = "#4be1ec";
+  ctx.fillText("🧭 GitHub 中文发现器", cx, y + 24); y += 34;
+  ctx.font = font(18); ctx.fillStyle = "rgba(230,243,255,.55)";
+  ctx.fillText("不懂英文也能轻松逛 GitHub", cx, y + 18); y += 30;
+  /* 分类 chip */
+  if(r.cat){
+    ctx.font = font(22);
+    const tw = ctx.measureText(r.cat).width, chipW = tw + 40, chipX = cx - chipW/2, chipH = 44;
+    roundPath(chipX, y, chipW, chipH, 22);
+    ctx.fillStyle = "rgba(75,225,236,.12)"; ctx.fill();
+    ctx.strokeStyle = "rgba(75,225,236,.6)"; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = "#4be1ec"; ctx.textBaseline = "middle";
+    ctx.fillText(r.cat, cx, y + chipH/2 + 1);
+    y += chipH + 16;
+    ctx.textBaseline = "alphabetic";
+  } else y += 10;
+  /* 项目中文名（大字渐变，可拆两行） */
+  const tGrad = ctx.createLinearGradient(cx-320, 0, cx+320, 0);
+  tGrad.addColorStop(0, "#e6edf3"); tGrad.addColorStop(1, "#7ee7f5");
+  ctx.fillStyle = tGrad; ctx.font = font(titleSize, "bold");
+  ctx.fillText(t1, cx, y + titleSize);
+  if(titleTwo){ ctx.fillText(t2, cx, y + titleSize*2 + 14); y += titleSize*2 + 26; }
+  else y += titleSize + 18;
+  /* repo 路径 */
+  ctx.font = font(22); ctx.fillStyle = "#8b949e";
+  ctx.fillText(r.n, cx, y + 22); y += 46;
+  /* 星标大字（核心视觉） */
+  ctx.font = font(46, "bold"); ctx.fillStyle = "#e3b341";
+  ctx.fillText("⭐ " + starText, cx, y + 46); y += 64;
+  /* 语言 · 复刻 · 反馈 */
+  if(metaText){
+    ctx.font = font(20); ctx.fillStyle = "rgba(230,243,255,.6)";
+    ctx.fillText(metaText, cx, y + 20); y += 46;
   }
-  /* 底部：二维码 + 网址 + 品牌尾行 */
-  const qrSize = 208, qrX = W - P - 20 - qrSize, qrY = H - P - 20 - qrSize - 90;
+  /* 作者行 */
+  if(ownerText){
+    ctx.font = font(20); ctx.fillStyle = "rgba(230,243,255,.62)";
+    ctx.fillText(ownerText, cx, y + 20); y += 46;
+  }
+  /* 最近更新 */
+  if(updText){
+    ctx.font = font(19); ctx.fillStyle = "rgba(230,243,255,.45)";
+    ctx.fillText(updText, cx, y + 19); y += 40;
+  }
+  /* 分隔线 */
+  ctx.strokeStyle = "rgba(88,166,255,.28)"; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(cx-230, y); ctx.lineTo(cx+230, y); ctx.stroke();
+  y += 46;
+  /* 简介：动态行距撑满中部（行距 52~72，让下边不空） */
+  if(descLines.length){
+    const descTop = y;
+    const avail = QR_TOP - 40 - descTop - 30;
+    const lineH = Math.max(52, Math.min(72, Math.floor(avail / descLines.length)));
+    ctx.font = font(descFontSize); ctx.fillStyle = "#c9d1d9"; ctx.textAlign = "left";
+    const lx = P + 20;
+    for(let j = 0; j < descLines.length; j++) ctx.fillText(descLines[j], lx, descTop + j*lineH + descFontSize - 6);
+  }
+  /* 底部固定区：二维码 + 扫码提示 + 网址 + 品牌尾行 */
+  const qrSize = 200, qrX = W - P - 20 - qrSize, qrY = QR_TOP;
   ctx.textAlign = "center";
   let qrOk = false;
   try{
@@ -990,36 +1029,33 @@ function buildPosterCanvas(r){
       holder.remove();
     }
   }catch(e){ qrOk = false; }
-  /* 网址文本（二维码下方） */
-  ctx.font = font(22); ctx.fillStyle = "rgba(230,243,255,.85)";
+  if(qrOk){
+    ctx.font = font(22); ctx.fillStyle = "#4be1ec";
+    ctx.fillText("扫码直达 GitHub", cx - qrSize/2 - 130, qrY + qrSize/2);
+    ctx.font = font(17); ctx.fillStyle = "rgba(230,243,255,.5)";
+    ctx.fillText("手机扫一扫 · 打开项目主页", cx - qrSize/2 - 130, qrY + qrSize/2 + 30);
+  }
+  ctx.font = font(21); ctx.fillStyle = "rgba(230,243,255,.85)";
   const urlText = r.url.replace("https://","");
-  const uMaxW = W - P*2 - 40;
   ctx.textAlign = "left";
   let uLines = [];
-  if(ctx.measureText(urlText).width > uMaxW){
-    /* 尽量在 / 处断行，保证可点读 */
+  if(ctx.measureText(urlText).width > maxW){
     const parts = urlText.split("/");
     let seg = "";
     for(const part of parts){
       const t = seg ? seg + "/" + part : part;
-      if(ctx.measureText(t).width > uMaxW && seg){ uLines.push(seg); seg = part; }
+      if(ctx.measureText(t).width > maxW && seg){ uLines.push(seg); seg = part; }
       else seg = t;
     }
     if(seg) uLines.push(seg);
   } else uLines = [urlText];
-  const uBaseY = qrY + qrSize + (qrOk ? 58 : 0);
-  if(!qrOk){
-    /* 无二维码时网址上移居中显示 */
-    for(let k = 0; k < uLines.length; k++){
-      ctx.textAlign = "center";
-      ctx.fillText(uLines[k], cx, H - P - 20 - (uLines.length-1-k)*32 - 30);
-    }
-  }else{
-    for(let k = 0; k < uLines.length; k++) ctx.fillText(uLines[k], P + 20, uBaseY + k*30);
+  const uBaseY = qrY + qrSize + 58;
+  for(let k = 0; k < uLines.length; k++){
+    ctx.textAlign = qrOk ? "left" : "center";
+    ctx.fillText(uLines[k], qrOk ? (P + 20) : cx, uBaseY + k*28);
   }
-  /* 品牌尾行 */
-  ctx.textAlign = "center"; ctx.font = font(21); ctx.fillStyle = "rgba(139,148,158,.9)";
-  ctx.fillText("在「GitHub 中文发现器」上看到这个项目 · 扫一扫直达", cx, H - P - 20);
+  ctx.textAlign = "center"; ctx.font = font(20); ctx.fillStyle = "rgba(139,148,158,.9)";
+  ctx.fillText("在「GitHub 中文发现器」上看到这个项目 · 扫一扫直达", cx, H - P - 16);
   return cv;
 }
 function openPoster(name){
@@ -1617,12 +1653,13 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 function showUpdateToast(){
   var t = document.getElementById("updateToast");
   if(!t) return;
-  t.hidden = false;
+  t.classList.add("show");
   var b = document.getElementById("updateReloadBtn");
   if(b) b.onclick = function(){ location.reload(); };
   var d = document.getElementById("updateDismissBtn");
-  if(d) d.onclick = function(){ t.hidden = true; };
-  setTimeout(function(){ t.hidden = true; }, 8000);
+  if(d) d.onclick = function(){ t.classList.remove("show"); };
+  clearTimeout(t._t);
+  t._t = setTimeout(function(){ t.classList.remove("show"); }, 8000);
 }
 
 /* 初始化（v1.21.2）：整链 try/catch——任一渲染环节异常都显示提示而不是黑屏 */
@@ -1643,8 +1680,8 @@ window.addEventListener("pageshow", e=>{
   }
 });
 </script>
-<!-- 更新提示 toast（v1.22.2） -->
-<div class="update-toast" id="updateToast" hidden>
+<!-- 更新提示 toast（v1.22.2 / v1.23.1 修复：class 控制显示，不再依赖 hidden） -->
+<div class="update-toast" id="updateToast">
   <span>✨ 网站已更新到最新版</span>
   <button id="updateReloadBtn">刷新</button>
   <button class="update-dismiss" id="updateDismissBtn">✕</button>
