@@ -36,7 +36,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.23.2";
+window.GH_VER = "v1.24.0";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -236,6 +236,14 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .load-more{text-align:center;margin:14px 0;padding:10px;border:1px dashed var(--border);
   border-radius:12px;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;user-select:none}
 .load-more:active{transform:scale(.98);background:var(--chip)}
+/* v1.24.0 首页页码分页 */
+.pager{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin:16px 0 6px;padding:10px 8px;border-top:1px solid var(--border)}
+.pager .pg-info{font-size:12px;color:var(--text2);margin-right:6px;white-space:nowrap}
+.pager .pg{min-width:34px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);font-size:13px;cursor:pointer;user-select:none;transition:background .15s}
+.pager .pg:hover:not(:disabled){background:var(--chip)}
+.pager .pg.on{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.pager .pg:disabled{opacity:.4;cursor:not-allowed}
+.pager .pg-ell{color:var(--text2);padding:0 2px}
 /* 小白版详情展开区 */
 .card{cursor:pointer}
 .expand-hint{text-align:center;font-size:11.5px;color:var(--accent);margin-top:6px;user-select:none}
@@ -815,9 +823,17 @@ document.querySelector("main").addEventListener("click", e=>{
     card.classList.toggle("open");
     return;
   }
-  /* v1.19 首页分页：点「加载更多」追加一页 */
-  const more = e.target.closest("#loadMoreBtn");
-  if(more){ homePage++; renderHome(); return; }
+  /* v1.24.0 首页分页：点页码条翻页（翻页后回到列表顶部） */
+  const pg = e.target.closest("#homeList .pg");
+  if(pg && !pg.disabled){
+    const p = parseInt(pg.dataset.pg,10);
+    if(!isNaN(p) && p>=1 && p!==homePage){
+      homePage = p; renderHome();
+      const top = $("#homeList").getBoundingClientRect().top + window.pageYOffset - 72;
+      window.scrollTo({top: Math.max(0, top), behavior:"smooth"});
+    }
+    return;
+  }
 });
 
 /* ================= 分享 ================= */
@@ -1191,19 +1207,37 @@ function sortRepos(list){
   if(curSort==="fav") return [...list].sort((a,b)=>{ const fa=favs.has(a.n)?1:0, fb=favs.has(b.n)?1:0; if(fa!==fb) return fb-fa; return b.s-a.s; });
   return [...list].sort((a,b)=>b.s-a.s);
 }
-/* v1.19 首页分页：首屏只渲染 PAGE_SIZE 条 + 加载更多（切分类/排序/人群时重置到第一页） */
+/* v1.24.0 首页分页：页码分页（每页 24 条 + 页码条；切分类/排序/人群时重置回第一页） */
 const HOME_PAGE_SIZE = 24;
 let homePage = 1;
+function pagerHTML(cur, pages, total){
+  let items = [];
+  items.push(`<button class="pg" data-pg="${cur-1}" ${cur<=1?"disabled":""}>‹ 上一页</button>`);
+  const lo = Math.max(1, cur-2), hi = Math.min(pages, cur+2);
+  if(lo>1){
+    items.push(`<button class="pg" data-pg="1">1</button>`);
+    if(lo>2) items.push(`<span class="pg-ell">…</span>`);
+  }
+  for(let p=lo;p<=hi;p++) items.push(`<button class="pg${p===cur?" on":""}" data-pg="${p}">${p}</button>`);
+  if(hi<pages){
+    if(hi<pages-1) items.push(`<span class="pg-ell">…</span>`);
+    items.push(`<button class="pg" data-pg="${pages}">${pages}</button>`);
+  }
+  items.push(`<button class="pg" data-pg="${cur+1}" ${cur>=pages?"disabled":""}>下一页 ›</button>`);
+  return `<div class="pager" aria-label="分页"><span class="pg-info">第 ${cur}/${pages} 页 · 共 ${total} 个</span>${items.join("")}</div>`;
+}
 function renderHome(reset){
   if(reset) homePage = 1;
   cancelPendingSearch();   // 切分类/清空输入/排序时取消在途搜索，防止旧结果盖新页面
   let list = curCat==="全部" ? REPOS : REPOS.filter(r=>r.c===curCat);
   if(curUsage!=="全部") list = list.filter(r=>(USAGE[r.n]||[]).includes(curUsage));
   list = sortRepos(list);
-  const shown = list.slice(0, homePage * HOME_PAGE_SIZE);
-  const rest = list.length - shown.length;
+  const total = list.length, pages = Math.max(1, Math.ceil(total / HOME_PAGE_SIZE));
+  if(homePage > pages) homePage = pages;
+  const start = (homePage-1) * HOME_PAGE_SIZE;
+  const shown = list.slice(start, start + HOME_PAGE_SIZE);
   $("#homeList").innerHTML = shown.map(r=>cardHTML(r)).join("")
-    + (rest>0 ? `<div class="load-more" id="loadMoreBtn">加载更多（还有 ${rest} 个）</div>` : "");
+    + (total>HOME_PAGE_SIZE ? pagerHTML(homePage, pages, total) : "");
 }
 function renderUsages(){
   $("#usagePanel").innerHTML = USAGES.map(u=>`<div class="cat${u===curUsage?" active":""}" data-usage="${u}">${u}</div>`).join("");

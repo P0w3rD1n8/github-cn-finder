@@ -327,7 +327,13 @@ const REPOS = [
 {n:"AppFlowy-IO/AppFlowy",d:"开源 Notion，笔记看板数据库一体",s:77809,l:"Dart",c:"实用工具"},
 {n:"KDE/kdenlive",d:"免费开源视频剪辑软件，剪视频不用装 PR",s:5940,l:"C++",c:"影音与直播"},
 {n:"ventoy/Ventoy",d:"启动U盘制作工具，一个U盘装遍所有系统镜像",s:80423,l:"C",c:"实用工具"},
-{n:"dulaiduwang003/Pavise-Game",d:"游戏优化工具，打完游戏自动恢复系统原状",s:581,l:"C#",c:"游戏娱乐"}
+{n:"dulaiduwang003/Pavise-Game",d:"游戏优化工具，打完游戏自动恢复系统原状",s:581,l:"C#",c:"游戏娱乐"},
+/* 大肥鱼（DeepSeek Harness 生态，2026-10-30 收录） */
+{n:"T-Auto/dsh-ops",d:"DSH 底层操作工具插件，大幅减少 Token 消耗、加速任务执行",s:4801,l:"JavaScript",c:"AI 人工智能"},
+{n:"QCYTSN/dsh-dafeiyu",d:"大肥鱼本鱼！DeepSeek Harness 桌面伴侣，窗口置顶陪你工作",s:555,l:"JavaScript",c:"AI 人工智能"},
+{n:"liyupi/dafeiyu-cleaner",d:"B站清场工具：一键识别并清理评论区里 AI 机器人（大肥鱼）的浏览器插件",s:122,l:"JavaScript",c:"AI 人工智能"},
+{n:"xiaoshihou514/dsh-desktop-pet",d:"DeepSeek Harness 鲸鱼娘桌宠，桌面上的可爱小助手",s:59,l:"JavaScript",c:"AI 人工智能"},
+{n:"RYANFFY/deepseek-dafeiyu-pet",d:"大肥鱼独立桌面版：会散步、查天气，还盯着你的 DeepSeek 余额",s:15,l:"Python",c:"AI 人工智能"}
 ];
 /* 国内镜像直达表（2026-10-27 第三方核实报告提取）：owner/repo(小写) -> 镜像URL */
 /* GitCode：GitHub 官方合作镜像平台（gitcode.com/GitHub_Trending 或 gh_mirrors），114 个可用 */
