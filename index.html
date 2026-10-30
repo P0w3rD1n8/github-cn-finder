@@ -36,6 +36,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
+window.GH_VER = "v1.22.1";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -343,6 +344,10 @@ a.nav-item{text-decoration:none;color:inherit}
   .search-wrap input{font-size:15px}
   .cats{gap:8px}
 }
+/* 更新提示 toast（v1.22.2）：SW 安装新版后提示用户刷新，解决"永远看不到最新版" */
+.update-toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--text);box-shadow:0 4px 16px rgba(0,0,0,.35);font-size:13px;max-width:90vw}
+.update-toast button{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:12px}
+.update-toast .update-dismiss{background:transparent;color:var(--text2)}
 </style>
 </head>
 <body>
@@ -423,7 +428,7 @@ a.nav-item{text-decoration:none;color:inherit}
     <button class="dict-entry" id="dictEntry">GitHub 黑话大白话速查（Repository / PR / Fork…）<span class="dict-arrow">→</span></button>
     <div class="sec-title">ℹ️ 关于</div>
     <div class="about-box">
-      <b>GitHub 中文发现器</b><span class="ver">v1.19.2</span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
+      <b>GitHub 中文发现器</b><span class="ver" id="appVer"></span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
       · 内置 <b><span id="repoCount">152</span> 个精选项目</b>，每条都有大白话中文简介，专为英文小白翻译<br>
       · 📂 <a class="repo-link" href="list.html" target="_blank" rel="noopener">全部精选项目（网页版）</a>——每页都有中文介绍和国内镜像直达<br>
       · 星标等数据由 GitHub Actions <b>每小时自动抓取真实值</b>，不靠手填数字<br>
@@ -1384,9 +1389,26 @@ fetch("./repos.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{
   if(active && active.dataset.page==="me") renderFavs();
 }).catch(()=>{ /* repos.json 缺失或网络失败：沿用内置兜底数据 */ });
 
+/* 版本号动态显示（单源：head 里的 GH_VER，发版只改一处） */
+(function(){ var v = document.getElementById("appVer"); if(v) v.textContent = window.GH_VER || ""; })();
+
 /* 注册 Service Worker（PWA 可安装；file:// 打开时自动跳过） */
 if("serviceWorker" in navigator && location.protocol.startsWith("http")){
   navigator.serviceWorker.register("sw.js").catch(()=>{});
+  /* SW 安装并接管新版后提示刷新：让用户不用自己摸索"刷新几次才看到新版"（v1.22.2） */
+  navigator.serviceWorker.addEventListener("message", function(e){
+    if(e.data && e.data.type === "APP_UPDATED") showUpdateToast();
+  });
+}
+function showUpdateToast(){
+  var t = document.getElementById("updateToast");
+  if(!t) return;
+  t.hidden = false;
+  var b = document.getElementById("updateReloadBtn");
+  if(b) b.onclick = function(){ location.reload(); };
+  var d = document.getElementById("updateDismissBtn");
+  if(d) d.onclick = function(){ t.hidden = true; };
+  setTimeout(function(){ t.hidden = true; }, 8000);
 }
 
 /* 初始化（v1.21.2）：整链 try/catch——任一渲染环节异常都显示提示而不是黑屏 */
@@ -1407,6 +1429,12 @@ window.addEventListener("pageshow", e=>{
   }
 });
 </script>
+<!-- 更新提示 toast（v1.22.2） -->
+<div class="update-toast" id="updateToast" hidden>
+  <span>✨ 网站已更新到最新版</span>
+  <button id="updateReloadBtn">刷新</button>
+  <button class="update-dismiss" id="updateDismissBtn">✕</button>
+</div>
 </body>
 </html>
 
