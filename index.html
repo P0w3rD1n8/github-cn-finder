@@ -36,7 +36,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.23.1";
+window.GH_VER = "v1.23.2";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -1005,14 +1005,13 @@ function buildPosterCanvas(r){
   ctx.strokeStyle = "rgba(88,166,255,.28)"; ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(cx-230, y); ctx.lineTo(cx+230, y); ctx.stroke();
   y += 46;
-  /* 简介：动态行距撑满中部（行距 52~72，让下边不空） */
+  /* 简介：白字居中，动态行距撑满中部（行距 52~72，让下边不空） */
   if(descLines.length){
     const descTop = y;
     const avail = QR_TOP - 40 - descTop - 30;
     const lineH = Math.max(52, Math.min(72, Math.floor(avail / descLines.length)));
-    ctx.font = font(descFontSize); ctx.fillStyle = "#c9d1d9"; ctx.textAlign = "left";
-    const lx = P + 20;
-    for(let j = 0; j < descLines.length; j++) ctx.fillText(descLines[j], lx, descTop + j*lineH + descFontSize - 6);
+    ctx.font = font(descFontSize); ctx.fillStyle = "#f0f6fc"; ctx.textAlign = "center";
+    for(let j = 0; j < descLines.length; j++) ctx.fillText(descLines[j], cx, descTop + j*lineH + descFontSize - 6);
   }
   /* 底部固定区：二维码 + 扫码提示 + 网址 + 品牌尾行 */
   const qrSize = 200, qrX = W - P - 20 - qrSize, qrY = QR_TOP;

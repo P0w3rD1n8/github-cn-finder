@@ -6,8 +6,9 @@
    版本 v11（v1.22.2）：activate 后通知所有已打开页面（postMessage APP_UPDATED），
    页面收到后弹出「网站已更新，点刷新」提示——解决用户不知道要刷新、一直看旧缓存的问题。
    版本 v12（v1.23.0）：缓存清单新增 qrcode.min.js（海报功能本地二维码库）。
-   版本 v13（v1.23.1）：海报 v2 布局（信息加密+动态撑满）+ toast 移底部（class 控制显示，修复关不掉/压分类栏）。 */
-const CACHE = "gh-cn-v13";
+   版本 v13（v1.23.1）：海报 v2 布局（信息加密+动态撑满）+ toast 移底部（class 控制显示，修复关不掉/压分类栏）。
+   版本 v14（v1.23.2）：海报简介改白字居中。 */
+const CACHE = "gh-cn-v14";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html"];
