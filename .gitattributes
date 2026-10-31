@@ -1,0 +1,13 @@
+# 统一换行：仓库内存 LF，检出也用 LF
+# 背景：本机 core.autocrlf=true 且远端文件为 LF，导致每次 git 都提示
+# "LF will be replaced by CRLF"，diff 里也会出现整文件行尾噪声。
+# 这里显式声明：文本文件一律 LF（含工作区），二进制文件不做转换。
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary

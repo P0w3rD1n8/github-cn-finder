@@ -552,12 +552,12 @@ def main():
         n = r["n"]
         html_text, fname = build_project_page(n, r, data)
         pages[fname] = html_text
-        with open(os.path.join(OUT_DIR, fname), "w", encoding="utf-8") as f:
+        with open(os.path.join(OUT_DIR, fname), "w", encoding="utf-8", newline="\n") as f:
             f.write(html_text)
 
-    with open(os.path.join(ROOT, "list.html"), "w", encoding="utf-8") as f:
+    with open(os.path.join(ROOT, "list.html"), "w", encoding="utf-8", newline="\n") as f:
         f.write(build_list_page(repos, data))
-    with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
+    with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8", newline="\n") as f:
         f.write(build_sitemap(repos, data))
 
     print("✅ 已生成 {} 个静态项目页 + list.html + sitemap.xml（共 {} 项）".format(len(pages), len(repos)))

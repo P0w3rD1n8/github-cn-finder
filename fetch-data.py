@@ -167,7 +167,7 @@ def main():
             print(f"ℹ️ 与上一版快照完全一致且 24h 快照已满（{HIST_MAX}），跳过写入")
             return
 
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(OUT, "w", encoding="utf-8", newline="\n") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
     print(f"✅ 已生成 {OUT}：{ok} 成功 / {fail} 失败 / 共 {len(names)}，ps 命中 {ps_hit}，hist 命中 {hist_hit}")
 
