@@ -79,7 +79,8 @@ def read(path):
 
 
 def git(repo, *args, binary=True, timeout=120):
-    cmd = ["git", "-C", repo, "-c", "http.sslBackend=openssl", "-c", "http.proxy=", "-c", "https.proxy="] + list(args)
+    cmd = ["git", "-C", repo, "-c", "core.quotePath=false",
+           "-c", "http.sslBackend=openssl", "-c", "http.proxy=", "-c", "https.proxy="] + list(args)
     env = dict(os.environ)
     for k in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):
         env.pop(k, None)
@@ -141,27 +142,47 @@ def main():
         return 2
 
     content_diff, crlf_only, missing_local = [], [], []
-    for p in remote_paths:
-        fp = os.path.join(repo, p.replace("/", os.sep))
-        if not os.path.exists(fp):
-            missing_local.append(p)
-            continue
-        lb = read(fp)
-        rb = git(repo, "show", f"origin/main:{p}")
-        if lb == rb:
-            continue
-        if norm(lb) == norm(rb):
-            crlf_only.append(p)
-        else:
-            content_diff.append(p)
+    remote_true = None
+    try:  # 真实远端 head（1 次 API，用来看本地 origin/main 引用是否过期）
+        st, body = fetch("https://api.github.com/repos/P0w3rD1n8/github-cn-finder/git/ref/heads/main")
+        if st == 200:
+            remote_true = json.loads(body.decode("utf-8"))["object"]["sha"]
+    except Exception:  # noqa: BLE001
+        remote_true = None
 
-    only_local = sorted(set(tracked) - set(remote_paths))
+    stale_ref = bool(remote_true and remote_true != remote)
+    dirty = [x for x in git(repo, "status", "--porcelain=v1", binary=False).splitlines() if x.strip()]
+
+    if stale_ref and remote_true == head:
+        # 本地已推送（例如用 URL 推送，origin/main 引用没更新）——逐文件比对没有意义
+        say(f"   ⚠ 本地 origin/main 引用停在 {remote[:10]}，真实远端已是 {remote_true[:10]}（= HEAD，已推送）")
+        say("     跳过逐文件比对；如需精确比对先跑一次 `--fetch`")
+    else:
+        for p in remote_paths:
+            fp = os.path.join(repo, p.replace("/", os.sep))
+            if not os.path.exists(fp):
+                missing_local.append(p)
+                continue
+            lb = read(fp)
+            rb = git(repo, "show", f"origin/main:{p}")
+            if lb == rb:
+                continue
+            if norm(lb) == norm(rb):
+                crlf_only.append(p)
+            else:
+                content_diff.append(p)
+        if stale_ref:
+            say(f"   ⚠ 本地 origin/main 引用({remote[:10]}) 与真实远端({remote_true[:10]}) 不一致，比对结果可能失真")
+
+    only_local = sorted(set(tracked) - set(remote_paths)) if not stale_ref else []
     report["checks"]["repo"] = {
-        "head": head[:10], "remote_main": remote[:10],
+        "head": head[:10], "remote_main": remote[:10], "remote_true": (remote_true or "")[:10],
+        "stale_ref": stale_ref,
         "files_remote": len(remote_paths), "files_tracked": len(tracked),
         "content_diff": content_diff, "crlf_only": crlf_only,
         "missing_local": missing_local, "only_local_tracked": only_local,
-        "clean": not (content_diff or missing_local or only_local),
+        "dirty": dirty,
+        "clean": not (content_diff or missing_local or only_local) and not dirty,
     }
     if content_diff:
         P.append(f"本地与远端有真实内容差异: {content_diff[:10]}")
@@ -169,6 +190,8 @@ def main():
         P.append(f"远端有、本地缺: {missing_local[:10]}")
     if only_local:
         P.append(f"本地已跟踪、远端没有: {only_local[:10]}")
+    if dirty:
+        P.append(f"工作区有未提交改动: {dirty[:6]}")
 
     # ---------- B/C. 线上 vs 本地 ----------
     say("② 线上站点 ↔ 本地文件 …")
@@ -224,9 +247,10 @@ def main():
         "local_readme_ver": grab(local_readme, r'当前版本：\*\*(v[\d.]+)\*\*'),
     }
     report["checks"]["version"] = ver
-    if ver["local_index_ver"] != ver["live_index_ver"]:
+    # 只在两边都取到值时才判不一致（线上取回失败时 live_* 为 None，属网络问题，别误报）
+    if ver["live_index_ver"] and ver["local_index_ver"] != ver["live_index_ver"]:
         P.append(f"版本不一致: 本地 {ver['local_index_ver']} / 线上 {ver['live_index_ver']}")
-    if ver["local_sw_cache"] != ver["live_sw_cache"]:
+    if ver["live_sw_cache"] and ver["local_sw_cache"] != ver["live_sw_cache"]:
         P.append(f"SW 缓存名不一致: 本地 {ver['local_sw_cache']} / 线上 {ver['live_sw_cache']}")
     if ver["local_readme_ver"] != ver["local_index_ver"]:
         P.append(f"README 版本未同步: {ver['local_readme_ver']} vs index {ver['local_index_ver']}")
@@ -368,12 +392,13 @@ def main():
     else:
         c = report["checks"]
         print("=" * 74)
-        print(f"本地 HEAD   : {c['repo']['head']}    远端 main: {c['repo']['remote_main']}")
+        print(f"本地 HEAD   : {c['repo']['head']}  远端引用: {c['repo']['remote_main']}  真实远端: {c['repo'].get('remote_true') or '未知'}")
         print(f"文件数      : 远端 {c['repo']['files_remote']} / 本地已跟踪 {c['repo']['files_tracked']}")
         print(f"本地↔远端   : {'一致' if c['repo']['clean'] else '有差异'}"
-              f"（仅 CRLF 差异 {len(c['repo']['crlf_only'])} 个）")
-        for k in ("content_diff", "missing_local", "only_local_tracked"):
-            if c["repo"][k]:
+              f"（仅 CRLF 差异 {len(c['repo']['crlf_only'])} 个"
+              f"{'，origin/main 引用过期已跳过逐文件比对' if c['repo']['stale_ref'] else ''}）")
+        for k in ("content_diff", "missing_local", "only_local_tracked", "dirty"):
+            if c["repo"].get(k):
                 print(f"  {k}: {c['repo'][k][:8]}")
         v = c["version"]
         print(f"版本        : 本地 {v['local_index_ver']} / 线上 {v['live_index_ver']} "
