@@ -8,3 +8,6 @@ _chunk.js
 __pycache__/
 *.pyc
 _c.txt
+_shots/
+.pylibs/
+.tmp-pip/

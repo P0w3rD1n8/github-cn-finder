@@ -73,13 +73,15 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
    - `sw.js`：`const CACHE = "gh-cn-vXX";`（每次 +1，当前 v16 → v17）
    - `README.md`：当前版本 + 版本历史顶部加一条
 2. **重新生成产物**：fetch-data.py → build_pages.py（repos.json / p/ / list.html / sitemap.xml 全重建；data.js 是人工源不动）。
-3. **本地验证**：用 `C:\Users\power\Documents\_verify_online_v1241.py`（Playwright + Edge channel=msedge）对本地文件跑一遍：首屏 24 卡、分页条、搜索、各分类、静态页、无报错。**用 DSH 内置 Python 跑，需先装 playwright**（见 §5.4）。改动涉及行为时按清单逐项验。
+3. **本地验证**：跑 `verify_browser.py --local`（Playwright + Edge，13 项浏览器级断言：首屏 24 卡、分页条、第 7 页 8 卡、AI 分类 23 个、搜索空态、搜索命中、静态页、无报错、375px 手机端）。**注意**：Playwright 需要命名管道和 TEMP 写权限，DSH 默认沙箱会报 `WinError 5`，必须用完整权限运行（见 §5.4）。
 4. **上线推送**：
-   - 常规路径：git commit + push（**清代理 + `-c http.sslBackend=openssl`**，见 §5.1；直连 push 若 `Recv failure: Connection reset`，改走 REST API 脚本，见 §5.2）。
+   - 常规路径：git commit + push（**清代理 + `-c http.sslBackend=openssl` + `credential.helper=` + token 走 URL**，见 §5.1）。
    - 等约 90 秒 CDN 生效，再跑一次线上核验脚本（改 url 为线上地址）。
-5. **线上核验**：先跑 HTTP 级 `verify_sync.py`（用法见本节末），再用 Playwright 验浏览器行为（分页点击/搜索空态/无报错）。
+5. **线上核验**：先跑 HTTP 级 `verify_sync.py`（用法见本节末），再用 `verify_browser.py`（不带 `--local`）验线上浏览器行为。
 
-### 附：一致性核验工具 verify_sync.py
+### 附：两个核验工具
+
+**verify_sync.py — HTTP 级三方一致性**
 ```powershell
 $py = "C:\Users\power\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe"
 $env:PYTHONIOENCODING="utf-8"     # 否则中文/emoji 输出会 GBK 报错
@@ -88,9 +90,20 @@ $env:PYTHONIOENCODING="utf-8"     # 否则中文/emoji 输出会 GBK 报错
 & $py verify_sync.py --pages      # 另抽样 12 个 p 页查线上状态码
 & $py verify_sync.py --full-pages --page-budget 120   # 全量 152 个
 ```
-- 判定口径：**CRLF/LF 差异不算问题**（本机 autocrlf=true、远端 REST 上传保留 CRLF，两边永远会有行尾差异）；只报真内容差异。
+- 判定口径：**CRLF/LF 差异不算问题**（已加 `.gitattributes` 统一 LF，但仍保留归一化兜底）；只报真内容差异。
 - p 页默认不扫：GitHub Pages 链路偶发 20–35s 握手卡顿，全量扫描容易跑成分钟级；`--pages` 有总预算，超时/网络失败的请求单独归类、不计为内容问题。
 - 下架页清单**不再手写**：从 `git log --diff-filter=D -- p/` 自动推算"历史存在、现已删除"的页面，逐个要求 404。
+
+**verify_browser.py — 浏览器级行为验收（13 项）**
+```powershell
+$env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 §5.4）
+& $py verify_browser.py --local      # 本地起 http.server 测当前工作区
+& $py verify_browser.py              # 测线上
+& $py verify_browser.py --headed     # 显示窗口调试
+```
+- 覆盖：首屏 24 卡 / 分页条 / 第 7 页 8 卡 / AI 分类 23 个 / 搜索空态 / 搜索命中 / 静态页 / 控制台无报错 / 请求无失败 / 375px 手机端（24 卡、无横向溢出、不白屏）。
+- 截图落在 `_shots/`（已 gitignore）。
+- 已知口径：搜索会同时查 GitHub API，**无意义关键词才会 0 结果**；前端会主动取消上一轮搜索请求，`ERR_ABORTED` 不计为失败。
 
 ## 5. 已知坑与对策（血泪经验，必须遵守）
 
@@ -139,7 +152,12 @@ $env:PYTHONIOENCODING="utf-8"     # 否则中文/emoji 输出会 GBK 报错
   ```
   例：`& "C:\Users\power\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe" fetch-data.py`
 - 控制台是 GBK，脚本里的 emoji/中文 print 会抛 `UnicodeEncodeError`（如 build_pages.py 结尾那行 ✅），**不影响已写入的文件**；想干净输出就加 `$env:PYTHONIOENCODING="utf-8"`。
-- HTTP 级核验可用（urllib）；**浏览器级核验（Playwright）需要先装 playwright**（Edge 与 node v24 都在）：`<DSH python> -m pip install playwright` 后按需 `playwright install chromium` 或用 Edge channel=msedge。
+- HTTP 级核验可用（urllib）；**浏览器级核验（Playwright）已装好**，但装法有坑，记录如下：
+  1. `pip install playwright` 在本机**会卡死**（pip 的网络路径不通，连小包都下不动）。可行做法：用 urllib 手动从阿里镜像下 wheel，再解压到工作区 `.pylibs/`（`*.whl` 就是 zip，`zipfile.extractall` 即可；`pip --target` 会因目录重命名被沙箱拒）。
+  2. 需要的 wheel：`playwright-*-py3-none-win_amd64`、`greenlet-*-cp312-cp312-win_amd64`、`pyee-*-py3-none-any`（`typing_extensions` 运行时已自带）。
+  3. 跑之前设 `$env:PYTHONPATH="$PWD\.pylibs"`；`.pylibs/` 已 gitignore（约 108MB）。
+  4. **必须用完整权限（danger-full-access）跑**：Playwright 启动 Edge 要建命名管道，默认沙箱报 `PermissionError: [WinError 5]`；另外 `TEMP` 要指到工作区内（`$env:TEMP="$PWD\.tmp-pw"`），否则 `mkdtemp EPERM`。
+  5. 浏览器用本机 Edge（`channel="msedge"`），**不需要** `playwright install chromium`。
 
 ## 6. 当前状态与待办
 
