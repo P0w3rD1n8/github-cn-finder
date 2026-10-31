@@ -5,3 +5,6 @@
 support/
 serve.ps1
 _chunk.js
+__pycache__/
+*.pyc
+_c.txt
