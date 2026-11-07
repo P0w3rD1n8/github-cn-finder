@@ -25,6 +25,8 @@ DOCS_SUMMARY_JSON = os.path.join(ROOT, "docs_summary.json")
 OUT_DIR = os.path.join(ROOT, "p")
 BASE_URL = "https://p0w3rd1n8.github.io/github-cn-finder"
 OG_IMAGE = "https://cdn.jsdelivr.net/gh/P0w3rD1n8/github-cn-finder@main/og-cover.png"
+# v1.27.0：每个项目自己的分享封面（build_og.py 生成 og/<owner>-<repo>.png）
+OG_DIR_URL = BASE_URL + "/og"
 
 PAGE_CSS = """\
 :root{--bg:#0d1117;--card:#161b22;--text:#e6edf3;--text2:#8b949e;--border:#30363d;--accent:#58a6ff;--star:#f0b429}
@@ -374,7 +376,7 @@ def build_project_page(n, r, ctx):
 <title>__TITLE__</title>
 <meta name="description" content="__DESC__">
 <link rel="canonical" href="__CANONICAL__">
-<link rel="icon" href="__BASE__/icon.svg" type="image/svg+xml">
+<link rel="icon" href="__HOME__icon.svg" type="image/svg+xml">
 __LDJSON__
 <meta property="og:site_name" content="GitHub 中文发现器">
 <meta property="og:type" content="article">
@@ -429,7 +431,7 @@ __STARSCRIPT__
         .replace("__OGT__", esc(zh) + "（" + esc(n) + "）- GitHub 中文发现器")
         .replace("__DESC__", esc(desc))
         .replace("__CANONICAL__", BASE_URL + "/p/" + esc(fname))
-        .replace("__OGIMG__", OG_IMAGE)
+        .replace("__OGIMG__", OG_DIR_URL + "/" + esc(fname.replace(".html", ".png")) if os.path.exists(os.path.join(ROOT, "og", fname.replace(".html", ".png"))) else OG_IMAGE)
         .replace("__META__", meta_html)
         .replace("__DETAIL__", detail_html)
         .replace("__MIRROR__", mirror_html)

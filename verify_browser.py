@@ -270,6 +270,30 @@ def main():
             check("RSS feed.xml", r_resp is not None and r_resp.status == 200 and "<rss" in r_body,
                   f"HTTP {r_resp.status if r_resp else '?'} / {len(r_body)} 字节")
 
+            # ---------- v1.27.0 对比模式 + 项目 OG 图 ----------
+            page.goto(base, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(1200)
+            page.evaluate("() => { try{ localStorage.removeItem('ghcn_cmp'); }catch(e){} }")
+            page.reload(wait_until="domcontentloaded")
+            page.wait_for_timeout(1200)
+            page.locator("#homeList .cmp-btn").nth(0).click()
+            page.locator("#homeList .cmp-btn").nth(1).click()
+            page.wait_for_timeout(400)
+            tray_on = page.locator("#cmpTray.show").count()
+            page.locator("#cmpGo").click()
+            page.wait_for_timeout(500)
+            rows = page.locator("#cmpWrap table.cmp tr").count()
+            cols = page.locator("#cmpWrap table.cmp th").count()
+            check("对比模式（2 个项目）", tray_on == 1 and rows >= 8 and cols >= 3,
+                  f"tray={tray_on} 行={rows} 列={cols}")
+            page.locator("#closeCmp").click()
+
+            og = page.request.get(base + "og/ollama-ollama.png")
+            og2 = page.request.get(base + "p/ollama-ollama.html")
+            has_meta = 'og/ollama-ollama.png' in og2.text()
+            check("项目分享封面 OG 图", og.status == 200 and "image" in (og.headers.get("content-type") or "")
+                  and has_meta, f"HTTP {og.status} / meta={has_meta}")
+
             # 前端会主动取消上一轮搜索请求（cancelPendingSearch），aborted 属正常
             real_failures = [
                 f for f in failures

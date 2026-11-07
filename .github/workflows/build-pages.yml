@@ -27,6 +27,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: 安装 Pillow 与中文字体（生成分享封面用）
+        run: |
+          python -m pip install --quiet pillow
+          sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-cjk
+
+      - name: 生成每个项目的分享封面（v1.27.0）
+        run: python build_og.py
+
       - name: 生成静态项目页
         run: python build_pages.py
 
@@ -37,7 +45,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add p list.html sitemap.xml c weekly feed.xml
+          git add p list.html sitemap.xml c weekly feed.xml og
           if git diff --cached --quiet; then
             echo "页面无变化，跳过提交"
           else

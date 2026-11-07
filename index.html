@@ -37,7 +37,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.26.0";
+window.GH_VER = "v1.27.0";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -173,6 +173,26 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .card-actions .btn:active{opacity:.7}
 .card-actions .btn-main{background:var(--accent);color:#fff;border:1px solid var(--accent)}
 .card-actions .btn-ghost{background:transparent;color:var(--accent);border:1px solid var(--border)}
+/* v1.27.0 对比模式 */
+.cmp-btn{background:var(--card2);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:5px 11px;font-size:12px;cursor:pointer;font-family:inherit}
+.cmp-btn.on{background:rgba(88,166,255,.14);border-color:var(--accent);color:var(--accent)}
+.cmp-tray{position:fixed;left:50%;transform:translateX(-50%);bottom:78px;display:none;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:8px 12px;box-shadow:0 10px 28px rgba(0,0,0,.5);z-index:60;max-width:calc(100% - 20px)}
+.cmp-tray.show{display:flex}
+.cmp-chips{display:flex;gap:6px;overflow:hidden}
+.cmp-chip{font-size:11px;color:var(--text);background:var(--card2);border:1px solid var(--border);border-radius:999px;padding:3px 8px;white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.cmp-chip:hover{border-color:#f85149;color:#f85149}
+.cmp-actions{display:flex;gap:6px;align-items:center}
+.cmp-go{background:var(--accent);color:#0d1117;border:0;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.cmp-go:disabled{opacity:.45;cursor:not-allowed}
+.cmp-clear{background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:999px;padding:6px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+.modal-cmp{max-width:900px}
+.cmp-wrap{overflow-x:auto}
+table.cmp{width:100%;border-collapse:collapse;font-size:12.5px;min-width:520px}
+table.cmp th,table.cmp td{border-bottom:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+table.cmp th{color:var(--text2);font-weight:600;white-space:nowrap;width:92px}
+table.cmp tr:last-child th,table.cmp tr:last-child td{border-bottom:0}
+table.cmp .best{color:#3fb950;font-weight:700}
+table.cmp a{color:var(--accent);text-decoration:none}
 .rank-tabs{padding:0 0 12px}
 /* 首页横幅 */
 .banner{background:linear-gradient(135deg,rgba(88,166,255,.14),rgba(163,113,247,.14));
@@ -528,6 +548,24 @@ a.nav-item{text-decoration:none;color:inherit}
   </div>
 </div>
 
+<!-- 对比模式（v1.27.0）：勾选 2–3 个项目并排比较 -->
+<div class="cmp-tray" id="cmpTray">
+  <div class="cmp-chips" id="cmpChips"></div>
+  <div class="cmp-actions">
+    <button class="cmp-go" id="cmpGo">开始对比</button>
+    <button class="cmp-clear" id="cmpClear">清空</button>
+  </div>
+</div>
+<div class="modal-mask" id="cmpModal">
+  <div class="modal modal-cmp">
+    <div class="modal-title">⇄ 项目对比<span style="font-weight:400;font-size:12px;color:var(--text2)">（最多 3 个）</span></div>
+    <div class="cmp-wrap" id="cmpWrap"></div>
+    <div class="modal-btns">
+      <button id="closeCmp">关闭</button>
+    </div>
+  </div>
+</div>
+
 <!-- 作者详情弹窗 -->
 <div class="modal-mask" id="authorModal">
   <div class="modal">
@@ -851,6 +889,7 @@ function cardHTML(r, src, rank, delta){
     <div class="card-actions">
       <a class="btn btn-main" href="https://github.com/${esc(r.n)}" target="_blank" rel="noopener">去 GitHub 查看 ↗</a>
       ${mirrorBtn}
+      <button class="cmp-btn${cmpSet.has(r.n)?" on":""}" data-cmp="${esc(r.n)}" title="加入对比（最多 3 个）">⇄ 对比</button>
     </div>
   </div>`;
 }
@@ -1802,6 +1841,96 @@ function showUpdateToast(){
   t._t = setTimeout(function(){ t.classList.remove("show"); }, 8000);
 }
 
+/* ===== v1.27.0 对比模式：勾选 2–3 个项目并排看差异 ===== */
+const CMP_KEY = "ghcn_cmp";
+let cmpSet;
+try{ cmpSet = new Set(JSON.parse(localStorage.getItem(CMP_KEY) || "[]")); }catch(e){ cmpSet = new Set(); }
+
+function cmpPersist(){ try{ localStorage.setItem(CMP_KEY, JSON.stringify([...cmpSet])); }catch(e){} }
+function cmpRepo(n){ return KNOWN[n] || REPOS.find(r=>r.n===n); }
+function cmpName(n){ return REPO_ZH[n] || (n||"").split("/")[1] || n; }
+
+function renderCmpTray(){
+  const tray = $("#cmpTray");
+  if(!tray) return;
+  $("#cmpChips").innerHTML = [...cmpSet].map(n =>
+    `<span class="cmp-chip" data-cmp-del="${esc(n)}" title="点一下移出对比">${esc(cmpName(n))}</span>`
+  ).join("");
+  tray.classList.toggle("show", cmpSet.size > 0);
+  const go = $("#cmpGo");
+  go.disabled = cmpSet.size < 2;
+  go.textContent = cmpSet.size < 2 ? "再选 1 个" : `对比这 ${cmpSet.size} 个`;
+}
+
+function cmpToggle(n){
+  if(cmpSet.has(n)){
+    cmpSet.delete(n);
+  }else{
+    if(cmpSet.size >= 3){
+      $("#cmpTray").classList.add("show");
+      $("#cmpGo").textContent = "最多选 3 个";
+      setTimeout(renderCmpTray, 1400);
+      return;
+    }
+    cmpSet.add(n);
+  }
+  cmpPersist();
+  document.querySelectorAll(".cmp-btn").forEach(b=>{
+    if(b.dataset.cmp === n) b.classList.toggle("on", cmpSet.has(n));
+  });
+  renderCmpTray();
+}
+
+function cmpTableHTML(items){
+  const head = "<tr><th>项目</th>" + items.map(r=>{
+    const o = r.n.split("/")[0], rp = r.n.split("/")[1];
+    return `<th><a href="p/${esc(o)}-${esc(rp)}.html">${esc(cmpName(r.n))}</a>`
+         + `<br><span style="font-weight:400;color:var(--text2);font-size:11px">${esc(r.n)}</span></th>`;
+  }).join("") + "</tr>";
+  const best = Math.max(...items.map(r=>r.s||0));
+  const row = (label, fn) => "<tr><th>" + label + "</th>" + items.map(r=>"<td>" + fn(r) + "</td>").join("") + "</tr>";
+  const rows = [
+    row("分类", r=>esc(r.c || "-")),
+    row("语言", r=>esc(r.l || "多语言")),
+    row("星标", r=>`<span class="${(r.s||0)===best?"best":""}">★ ${fmt(r.s)}</span>`),
+    row("最近更新", r=>{
+      if(!r.pa) return "未知";
+      const days = Math.floor((Date.now() - new Date(r.pa + "T00:00:00").getTime())/86400000);
+      return esc(r.pa) + (isFinite(days) ? `（${days} 天前）` : "");
+    }),
+    row("活跃状态", r=>{
+      const a = activityOf(r);
+      return a ? `<span class="${a.cls==="act-dead"?"best":""}">${esc(a.text)}</span>` : "正常更新";
+    }),
+    row("国内镜像", r=>{
+      const k = (r.n||"").toLowerCase();
+      return (GC_MIRRORS[k] || GT_MIRRORS[k]) ? "有" : "暂无";
+    }),
+    row("适合人群", r=>esc((USAGE[r.n] || []).join("、") || "-")),
+    row("一句话", r=>esc(r.d || "-"))
+  ].join("");
+  return `<table class="cmp">${head}${rows}</table>`;
+}
+
+function openCmp(){
+  const items = [...cmpSet].map(cmpRepo).filter(Boolean);
+  if(items.length < 2) return;
+  $("#cmpWrap").innerHTML = cmpTableHTML(items);
+  $("#cmpModal").classList.add("show");
+}
+function closeCmp(){ $("#cmpModal").classList.remove("show"); }
+
+document.addEventListener("click", e=>{
+  const add = e.target.closest("[data-cmp]");
+  if(add && !e.target.closest("[data-cmp-del]")){ e.preventDefault(); cmpToggle(add.dataset.cmp); return; }
+  const del = e.target.closest("[data-cmp-del]");
+  if(del){ e.preventDefault(); cmpToggle(del.dataset.cmpDel); return; }
+});
+if($("#cmpGo")) $("#cmpGo").addEventListener("click", openCmp);
+if($("#cmpClear")) $("#cmpClear").addEventListener("click", ()=>{ cmpSet.clear(); cmpPersist(); renderCmpTray(); document.querySelectorAll(".cmp-btn.on").forEach(b=>b.classList.remove("on")); });
+if($("#closeCmp")) $("#closeCmp").addEventListener("click", closeCmp);
+if($("#cmpModal")) $("#cmpModal").addEventListener("click", e=>{ if(e.target.id === "cmpModal") closeCmp(); });
+
 /* 初始化（v1.21.2）：整链 try/catch——任一渲染环节异常都显示提示而不是黑屏 */
 if (typeof REPOS !== "undefined" && Array.isArray(REPOS) && REPOS.length){
   const repoCountEl = document.getElementById("repoCount");
@@ -1809,7 +1938,7 @@ if (typeof REPOS !== "undefined" && Array.isArray(REPOS) && REPOS.length){
   try{
     const restoredQ = applyURLState();
     document.querySelectorAll("#sortTabs .sort-tab").forEach(b=>b.classList.toggle("active", b.dataset.sort===curSort));
-    renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs();
+    renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs(); renderCmpTray();
     if(restoredQ){ clearTimeout(searchTimer); doSearch(); }
   }catch(err){
     showDataError();
