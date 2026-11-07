@@ -73,6 +73,25 @@ def count_cards(page):
     return page.locator("#homeList .card").count()
 
 
+def load_expectations(root):
+    """从 data.js 算出期望值，避免每次加项目都要改脚本里的写死数字"""
+    import math
+    import re
+
+    src = open(os.path.join(root, "data.js"), encoding="utf-8").read()
+    body = re.search(r"const REPOS = \[(.*?)\n\];", src, re.S).group(1)
+    cats = re.findall(r'c:"([^"]+)"', body)
+    total = len(cats)
+    ai = sum(1 for c in cats if c == "AI 人工智能")
+    return {
+        "total": total,
+        "pages": max(1, math.ceil(total / 24)),
+        "last_cards": total - (max(1, math.ceil(total / 24)) - 1) * 24,
+        "ai": ai,
+        "ai_pages": max(1, math.ceil(ai / 24)),
+    }
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--url", default=None)
@@ -83,6 +102,10 @@ def main():
     args = ap.parse_args()
 
     from playwright.sync_api import sync_playwright
+
+    exp = load_expectations(ROOT)
+    print(f"期望值（来自 data.js）: 共 {exp['total']} 个 / {exp['pages']} 页 / 末页 {exp['last_cards']} 卡 / "
+          f"AI {exp['ai']} 个（{exp['ai_pages']} 页）", flush=True)
 
     httpd = None
     if args.local:
@@ -112,26 +135,30 @@ def main():
             except Exception:
                 pass
             page.wait_for_timeout(600)
-            ok24 = wait_cards(page, 24)
+            ok24 = wait_cards(page, min(24, exp["total"]))
             n = count_cards(page)
-            check("首屏 24 卡", ok24 and n == 24, f"实际 {n} 张")
+            check(f"首屏 {min(24, exp['total'])} 卡", n == min(24, exp["total"]), f"实际 {n} 张")
 
             info = page.locator("#homeList .pg-info").first
             itext = info.inner_text() if info.count() else ""
-            check("分页条「第 1/7 页 · 共 152 个」", "第 1/7 页" in itext and "152" in itext, itext)
+            check(f"分页条「第 1/{exp['pages']} 页 · 共 {exp['total']} 个」",
+                  f"第 1/{exp['pages']} 页" in itext and str(exp["total"]) in itext, itext)
 
             # 末页
-            page.locator('#homeList .pg[data-pg="7"]').click()
+            page.locator(f'#homeList .pg[data-pg="{exp["pages"]}"]').click()
             try:
                 page.wait_for_function(
-                    "() => (document.querySelector('#homeList .pg-info')||{}).textContent?.includes('第 7/7 页')",
+                    "n => (document.querySelector('#homeList .pg-info')||{}).textContent?.includes(n)",
+                    arg=f"第 {exp['pages']}/{exp['pages']} 页",
                     timeout=8000,
                 )
             except Exception:
                 pass
             n7 = count_cards(page)
             info7 = page.locator("#homeList .pg-info").first.inner_text()
-            check("第 7 页 8 卡", n7 == 8 and "第 7/7 页" in info7, f"{n7} 张 / {info7}")
+            check(f"第 {exp['pages']} 页 {exp['last_cards']} 卡",
+                  n7 == exp["last_cards"] and f"第 {exp['pages']}/{exp['pages']} 页" in info7,
+                  f"{n7} 张 / {info7}")
 
             # 回到第 1 页 + 分类
             page.locator('#homeList .pg[data-pg="1"]').click()
@@ -140,8 +167,13 @@ def main():
             page.wait_for_timeout(500)
             nai = count_cards(page)
             info_ai = page.locator("#homeList .pg-info").first
-            ai_text = info_ai.inner_text() if info_ai.count() else "（无分页条，单页显示）"
-            check("AI 分类 23 个 / 1 页", nai == 23, f"{nai} 张 / {ai_text}")
+            has_pager = info_ai.count() > 0
+            ai_text = info_ai.inner_text() if has_pager else "（无分页条）"
+            if exp["ai"] <= 24:
+                ai_ok = nai == exp["ai"] and not has_pager
+            else:
+                ai_ok = nai == 24 and f"1/{exp['ai_pages']} 页" in ai_text
+            check(f"AI 分类 {exp['ai']} 个 / {exp['ai_pages']} 页", ai_ok, f"{nai} 张 / {ai_text}")
 
             # 搜索空态（用无意义关键词，避免命中 GitHub 远程搜索结果）
             page.locator('#catBar [data-cat="全部"]').click()

@@ -14,9 +14,9 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | GitHub 仓库 | P0w3rD1n8/github-cn-finder（远端 main 分支） |
 | 本地仓库（ROG） | C:\Users\power\GitHub中文发现器 |
 | DSH 工作区 | C:\Users\power\Documents\发现器开发-建议（宣传/视频物料在此） |
-| 当前版本 | **v1.24.1**（2026-10-31 上线，SW 缓存 gh-cn-v16，152 个项目） |
-| 本地 commit | 与远端同步 = `1ea01e2`（2026-10-31 15:49 维护提交；此前 c5b9928 为 v1.24.1 基线） |
-| 远端 main | `1ea01e2`（数据表残留清理 + verify_sync.py + 手册修正；基线 c5b9928 = 6303e18 重建静态页 + star 快照） |
+| 当前版本 | **v1.24.2**（2026-11-07 上线，SW 缓存 gh-cn-v17，162 个项目） |
+| 本地 commit | 待本次发版后更新（v1.24.2 为内容更新批） |
+| 远端 main | 同上（含 10 个新项目 + 10 个仓库改名同步） |
 
 ## 2. 文件职责一览
 
@@ -161,17 +161,20 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 
 ## 6. 当前状态与待办
 
-### 已上线（v1.24.1）
+### 已上线（v1.24.2）
 - 页码分页：每页 24 个，页码条「上一页/页码窗口/下一页/第 x/N 页 · 共 N 个」。
-- 152 个项目；AI 分类 23 个恰 1 页；分页 7 页、末页 8 卡。
+- **162 个项目**；AI 分类 26 个（2 页）；分页 7 页、末页 18 卡。
+- v1.24.2（2026-11-07）新增 10 个：OpenClaw、Superpowers、OpenCode、Firecrawl、MarkItDown、CleanYourTV、DeepInfer、Aerial、肉呆去广告、课标知识图谱。
+- 同步 10 个仓库改名（`Qwen2.5` → `Qwen3` 文案已重写；llama.cpp / React / React Native / OpenHands / ComfyUI / alist / LobeChat / LibreChat / developer-roadmap）。
 - 已下架并确认线上 404：5 个大肥鱼插件（T-Auto/dsh-ops、QCYTSN/dsh-dafeiyu、liyupi/dafeiyu-cleaner、xiaoshihou514/dsh-desktop-pet、RYANFFY/deepseek-dafeiyu-pet）+ 早期下架的 legado（阅读）。
-- 2026-10-31 DSH 接手时已核验：线上=本地（data.js 规范化逐字节相同、sitemap 154、list.html 仅 CRLF 差异、下架页 404、在册页 200、CI 全绿）；本地已 `git reset --hard origin/main` 对齐到 c5b9928，无分叉。
 - 说明：`repos.json` 每小时被 CI 刷新，本地与远端差一个快照属正常，不是漂移。
+- 工具：`verify_sync.py`（HTTP 级三方核验）+ `verify_browser.py`（13 项浏览器断言，期望值从 data.js 实时计算，加项目不用改脚本）。
 
 ### 待办/未决（等用户拍板，勿擅自做）
-1. **dsh-our-free-model 是否收录**：Ebony-Vinyl/dsh-our-free-model（★★53.1k，GitHub Trending 日榜第 1）——用户已试装此插件，是否收录进「AI 人工智能」分类未表态。
+1. **dsh-our-free-model 是否收录**：Ebony-Vinyl/dsh-our-free-model（★64.8k）——用户未表态；按"插件非应用"的既有口径，建议维持不收。
 2. **插件单独子项 + star 门槛方案**：用户曾提出「插件与应用不同类应单设子项」「低人气（如 star<100）应剔除」，方案暂缓，未重启。
-3. 宣传/引流侧物料在 `C:\Users\power\Documents\发现器开发-建议\`（视频、封面、脚本），如需再产出可参考其中的 make_video.py / 决策参考。
+3. **仓库改名巡检**：本次用一次性脚本扫出 10 个改名；可考虑把"链接巡检（404/301）"做进 `verify_sync.py`，每月跑一次。
+4. 宣传/引流侧物料在 `C:\Users\power\Documents\发现器开发-建议\`（视频、封面、脚本），如需再产出可参考其中的 make_video.py / 决策参考。
 
 ## 7. DSH 侧操作要点（本机）
 
@@ -191,9 +194,9 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 
 - [ ] sw.js 缓存名已升级（gh-cn-vXX）
 - [ ] index.html GH_VER 正确
-- [ ] 首页首屏 24 卡 + 页码条「第 1/7 页 · 共 152 个」
-- [ ] 末页（第 7 页）8 卡
+- [ ] 首页首屏 24 卡 + 页码条「第 1/7 页 · 共 162 个」
+- [ ] 末页（第 7 页）18 卡
 - [ ] 搜索关键词 0 结果空态正常
 - [ ] 已下架项目的 p 页 404
-- [ ] sitemap.xml 152 项目 + 首页 + list.html = 154 url
+- [ ] sitemap.xml 162 项目 + 首页 + list.html = 164 url
 - [ ] 手机视口（375px）首屏可读、不闪白

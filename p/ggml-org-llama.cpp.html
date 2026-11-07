@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Llama.cpp 本地大模型 - GitHub 中文发现器</title>
 <meta name="description" content="用纯 C++ 在普通电脑上高效运行大语言模型">
-<link rel="canonical" href="https://p0w3rd1n8.github.io/github-cn-finder/p/ggerganov-llama.cpp.html">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Llama.cpp 本地大模型", "description": "用纯 C++ 在普通电脑上高效运行大语言模型", "url": "https://github.com/ggerganov/llama.cpp", "applicationCategory": "AI 人工智能", "inLanguage": "zh-CN"}</script>
+<link rel="canonical" href="https://p0w3rd1n8.github.io/github-cn-finder/p/ggml-org-llama.cpp.html">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Llama.cpp 本地大模型", "description": "用纯 C++ 在普通电脑上高效运行大语言模型", "url": "https://github.com/ggml-org/llama.cpp", "applicationCategory": "AI 人工智能", "inLanguage": "zh-CN"}</script>
 <meta property="og:site_name" content="GitHub 中文发现器">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Llama.cpp 本地大模型（ggerganov/llama.cpp）- GitHub 中文发现器">
+<meta property="og:title" content="Llama.cpp 本地大模型（ggml-org/llama.cpp）- GitHub 中文发现器">
 <meta property="og:description" content="用纯 C++ 在普通电脑上高效运行大语言模型">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/P0w3rD1n8/github-cn-finder@main/og-cover.png">
 <meta name="theme-color" content="#0d1117">
@@ -73,7 +73,7 @@ var _hmt = _hmt || [];
   <a class="back" href="https://p0w3rd1n8.github.io/github-cn-finder/">← 返回首页</a>
 </header>
 <main class="container">
-  <h1>Llama.cpp 本地大模型 <span class="en">ggerganov/llama.cpp</span></h1>
+  <h1>Llama.cpp 本地大模型 <span class="en">ggml-org/llama.cpp</span></h1>
   <div class="meta-row"><span class="tag">AI 人工智能</span> · <span class="tag">C++</span> · <span class="star">⭐ 132,486 星标</span></div>
   <p class="desc">用纯 C++ 在普通电脑上高效运行大语言模型</p>
   <section class="detail">🎯应用场景：在普通电脑（甚至手机）上跑大模型，不需要高端显卡。
@@ -81,15 +81,15 @@ var _hmt = _hmt || [];
 💻适用平台：Windows / Mac / Linux，命令行操作。
 🛠怎么用起来：下载编译好的版本，命令行指定模型文件启动；动手能力要求较高，适合爱折腾的玩家。</section>
   <div class="links">
-    <a class="btn" href="https://github.com/ggerganov/llama.cpp" target="_blank" rel="noopener">去 GitHub 查看 ↗</a>
+    <a class="btn" href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener">去 GitHub 查看 ↗</a>
     <a class="btn ghost" href="https://gitcode.com/GitHub_Trending/ll/llama.cpp" target="_blank" rel="noopener">⚡ GitCode 国内镜像</a>
   </div>
-  <section class="docs"><h2>📖 官方文档摘要</h2><div class="blk"><div class="lbl">官方定位</div><p>用纯 C/C++ 实现的大语言模型（及视觉语言模型）推理引擎，目标是以最少的配置、在本地和云端各种硬件上都实现 SOTA 级别的推理性能。</p></div><div class="blk"><div class="lbl">亮点特性</div><ul><li>纯 C/C++ 实现、零依赖，构建在 ggml 库之上</li><li>Apple Silicon 一级优化（ARM NEON、Accelerate、Metal）；x86 支持 AVX/AVX2/AVX512/AMX；RISC-V 也有支持</li><li>支持 1.5/2/3/4/5/6/8 bit 整数量化，推理更快、内存更省</li><li>CUDA 自研 kernel，另支持 HIP（AMD）、MUSA（摩尔线程）、Vulkan、SYCL、Metal 等后端，并支持 CPU+GPU 混合推理跑下超过显存容量的模型</li></ul></div><div class="blk"><div class="lbl">快速开始</div><ol><li>安装（Linux/macOS）：<code>curl -LsSf https://llama.app/install.sh | sh</code>；Windows PowerShell：<code>irm https://llama.app/install.ps1 | iex</code></li><li>其他途径：访问 https://llama.app 按指引操作，或从 releases 页下载预编译二进制，或按 docs/build.md 从源码编译</li><li>装好后直接从 Hugging Face 拉模型跑 CLI：<code>llama cli -hf ggml-org/Qwen3.5-0.8B-GGUF</code></li><li>启动 OpenAI 兼容 API 服务：<code>llama serve -hf ggml-org/Qwen3.5-0.8B-GGUF</code></li></ol></div><div class="blk"><div class="lbl">求助渠道</div><p>官网 https://llama.app ；文档见仓库 docs/ 目录（docs/build.md、docs/docker.md、tools/server/README.md 等）；问题走 GitHub Issues</p></div><div class="foot">整理日期：2026-10-29 · 内容翻译整理自官方 README，非官方发布，仅供参考</div></section>
-  <div class="detail-tip">👤 维护者 <a href="https://github.com/ggerganov" target="_blank" rel="noopener">ggerganov</a>：llama.cpp 作者，用纯 C++ 让大语言模型在普通电脑上高效运行。</div>
-  <section class="related"><h2>📚 相关项目（AI 人工智能）</h2><div class="list-item"><span class="nm"><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/tensorflow-tensorflow.html">TensorFlow 机器学习</a></span><span class="st">⭐ 201,287</span></div><div class="list-item"><span class="nm"><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/significant-gravitas-AutoGPT.html">AutoGPT 智能体</a></span><span class="st">⭐ 187,784</span></div><div class="list-item"><span class="nm"><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/ollama-ollama.html">Ollama 本地大模型</a></span><span class="st">⭐ 184,935</span></div><div class="list-item"><span class="nm"><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/huggingface-transformers.html">HuggingFace 模型库</a></span><span class="st">⭐ 168,225</span></div><div class="list-item"><span class="nm"><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/AUTOMATIC1111-stable-diffusion-webui.html">AI 绘画 WebUI</a></span><span class="st">⭐ 165,160</span></div><a class="related-more" href="https://p0w3rd1n8.github.io/github-cn-finder/list.html">查看全部 →</a></section>
+  
+  <div class="detail-tip">👤 维护者 <a href="https://github.com/ggml-org" target="_blank" rel="noopener">ggml-org</a>：llama.cpp 作者，用纯 C++ 让大语言模型在普通电脑上高效运行。</div>
+  <section class="related"><h2>📚 相关项目（AI 人工智能）</h2><div class="list-item"><span class="nm"><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/openclaw-openclaw.html">OpenClaw 私人 AI 助手</a></span><span class="st">⭐ 394,101</span></div><div class="list-item"><span class="nm"><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/tensorflow-tensorflow.html">TensorFlow 机器学习</a></span><span class="st">⭐ 201,287</span></div><div class="list-item"><span class="nm"><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/firecrawl-firecrawl.html">Firecrawl 网页抓取</a></span><span class="st">⭐ 199,378</span></div><div class="list-item"><span class="nm"><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/significant-gravitas-AutoGPT.html">AutoGPT 智能体</a></span><span class="st">⭐ 187,784</span></div><div class="list-item"><span class="nm"><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/ollama-ollama.html">Ollama 本地大模型</a></span><span class="st">⭐ 184,935</span></div><a class="related-more" href="https://p0w3rd1n8.github.io/github-cn-finder/list.html">查看全部 →</a></section>
   <div class="foot-note">💡 说明：中文介绍与星标数据由「GitHub 中文发现器」人工整理与自动采集，仅供学习参考；安装/使用请以项目官方文档为准。</div>
 </main>
 <footer>© GitHub 中文发现器 · <a href="https://p0w3rd1n8.github.io/github-cn-finder/">返回全部精选</a></footer>
-<script>(function(){var k="ggerganov/llama.cpp";var s=document.querySelector(".star");if(!s)return;fetch("https://p0w3rd1n8.github.io/github-cn-finder/repos.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(d){if(!d||!d.repos||!d.repos[k])return;var e=d.repos[k];if(typeof e.s!=="number")return;s.textContent="⭐ "+e.s.toLocaleString("en-US")+" 星标";var dt=new Date(d.updated);if(isNaN(dt))return;var t=dt.toLocaleString("zh-CN",{hour12:false});s.title="数据截至 "+t;var u=document.createElement("span");u.style.cssText="font-size:11px;color:#8b949e;font-weight:400";u.textContent=" · 数据截至 "+t;s.appendChild(u);}).catch(function(){});})();</script>
+<script>(function(){var k="ggml-org/llama.cpp";var s=document.querySelector(".star");if(!s)return;fetch("https://p0w3rd1n8.github.io/github-cn-finder/repos.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(d){if(!d||!d.repos||!d.repos[k])return;var e=d.repos[k];if(typeof e.s!=="number")return;s.textContent="⭐ "+e.s.toLocaleString("en-US")+" 星标";var dt=new Date(d.updated);if(isNaN(dt))return;var t=dt.toLocaleString("zh-CN",{hour12:false});s.title="数据截至 "+t;var u=document.createElement("span");u.style.cssText="font-size:11px;color:#8b949e;font-weight:400";u.textContent=" · 数据截至 "+t;s.appendChild(u);}).catch(function(){});})();</script>
 </body>
 </html>

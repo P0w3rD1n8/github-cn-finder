@@ -1,7 +1,7 @@
 # GitHub 中文发现器 🧭
 
 > 不懂英文，也能轻松逛 GitHub
-> 当前版本：**v1.24.1**（2026-10-31）
+> 当前版本：**v1.24.2**（2026-11-07）
 
 一个面向中文用户的 GitHub 优质开源项目发现工具，把 GitHub 上最值得关注的项目翻译成大白话，让完全不懂英文、不懂编程的小白也能轻松找到好东西。
 
@@ -53,6 +53,11 @@
 | README.md | 项目说明 |
 
 ## 📜 版本历史
+
+**v1.24.2（2026-11-07）**
+- 新增 10 个项目，精选库 152 → **162 个**：OpenClaw 私人 AI 助手（★394k）、Superpowers 开发方法论（★314k）、OpenCode 终端编程 Agent（★225k）、Firecrawl 网页抓取（★199k）、MarkItDown 文档转 Markdown（★194k）、CleanYourTV 电视去广告（★54k）、DeepInfer 推理框架（★26k）、Aerial 电视桌面（★10k）、肉呆去广告（★6.8k）、课标知识图谱（★7.0k）
+- 同步 10 个仓库改名后的真实地址：llama.cpp、React / React Native、OpenHands、ComfyUI、alist、LobeChat、LibreChat、developer-roadmap，以及 Qwen2.5 → **Qwen3**（文案一并更新）
+- 分页 7 页不变、末页 18 卡；AI 分类 23 → 26 条（2 页）（Service Worker v17）
 
 **v1.24.1（2026-10-31）**
 - 下架 5 个「大肥鱼」插件项目（dsh-ops / dsh-dafeiyu / dafeiyu-cleaner / dsh-desktop-pet / deepseek-dafeiyu-pet）：插件与应用类型不同、且除 dsh-ops 外人气过低，回归 152 个精选；页面分页、海报等功能不变（Service Worker v16）

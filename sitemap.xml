@@ -46,7 +46,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/ggerganov-llama.cpp.html</loc>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/ggml-org-llama.cpp.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -61,7 +61,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/facebook-react.html</loc>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/react-react.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -256,7 +256,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/facebook-react-native.html</loc>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/react-react-native.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -301,7 +301,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/kamranahmedse-developer-roadmap.html</loc>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/nilbuild-developer-roadmap.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -341,7 +341,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/comfyanonymous-ComfyUI.html</loc>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/Comfy-Org-ComfyUI.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -366,7 +366,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/alist-org-alist.html</loc>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/AlistGo-alist.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -446,12 +446,12 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/lobehub-lobe-chat.html</loc>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/lobehub-lobehub.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/danny-avila-LibreChat.html</loc>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/LibreChat-AI-LibreChat.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -466,7 +466,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/QwenLM-Qwen2.5.html</loc>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/QwenLM-Qwen3.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -481,7 +481,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/All-Hands-AI-OpenHands.html</loc>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/OpenHands-OpenHands.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -767,6 +767,56 @@
   </url>
   <url>
     <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/dulaiduwang003-Pavise-Game.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/openclaw-openclaw.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/obra-superpowers.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/anomalyco-opencode.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/firecrawl-firecrawl.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/microsoft-markitdown.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/Gathin23-cleanyourtv.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/deepseek-ai-DeepInfer.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/pengchujin-aerial-tv.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/rddmwmddr-android-ad-cleaner.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/p/xiaoyang111222-cn-math-taxonomy.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
