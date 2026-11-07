@@ -14,7 +14,7 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | GitHub 仓库 | P0w3rD1n8/github-cn-finder（远端 main 分支） |
 | 本地仓库（ROG） | C:\Users\power\GitHub中文发现器 |
 | DSH 工作区 | C:\Users\power\Documents\发现器开发-建议（宣传/视频物料在此） |
-| 当前版本 | **v1.24.2**（2026-11-07 上线，SW 缓存 gh-cn-v17，162 个项目） |
+| 当前版本 | **v1.25.0**（2026-11-07 上线，SW 缓存 gh-cn-v18，162 个项目） |
 | 本地 commit | 与远端同步 = `bab81b6`（2026-11-07 v1.24.2 发版：`f4f915a` 内容 + `bab81b6` star 快照） |
 | 远端 main | `bab81b6`（162 个项目 / SW v17；CI validate + build-pages 在 f4f915a 上均 success） |
 
@@ -24,7 +24,8 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 |---|---|
 | `data.js` | **数据主源（人工维护）**：`REPOS`（精选清单 `{n:"owner/repo"}`）+ `REPO_ZH`（中文名）+ `DETAIL`（中文详情四段式）+ `USAGE`（一句话用法）+ `CATS`（分类表）。**增删项目/改中文简介改这里**，然后跑 fetch-data.py |
 | `fetch-data.py` | 数据抓取：读 `data.js` 的 `REPOS` 数组 → 调 GitHub API 抓 star/语言/描述等真实字段 → **写出** `repos.json`。CI 与本地均跑它 |
-| `repos.json` | **自动产物，不要手改**：抓取结果（含 star/fork/hist 快照，`updated` 时间戳），前端 fetch 使用；CI 每小时自动刷新并提交 |
+| `repos.json` | **自动产物，不要手改**：抓取结果（含 star/fork/hist 快照、`pa` 最近提交日、`ar` 是否归档），前端 fetch 使用；CI 每小时自动刷新并提交 |
+| `weekly.json` | **自动产物**：每周一张全库 star 快照（`{date, stars}`，保留 60 期），由 fetch-data.py 维护，供「周涨星」和周刊页使用 |
 | `build_pages.py` | 静态页生成器：由 data.js 生成 `p/<owner>-<repo>.html`（每个项目一个分享落地页）+ `list.html`（全列表）+ `sitemap.xml` |
 | `p/` | 152 个静态项目页（v1.24.1 现状） |
 | `index.html` | 首页全部前端逻辑：分页、分类、搜索、收藏、海报、主题；版本号在 `window.GH_VER` |
@@ -96,14 +97,14 @@ $env:PYTHONIOENCODING="utf-8"     # 否则中文/emoji 输出会 GBK 报错
 - 下架页清单**不再手写**：从 `git log --diff-filter=D -- p/` 自动推算"历史存在、现已删除"的页面，逐个要求 404。
 - `--links` 的探测方式：有 `GH_TOKEN`/`GITHUB_TOKEN` 或 `~/.git-credentials` 时走 API（162 个约 10 秒，直接拿到新 `full_name`）；无 token 退回 HEAD 探测（慢且易受网络影响）。**404 记为问题，改名只记为提示**（改完 REPOS 与四张表才算修完）。
 
-**verify_browser.py — 浏览器级行为验收（13 项）**
+**verify_browser.py — 浏览器级行为验收（18 项）**
 ```powershell
 $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 §5.4）
 & $py verify_browser.py --local      # 本地起 http.server 测当前工作区
 & $py verify_browser.py              # 测线上
 & $py verify_browser.py --headed     # 显示窗口调试
 ```
-- 覆盖：首屏 24 卡 / 分页条 / 第 7 页 8 卡 / AI 分类 23 个 / 搜索空态 / 搜索命中 / 静态页 / 控制台无报错 / 请求无失败 / 375px 手机端（24 卡、无横向溢出、不白屏）。
+- 覆盖：首屏卡数 / 分页条 / 末页卡数 / AI 分类 / 搜索空态 / 搜索命中 / 静态页 / 控制台无报错 / 请求无失败 / 375px 手机端 / **v1.25.0 新增：筛选写 URL、刷新保持筛选、活跃度判定、停更角标、相似项目**。
 - 截图落在 `_shots/`（已 gitignore）。
 - 已知口径：搜索会同时查 GitHub API，**无意义关键词才会 0 结果**；前端会主动取消上一轮搜索请求，`ERR_ABORTED` 不计为失败。
 
@@ -164,14 +165,16 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 
 ## 6. 当前状态与待办
 
-### 已上线（v1.24.2）
+### 已上线（v1.25.0）
 - 页码分页：每页 24 个，页码条「上一页/页码窗口/下一页/第 x/N 页 · 共 N 个」。
 - **162 个项目**；AI 分类 26 个（2 页）；分页 7 页、末页 18 卡。
+- **v1.25.0（2026-11-07）体验三件套**：筛选状态写入 URL（`?cat=&use=&sort=&p=&q=`，刷新/分享不丢）；卡片活跃度角标（只标异常：半年未更 / 停更 / 已归档——162 个里 131 个是 7 天内更新的，给活跃项目打标等于没信息）；详情页「相似项目」4 个（同分类+同语言+人群标签+人气量级加权）。
+- **v1.25.0 数据管线**：`repos.json` 新增 `ar`（归档）字段；新增 `weekly.json` 每周 star 快照（CI 每周补一笔，保留 60 期），为周涨星榜/周刊铺路。
 - v1.24.2（2026-11-07）新增 10 个：OpenClaw、Superpowers、OpenCode、Firecrawl、MarkItDown、CleanYourTV、DeepInfer、Aerial、肉呆去广告、课标知识图谱。
 - 同步 10 个仓库改名（`Qwen2.5` → `Qwen3` 文案已重写；llama.cpp / React / React Native / OpenHands / ComfyUI / alist / LobeChat / LibreChat / developer-roadmap）。
 - 已下架并确认线上 404：5 个大肥鱼插件（T-Auto/dsh-ops、QCYTSN/dsh-dafeiyu、liyupi/dafeiyu-cleaner、xiaoshihou514/dsh-desktop-pet、RYANFFY/deepseek-dafeiyu-pet）+ 早期下架的 legado（阅读）。
 - 说明：`repos.json` 每小时被 CI 刷新，本地与远端差一个快照属正常，不是漂移。
-- 工具：`verify_sync.py`（HTTP 级三方核验）+ `verify_browser.py`（13 项浏览器断言，期望值从 data.js 实时计算，加项目不用改脚本）。
+- 工具：`verify_sync.py`（HTTP 级三方核验 + `--links` 链接巡检）+ `verify_browser.py`（18 项浏览器断言，期望值从 data.js 实时计算）。
 
 ### 待办/未决（等用户拍板，勿擅自做）
 1. **dsh-our-free-model 是否收录**：Ebony-Vinyl/dsh-our-free-model（★64.8k）——用户未表态；按"插件非应用"的既有口径，建议维持不收。
@@ -194,6 +197,10 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - 接手项目：在 DSH 里打开 `C:\Users\power\GitHub中文发现器` 作为工作区，配合本手册即可独立迭代。DSH 是本地 AI 助手，不连接豆包云端技能，纯本地文件操作。
 
 ## 8. 验证清单（发版后线上必查）
+
+- [ ] 筛选写入 URL：点分类后地址栏出现 `?cat=…`，刷新不丢（v1.25.0）
+- [ ] 停更项目的卡片有角标（半年未更 / 停更 / 已归档）（v1.25.0）
+- [ ] 详情页底部有「相似项目」4 个（v1.25.0）
 
 - [ ] sw.js 缓存名已升级（gh-cn-vXX）
 - [ ] index.html GH_VER 正确

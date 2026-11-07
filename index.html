@@ -36,7 +36,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.24.2";
+window.GH_VER = "v1.25.0";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -160,6 +160,10 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .tag.src{background:rgba(88,166,255,.12);color:var(--accent);border-color:rgba(88,166,255,.3)}
 .tag.up{background:rgba(63,185,80,.14);color:#3fb950;border-color:rgba(63,185,80,.35);font-weight:700}
 .tag.en{background:rgba(247,129,102,.12);color:var(--accent2);border-color:rgba(247,129,102,.35)}
+/* v1.25.0 活跃度角标：小白一眼判断"这项目还活着吗"（日历天数来自 repos.json 的 pa） */
+.tag.act-live{background:rgba(63,185,80,.14);color:#3fb950;border-color:rgba(63,185,80,.35)}
+.tag.act-warn{background:rgba(240,180,41,.14);color:#f0b429;border-color:rgba(240,180,41,.35)}
+.tag.act-dead{background:rgba(248,81,73,.14);color:#f85149;border-color:rgba(248,81,73,.35)}
 /* 卡片操作按钮（去GitHub + 国内镜像）：首页卡片也一眼能看到跳转入口 */
 .card-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
 .card-actions .btn{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:8px;
@@ -254,6 +258,13 @@ img.repo-icon{object-fit:cover;background:var(--chip)}
 .card.open .repo-detail{display:block;animation:fade .25s ease}
 /* 详情底部统一提示：搭建命令有时效性，以官方文档为准 */
 .detail-tip{font-size:11px;color:#8b949e;margin-top:8px;padding-top:6px;border-top:1px dashed var(--border)}
+/* v1.25.0 相似项目 */
+.sim-h{font-weight:600;color:var(--text2);margin-bottom:6px}
+.sim-list{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sim-item{display:flex;flex-direction:column;gap:2px;padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:var(--card2);text-decoration:none;color:var(--text)}
+.sim-item:hover{border-color:var(--accent);text-decoration:none}
+.sim-name{font-size:12px;color:var(--accent);line-height:1.3}
+.sim-meta{font-size:10.5px;color:var(--text2)}
 /* 详情里的可点击代表作：醒目链接色 */
 .author-work-link{color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:2px}
 .author-work-link:active{opacity:.7}
@@ -718,9 +729,55 @@ function buildDetailHTML(r){
       detHTML += `<div class="detail-tip">ℹ️ 该项目国内暂无平台官方镜像，请访问 GitHub 官方页面查看原文。</div>`;
     }
   }
+  if(detHTML) detHTML += similarHTML(r);
   /* v1.23.0：生成海报入口（一键出图，发小红书/朋友圈的素材机） */
   detHTML += `<button class="poster-btn" onclick="event.stopPropagation();openPoster('${esc(r.n).replace(/'/g,"\\'")}')">🖼 生成海报</button>`;
   return detHTML;
+}
+
+/* v1.25.0 活跃度：只在「可能踩坑」时才在卡片上出角标（半年未更 / 停更 / 已归档）。
+   原因：162 个里 131 个都是 7 天内更新，给每个活跃项目打绿标等于没有信息量。 */
+function activityOf(r){
+  if(r && r.ar) return {cls:"act-dead", text:"已归档", title:"作者已把项目归档，不再接受更新"};
+  const pa = r && r.pa;
+  if(!pa) return null;
+  const days = Math.floor((Date.now() - new Date(pa + "T00:00:00").getTime()) / 86400000);
+  if(!isFinite(days) || days < 0) return null;
+  if(days >= 365) return {cls:"act-dead", text:"停更", title:"已 " + days + " 天没有提交（最后一次 " + pa + "），入手前留意"};
+  if(days >= 180) return {cls:"act-warn", text:"半年未更", title:"已 " + days + " 天没有提交（最后一次 " + pa + "）"};
+  return null;
+}
+/* v1.25.0 相似项目：同分类 + 同语言 + 人群标签重合 + 星标量级接近 */
+function similarRepos(r, limit){
+  limit = limit || 4;
+  if(!r) return [];
+  const myUse = USAGE[r.n] || [];
+  const scored = [];
+  for(const x of REPOS){
+    if(x.n === r.n) continue;
+    let score = 0;
+    if(x.c === r.c) score += 3;
+    if(x.l && r.l && x.l === r.l) score += 2;
+    const xu = USAGE[x.n] || [];
+    score += xu.filter(u => myUse.includes(u) && u !== "全部").length;
+    const ratio = x.s / Math.max(r.s, 1);
+    if(ratio >= 0.2 && ratio <= 5) score += 1;
+    if(score > 0) scored.push([score, x]);
+  }
+  scored.sort((a, b) => b[0] - a[0] || b[1].s - a[1].s);
+  return scored.slice(0, limit).map(x => x[1]);
+}
+function similarHTML(r){
+  const list = similarRepos(r, 4);
+  if(!list.length) return "";
+  const items = list.map(x => {
+    const has = PAGEMAP.has((x.n || "").toLowerCase());
+    const owner2 = x.n.split("/")[0], repo2 = x.n.split("/")[1];
+    const href = has ? `p/${esc(owner2)}-${esc(repo2)}.html` : `https://github.com/${esc(x.n)}`;
+    const attr = has ? "" : ` target="_blank" rel="noopener"`;
+    return `<a class="sim-item" href="${href}"${attr}><span class="sim-name">${esc(repoZh(x.n))}</span><span class="sim-meta">⭐ ${fmt(x.s)} · ${esc(x.c)}</span></a>`;
+  }).join("");
+  return `<div class="detail-tip sim-wrap"><div class="sim-h">🔎 相似项目（同分类 / 同语言 / 人气相近）</div><div class="sim-list">${items}</div></div>`;
 }
 
 /* 卡片渲染 */
@@ -771,6 +828,7 @@ function cardHTML(r, src, rank, delta){
       <span class="meta-item" title="星标：GitHub 上点赞这个项目的人数">⭐ <span class="lbl">星标</span> <span style="color:var(--star)">${fmt(r.s)}</span></span>
       <span class="meta-item" title="项目使用的编程语言"><span class="lang-dot" style="background:${LANG_COLORS[r.l]||"#8b949e"}"></span>${esc(r.l)||"多语言"}</span>
       <span class="tag" title="项目所属分类">${esc(r.c)}</span>
+      ${(()=>{ const a = activityOf(r); return a ? `<span class="tag ${a.cls}" title="${esc(a.title)}">${a.text}</span>` : ""; })()}
       ${r.en?`<span class="tag en" title="英文简介">EN</span>`:""}
       ${typeof delta==="number"&&delta>0?`<span class="tag up" title="近 24 小时新增的星标数">▲ ${fmt(delta)}</span>`:""}
       ${src?`<span class="tag src">${src}</span>`:""}
@@ -1238,6 +1296,41 @@ function renderHome(reset){
   const shown = list.slice(start, start + HOME_PAGE_SIZE);
   $("#homeList").innerHTML = shown.map(r=>cardHTML(r)).join("")
     + (total>HOME_PAGE_SIZE ? pagerHTML(homePage, pages, total) : "");
+  syncURL();
+}
+
+/* ===== v1.25.0 筛选状态同步到 URL：链接可分享、刷新不丢、可加书签 ===== */
+function currentURLState(){
+  const p = new URLSearchParams();
+  if(curCat !== "全部") p.set("cat", curCat);
+  if(curUsage !== "全部") p.set("use", curUsage);
+  if(curSort !== "star") p.set("sort", curSort);
+  if(homePage > 1) p.set("p", String(homePage));
+  const q = (($("#searchInput")||{}).value || "").trim();
+  if(q) p.set("q", q);
+  return p.toString();
+}
+function syncURL(){
+  try{
+    const qs = currentURLState();
+    history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+  }catch(e){ /* file:// 等环境忽略 */ }
+}
+function applyURLState(){
+  try{
+    const sp = new URLSearchParams(location.search);
+    const cat = sp.get("cat");
+    if(cat && CATS.includes(cat)) curCat = cat;
+    const use = sp.get("use");
+    if(use && USAGES.includes(use)) curUsage = use;
+    const sort = sp.get("sort");
+    if(sort === "fav" || sort === "star") curSort = sort;
+    const pg = parseInt(sp.get("p") || "1", 10);
+    if(pg > 0) homePage = pg;
+    const q = (sp.get("q") || "").trim();
+    if(q && $("#searchInput")) $("#searchInput").value = q;
+    return q;
+  }catch(e){ return ""; }
 }
 function renderUsages(){
   $("#usagePanel").innerHTML = USAGES.map(u=>`<div class="cat${u===curUsage?" active":""}" data-usage="${u}">${u}</div>`).join("");
@@ -1327,6 +1420,7 @@ async function doSearch(){
   const q = $("#searchInput").value.trim();
   const box = $("#homeList");
   if(!q){ renderHome(true); return; }   // 清空搜索框 → 恢复精选列表
+  syncURL();                            // 搜索词也进 URL，方便分享
 
   const local = localSearch(q);
   box.innerHTML = `<div class="loading"><span class="spin"></span>正在搜索 GitHub…</div>`;
@@ -1700,7 +1794,10 @@ if (typeof REPOS !== "undefined" && Array.isArray(REPOS) && REPOS.length){
   const repoCountEl = document.getElementById("repoCount");
   if(repoCountEl) repoCountEl.textContent = REPOS.length;
   try{
-    renderCats(); renderUsages(); renderHome(true); renderMirrorStats(); renderDailyPick(); renderFavs();
+    const restoredQ = applyURLState();
+    document.querySelectorAll("#sortTabs .sort-tab").forEach(b=>b.classList.toggle("active", b.dataset.sort===curSort));
+    renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs();
+    if(restoredQ){ clearTimeout(searchTimer); doSearch(); }
   }catch(err){
     showDataError();
   }

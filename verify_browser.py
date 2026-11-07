@@ -199,6 +199,49 @@ def main():
             page.wait_for_timeout(500)
             page.screenshot(path=os.path.join(args.shots, "desktop-1280.png"), full_page=False)
 
+            # ---------- v1.25.0 新功能 ----------
+            # 1) 筛选写入 URL + 刷新保持
+            page.locator('#catBar [data-cat="AI 人工智能"]').click()
+            page.wait_for_timeout(500)
+            u1 = page.url
+            check("筛选写入 URL", "cat=" in u1, u1.split("?")[-1][:70])
+            page.reload(wait_until="domcontentloaded")
+            page.wait_for_timeout(900)
+            active_cat = page.locator("#catBar .cat.active").first.inner_text()
+            n_after = count_cards(page)
+            check("刷新后保持筛选", active_cat == "AI 人工智能" and n_after == min(24, exp["ai"]),
+                  f"{active_cat} / {n_after} 张")
+
+            # 2) 活跃度角标：先验判定逻辑，再验真实卡片
+            page.locator('#catBar [data-cat="全部"]').click()
+            page.wait_for_timeout(500)
+            acts = page.evaluate("""() => [
+                activityOf({n:'fresh', pa:'2026-11-01'}),
+                activityOf({n:'half', pa:'2026-04-01'}),
+                activityOf({n:'dead', pa:'2025-01-01'}),
+                activityOf({n:'arch', ar:true})
+            ]""")
+            ok_act = (acts[0] is None
+                      and acts[1] and acts[1]["text"] == "半年未更"
+                      and acts[2] and acts[2]["text"] == "停更"
+                      and acts[3] and acts[3]["text"] == "已归档")
+            check("活跃度判定逻辑", ok_act, str(acts)[:120])
+
+            page.fill("#searchInput", "stable-diffusion")
+            page.wait_for_timeout(1800)
+            badge_txt = page.evaluate(
+                "() => [...document.querySelectorAll('#homeList .tag.act-warn,#homeList .tag.act-dead')].map(e=>e.textContent)"
+            )
+            check("停更项目卡片显示角标", len(badge_txt) > 0, f"示例 {badge_txt[:3]}")
+            page.fill("#searchInput", "")
+            page.wait_for_timeout(700)
+
+            # 3) 详情页相似项目
+            page.locator("#homeList .expand-hint").first.click()
+            page.wait_for_timeout(500)
+            sim = page.locator(".sim-item").count()
+            check("详情页相似项目", sim >= 2, f"{sim} 个")
+
             # 静态项目页
             p_resp = page.goto(base + "p/ollama-ollama.html", wait_until="domcontentloaded", timeout=45000)
             h1 = page.locator("h1").first.inner_text() if page.locator("h1").count() else ""

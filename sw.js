@@ -10,8 +10,10 @@
    版本 v14（v1.23.2）：海报简介改白字居中。
    版本 v15（v1.24.0）：首页「加载更多」升级为页码分页（每页 24 + 页码条）；收录 5 个「大肥鱼」DeepSeek Harness 插件项目。
    版本 v16（v1.24.1）：下架 5 个大肥鱼插件项目（插件非应用类型、除 dsh-ops 外人气过低，回归 152 个精选）。
-   版本 v17（v1.24.2）：新增 10 个项目（162 个）；修正 10 个仓库改名（llama.cpp/React/OpenHands/Qwen3 等）。 */
-const CACHE = "gh-cn-v17";
+   版本 v17（v1.24.2）：新增 10 个项目（162 个）；修正 10 个仓库改名（llama.cpp/React/OpenHands/Qwen3 等）。
+   版本 v18（v1.25.0）：筛选状态写入 URL（可分享/刷新不丢）；卡片新增活跃度角标（半年未更/停更/已归档）；
+   详情页新增「相似项目」推荐；数据管线新增每周 star 快照 weekly.json（供周涨星与周刊）。 */
+const CACHE = "gh-cn-v18";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html"];

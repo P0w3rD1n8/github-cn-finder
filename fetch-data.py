@@ -26,6 +26,39 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "repos.json")
 API = "https://api.github.com"
 RAW_PREV = "https://raw.githubusercontent.com/P0w3rD1n8/github-cn-finder/main/repos.json"
 HIST_MAX = 24  # hist 快照上限：近 24 小时（每小时一个点）
+WEEKLY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "weekly.json")
+WEEKLY_MAX = 60       # 保留最近 60 周（约一年）
+WEEKLY_GAP_DAYS = 6.5  # 距上次快照超过这个天数就补一笔（配合每小时 CI，实际约每 7 天一笔）
+
+
+def update_weekly(repos):
+    """v1.25.0：每周存一次全库 star 快照，供「周涨星」和周刊使用；不足 7 天则跳过。"""
+    today = time.strftime("%Y-%m-%d", time.gmtime())
+    data = {"snapshots": []}
+    if os.path.exists(WEEKLY):
+        try:
+            with open(WEEKLY, encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception:
+            data = {"snapshots": []}
+    snaps = data.get("snapshots") or []
+    if snaps:
+        try:
+            last = time.mktime(time.strptime(snaps[-1].get("date", ""), "%Y-%m-%d"))
+            now = time.mktime(time.strptime(today, "%Y-%m-%d"))
+            if (now - last) / 86400 < WEEKLY_GAP_DAYS:
+                return False
+        except Exception:
+            pass
+    stars = {n: r["s"] for n, r in repos.items() if isinstance(r.get("s"), (int, float))}
+    if not stars:
+        return False
+    snaps.append({"date": today, "stars": stars})
+    data["snapshots"] = snaps[-WEEKLY_MAX:]
+    with open(WEEKLY, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
+    print(f"🗓 已写入周快照 {today}（共 {len(data['snapshots'])} 期）")
+    return True
 
 TOKEN = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or ""
 
@@ -78,6 +111,7 @@ def fetch_repo(full_name, retries=3):
                 "iu": d.get("open_issues_count"),
                 "pa": (d.get("pushed_at") or "")[:10],
                 "lg": d.get("language") or "",
+                "ar": bool(d.get("archived")),   # v1.25.0：归档状态，前端显示「已归档」角标
             }
         except Exception as e:
             code = getattr(e, "code", None)
@@ -152,24 +186,26 @@ def main():
         "repos": repos,
     }
 
-    # 跳过写入条件：与上一版快照相比 s/fk/iu/lg 全未变，且 hist 已满 24（没有新的时点可累积）。
+    # 跳过写入条件：与上一版快照相比 s/fk/iu/lg/pa/ar 全未变，且 hist 已满 24（没有新的时点可累积）。
     # 这样前 24 次运行必然写入（把 hist 快照攒满），之后只有数据变化才提交，避免每小时无意义 commit
     if prev and len(prev) >= ok:
         def need_write(n, r):
             p = prev.get(n)
             if not p:
                 return True
-            if any(p.get(k) != r.get(k) for k in ("s", "fk", "iu", "lg")):
+            if any(p.get(k) != r.get(k) for k in ("s", "fk", "iu", "lg", "pa", "ar")):
                 return True
             ph = p.get("hist")
             return not (isinstance(ph, list) and len(ph) >= HIST_MAX)
         if not any(need_write(n, r) for n, r in repos.items()):
             print(f"ℹ️ 与上一版快照完全一致且 24h 快照已满（{HIST_MAX}），跳过写入")
+            update_weekly(repos)   # 即使跳过 repos.json，也检查周快照是否该落一笔
             return
 
     with open(OUT, "w", encoding="utf-8", newline="\n") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
     print(f"✅ 已生成 {OUT}：{ok} 成功 / {fail} 失败 / 共 {len(names)}，ps 命中 {ps_hit}，hist 命中 {hist_hit}")
+    update_weekly(repos)
 
 
 if __name__ == "__main__":
