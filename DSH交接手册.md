@@ -138,6 +138,7 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - GH_TOKEN 来源：`C:\Users\power\.git-credentials`（格式 `https://P0w3rD1n8:gho_xxxxx`，把冒号后当 token 用）。**凭据不要提交进仓库**。
 
 ### 5.3 其他坑
+- **push 前先 `fetch` + `rebase`**：CI 每小时会提交 `repos.json`，本地久了直接 push 会被 `! [rejected] (fetch first)` 拒掉。正确姿势：`git fetch origin main` → `git rebase origin/main` → push（只改 repos.json 的提交不会冲突）。**push 失败后不要手动 `git update-ref refs/remotes/origin/main`**——那会把跟踪引用指到假的位置。
 - star 数据必须走真实 API 回写，前端不造假数据。
 - UTC 时间口径：榜单/「今日」按 UTC 日切；黑名单在 fetch-data.py 里维护。
 - 手机端首屏可读性是验收底线（用户明确要求）。
