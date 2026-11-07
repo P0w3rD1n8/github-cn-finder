@@ -15,8 +15,8 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | 本地仓库（ROG） | C:\Users\power\GitHub中文发现器 |
 | DSH 工作区 | C:\Users\power\Documents\发现器开发-建议（宣传/视频物料在此） |
 | 当前版本 | **v1.25.0**（2026-11-07 上线，SW 缓存 gh-cn-v18，162 个项目） |
-| 本地 commit | 与远端同步 = `bab81b6`（2026-11-07 v1.24.2 发版：`f4f915a` 内容 + `bab81b6` star 快照） |
-| 远端 main | `bab81b6`（162 个项目 / SW v17；CI validate + build-pages 在 f4f915a 上均 success） |
+| 本地 commit | 与远端同步 = `ae355ac`（2026-11-07 v1.25.0 体验三件套 + 周快照） |
+| 远端 main | `ae355ac`（v1.25.0 / SW v18；线上 18 项浏览器断言全绿、7 文件逐字节一致） |
 
 ## 2. 文件职责一览
 
