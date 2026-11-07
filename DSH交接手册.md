@@ -88,11 +88,13 @@ $env:PYTHONIOENCODING="utf-8"     # 否则中文/emoji 输出会 GBK 报错
 & $py verify_sync.py              # 默认：本地↔远端 main、线上↔本地、版本、数据表、repos.json
 & $py verify_sync.py --fetch      # 先 git fetch 刷新 origin/main（网络抖时会挂，慎用）
 & $py verify_sync.py --pages      # 另抽样 12 个 p 页查线上状态码
-& $py verify_sync.py --full-pages --page-budget 120   # 全量 152 个
+& $py verify_sync.py --full-pages --page-budget 120   # 全量 p 页
+& $py verify_sync.py --links      # 巡检全部仓库链接：404 / 改名（走 GitHub API，需 token）
 ```
 - 判定口径：**CRLF/LF 差异不算问题**（已加 `.gitattributes` 统一 LF，但仍保留归一化兜底）；只报真内容差异。
 - p 页默认不扫：GitHub Pages 链路偶发 20–35s 握手卡顿，全量扫描容易跑成分钟级；`--pages` 有总预算，超时/网络失败的请求单独归类、不计为内容问题。
 - 下架页清单**不再手写**：从 `git log --diff-filter=D -- p/` 自动推算"历史存在、现已删除"的页面，逐个要求 404。
+- `--links` 的探测方式：有 `GH_TOKEN`/`GITHUB_TOKEN` 或 `~/.git-credentials` 时走 API（162 个约 10 秒，直接拿到新 `full_name`）；无 token 退回 HEAD 探测（慢且易受网络影响）。**404 记为问题，改名只记为提示**（改完 REPOS 与四张表才算修完）。
 
 **verify_browser.py — 浏览器级行为验收（13 项）**
 ```powershell
@@ -174,7 +176,7 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 ### 待办/未决（等用户拍板，勿擅自做）
 1. **dsh-our-free-model 是否收录**：Ebony-Vinyl/dsh-our-free-model（★64.8k）——用户未表态；按"插件非应用"的既有口径，建议维持不收。
 2. **插件单独子项 + star 门槛方案**：用户曾提出「插件与应用不同类应单设子项」「低人气（如 star<100）应剔除」，方案暂缓，未重启。
-3. **仓库改名巡检**：本次用一次性脚本扫出 10 个改名；可考虑把"链接巡检（404/301）"做进 `verify_sync.py`，每月跑一次。
+3. **仓库改名巡检**：已做进 `verify_sync.py --links`（2026-11-07 新增，API 模式 162 个约 10 秒）。建议每月跑一次，把 `改名` 提示同步到 REPOS 与四张表。上次巡检（11-07）修了 10 个改名。
 4. 宣传/引流侧物料在 `C:\Users\power\Documents\发现器开发-建议\`（视频、封面、脚本），如需再产出可参考其中的 make_video.py / 决策参考。
 
 ## 7. DSH 侧操作要点（本机）

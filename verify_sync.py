@@ -119,10 +119,13 @@ def main():
     ap.add_argument("--full-pages", action="store_true", help="扫描全部 p 页（最慢）")
     ap.add_argument("--page-budget", type=int, default=45, help="p 页扫描的总时间预算（秒，默认 45）")
     ap.add_argument("--fetch", action="store_true", help="先 git fetch 刷新 origin/main（默认不 fetch，避免网络挂起）")
+    ap.add_argument("--links", action="store_true", help="巡检所有仓库链接：404 / 改名（GitHub 301）")
+    ap.add_argument("--link-budget", type=int, default=60, help="链接巡检的总时间预算（秒，默认 60）")
     args = ap.parse_args()
     repo = os.path.abspath(args.repo)
-    report = {"repo": repo, "problems": [], "checks": {}}
+    report = {"repo": repo, "problems": [], "warnings": [], "checks": {}}
     P = report["problems"]
+    W = report["warnings"]
 
     # ---------- A. 本地 vs 远端 main ----------
     say("① 本地工作区 ↔ 远端 main …")
@@ -317,6 +320,98 @@ def main():
     if report["checks"]["repos_json"]["local_count"] != len(repos):
         P.append(f"repos.json 条数({report['checks']['repos_json']['local_count']}) ≠ REPOS({len(repos)})")
 
+    # ---------- G. 仓库链接巡检（404 / 改名） ----------
+    if args.links:
+        import concurrent.futures as _cf
+
+        say(f"⑤ 仓库链接巡检：{len(repos)} 个，预算 {args.link_budget}s …")
+
+        # 优先走 API（快、且直接给新 full_name）；无 token 时退回 HEAD 探测
+        token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+        if not token:
+            try:
+                cred = os.path.join(os.path.expanduser("~"), ".git-credentials")
+                m = re.search(r"https://[^:]+:([^@]+)@", open(cred, encoding="utf-8").read())
+                token = m.group(1) if m else None
+            except Exception:  # noqa: BLE001
+                token = None
+
+        class _NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *a, **k):  # 不跟随，自己记录 301 目标
+                return None
+
+        link_op = urllib.request.build_opener(
+            urllib.request.ProxyHandler({}), _NoRedirect(),
+            urllib.request.HTTPSHandler(context=CTX),
+        )
+        say(f"   探测方式：{'GitHub API（带 token）' if token else 'HEAD 请求（无 token，较慢且易受网络影响）'}")
+
+        def probe_api(full):
+            req = urllib.request.Request(
+                f"https://api.github.com/repos/{full}",
+                headers={"Accept": "application/vnd.github+json",
+                         "User-Agent": "gh-cn-finder-verify",
+                         "Authorization": "Bearer " + token},
+            )
+            with OPENER.open(req, timeout=15) as r:
+                d = json.loads(r.read().decode("utf-8"))
+            new = d.get("full_name") or full
+            return full, 200, ("" if new.lower() == full.lower() else new), None
+
+        def probe_head(full):
+            for _ in range(2):
+                try:
+                    req = urllib.request.Request(f"https://github.com/{full}", method="HEAD",
+                                                 headers={"User-Agent": "gh-cn-finder-verify"})
+                    with link_op.open(req, timeout=15) as r:
+                        return full, r.status, r.headers.get("Location") or "", None
+                except urllib.error.HTTPError as e:
+                    loc = e.headers.get("Location") or ""
+                    return full, e.code, loc.split("github.com/")[-1].strip("/"), None
+                except Exception as e:  # noqa: BLE001
+                    last = type(e).__name__
+            return full, None, "", last
+
+        def probe(full):
+            try:
+                return probe_api(full) if token else probe_head(full)
+            except urllib.error.HTTPError as e:
+                if e.code == 404:
+                    return full, 404, "", None
+                return full, e.code, "", f"HTTP {e.code}"
+            except Exception as e:  # noqa: BLE001
+                return full, None, "", type(e).__name__
+
+        ex = _cf.ThreadPoolExecutor(max_workers=8)
+        futs = {ex.submit(probe, n): n for n in repos}
+        done, moved, missing, neterr = 0, [], [], []
+        try:
+            for fut in _cf.as_completed(futs, timeout=args.link_budget):
+                full, status, new, err = fut.result()
+                done += 1
+                if err:
+                    neterr.append([full, err])
+                elif status == 404:
+                    missing.append(full)
+                elif new:
+                    moved.append([full, new])
+        except _cf.TimeoutError:
+            pass
+        finally:
+            ex.shutdown(wait=False, cancel_futures=True)
+
+        report["checks"]["links"] = {
+            "checked": done, "total": len(repos), "via": "api" if token else "head",
+            "missing": missing, "moved": moved, "network_errors": neterr,
+        }
+        if missing:
+            P.append(f"{len(missing)} 个仓库链接已 404: {missing[:8]}")
+        if moved:
+            W.append(f"{len(moved)} 个仓库已改名（建议同步 REPOS 与四张表）: " +
+                     "; ".join(f"{a} -> {b}" for a, b in moved[:8]))
+        if neterr or done < len(repos):
+            say(f"   ⚠ 网络/额度问题：{len(neterr)} 个失败、{len(repos) - done} 个超预算未完成（不计为问题）")
+
     # ---------- D. 线上 p 页（默认不扫；--pages 抽样 / --full-pages 全量） ----------
     if not (args.pages or args.full_pages):
         report["checks"]["pages"] = {"skipped": True}
@@ -433,8 +528,20 @@ def main():
                 print(f"p 页        : 应查 {pg['checked']}/{pg['total']} 个，非200 {pg['not_200'] or '无'}"
                       f"，网络失败 {len(pg['network_errors'])} 个")
                 print(f"              历史下架 {pg['removed_checked']}/{pg['removed_total']} 个，仍可访问 {pg['removed_still_live'] or '无'}")
+        if c.get("links"):
+            lk = c["links"]
+            print(f"链接巡检    : {lk['checked']}/{lk['total']} 个，404 {len(lk['missing'])}，"
+                  f"改名 {len(lk['moved'])}，网络失败 {len(lk['network_errors'])}")
+            for a, b in lk["moved"][:6]:
+                print(f"              改名 {a} -> {b}")
+            for m in lk["missing"][:6]:
+                print(f"              404 {m}")
         print("-" * 74)
         print("问题:", P or "无")
+        if W:
+            print("提示:")
+            for w in W:
+                print("  ·", w)
 
     return 0 if not P else 1
 
