@@ -37,7 +37,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.27.0";
+window.GH_VER = "v1.27.1";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -1823,10 +1823,39 @@ fetch("./repos.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{
 
 /* 注册 Service Worker（PWA 可安装；file:// 打开时自动跳过） */
 if("serviceWorker" in navigator && location.protocol.startsWith("http")){
-  navigator.serviceWorker.register("sw.js").catch(()=>{});
-  /* SW 安装并接管新版后提示刷新：让用户不用自己摸索"刷新几次才看到新版"（v1.22.2） */
+  /* v1.27.1：updateViaCache:"none" 让浏览器每次都从网络取 sw.js。
+     安卓 Edge 会按 HTTP 缓存把 sw.js 存 10 分钟，旧 SW 一直不退，才会出现"刷好几次才更新"。 */
+  navigator.serviceWorker.register("sw.js", {updateViaCache: "none"}).then(function(reg){
+    reg.update().catch(function(){});
+    document.addEventListener("visibilitychange", function(){
+      if(document.visibilityState === "visible") reg.update().catch(function(){});
+    });
+  }).catch(function(){});
+
+  /* 用户是否已经在这页上操作过（滚动/点击/按键）——用来决定能不能"静默刷新" */
+  var interacted = false;
+  ["scroll","click","keydown","touchstart"].forEach(function(ev){
+    window.addEventListener(ev, function(){ interacted = true; }, {once:true, passive:true});
+  });
+
+  /* 新 SW 接管：页面原本已受控 → 属于升级，自动刷新一次（用 sessionStorage 防循环） */
+  var hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", function(){
+    if(!hadController){ hadController = true; return; }
+    if(sessionStorage.getItem("ghcn_sw_reloaded") === "1") return;
+    sessionStorage.setItem("ghcn_sw_reloaded", "1");
+    location.reload();
+  });
+
+  /* 收到「已更新」：没操作过就静默刷新；已经动过手就只提示，避免打断阅读 */
   navigator.serviceWorker.addEventListener("message", function(e){
-    if(e.data && e.data.type === "APP_UPDATED") showUpdateToast();
+    if(!(e.data && e.data.type === "APP_UPDATED")) return;
+    if(!interacted){
+      clearTimeout(window.__ghAutoReload);
+      window.__ghAutoReload = setTimeout(function(){ location.reload(); }, 1200);
+      return;
+    }
+    showUpdateToast();
   });
 }
 function showUpdateToast(){

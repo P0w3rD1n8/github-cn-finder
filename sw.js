@@ -14,8 +14,10 @@
    版本 v18（v1.25.0）：筛选状态写入 URL（可分享/刷新不丢）；卡片新增活跃度角标（半年未更/停更/已归档）；
    详情页新增「相似项目」推荐；数据管线新增每周 star 快照 weekly.json（供周涨星与周刊）。
    版本 v19（v1.26.0）：新增「专题合辑」5 个（装机/自媒体/本地 AI/自建服务/学编程）、「每周精选」周刊页与 RSS 订阅。
-   版本 v20（v1.27.0）：新增「对比模式」（勾选 2–3 个项目并排比较）与每个项目的专属分享封面图（og/*.png）。 */
-const CACHE = "gh-cn-v20";
+   版本 v20（v1.27.0）：新增「对比模式」（勾选 2–3 个项目并排比较）与每个项目的专属分享封面图（og/*.png）。
+   版本 v21（v1.27.1）：导航与 data.js 改为 network-first（no-store），sw.js 用 updateViaCache:none 注册，
+   新版本一次刷新即可生效；未操作页面时收到更新会静默刷新。 */
+const CACHE = "gh-cn-v21";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html"];
@@ -57,16 +59,24 @@ self.addEventListener("fetch", e => {
   const u = new URL(e.request.url);
   if (u.origin !== location.origin) return;      // 跨源资源不拦截，走正常网络
   if (e.request.method !== "GET") return;        // 只处理 GET
+  // v21（v1.27.1）：页面导航、data.js 改走 network-first。
+  // 背景：安卓 Edge 上 stale-while-revalidate 会先给旧页面，用户要连刷好几次才看到新版。
+  // 改成「先要网络（绕过 HTTP 缓存），超时或离线才回缓存」，一次刷新就能拿到新版。
+  const isNav = e.request.mode === "navigate";
+  if (isNav || u.pathname.endsWith("/index.html") || u.pathname.endsWith("/data.js")) {
+    e.respondWith(networkFirst(e.request, isNav ? 3000 : 2500, "reload"));
+    return;
+  }
   if (u.pathname.endsWith("/repos.json")) {      // 实时数据：network-first（3 秒超时回退缓存），保证 star 是最新的
-    e.respondWith(networkFirst(e.request));
+    e.respondWith(networkFirst(e.request, 3000, "reload"));
     return;
   }
   e.respondWith(fromCacheOrNetwork(e.request));
 });
 
-async function networkFirst(req){
+async function networkFirst(req, timeout, cacheMode){
   try{
-    const res = await fetchWithTimeout(req, 3000);
+    const res = await fetchWithTimeout(req, timeout || 3000, cacheMode);
     if (res && res.ok){
       const copy = res.clone();
       caches.open(CACHE).then(c => c.put(req, copy)).catch(()=>{});
@@ -111,10 +121,11 @@ async function updateCache(req){
   }
 }
 
-function fetchWithTimeout(req, ms){
+function fetchWithTimeout(req, ms, cacheMode){
+  const opts = cacheMode ? {cache: cacheMode} : undefined;
   return new Promise((resolve, reject)=>{
     const timer = setTimeout(()=>reject(new Error("fetch timeout")), ms);
-    fetch(req).then(r=>{ clearTimeout(timer); resolve(r); },
+    fetch(req, opts).then(r=>{ clearTimeout(timer); resolve(r); },
                     err=>{ clearTimeout(timer); reject(err); });
   });
 }
