@@ -125,7 +125,8 @@ def main():
             page = ctx.new_page()
             errors, failures = [], []
             page.on("pageerror", lambda e: errors.append(str(e)))
-            page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
+            page.on("console", lambda m: errors.append(
+                f"{m.text} @ {(m.location or {}).get('url', '')}") if m.type == "error" else None)
             page.on("requestfailed", lambda r: failures.append(f"{r.url} {r.failure}"))
 
             page.goto(base, wait_until="domcontentloaded", timeout=45000)
@@ -247,6 +248,27 @@ def main():
             h1 = page.locator("h1").first.inner_text() if page.locator("h1").count() else ""
             check("静态页 p/ollama-ollama.html", p_resp is not None and p_resp.status == 200 and len(h1) > 0,
                   f"HTTP {p_resp.status if p_resp else '?'} / h1={h1[:24]}")
+
+            # ---------- v1.26.0 专题合辑 / 周刊 / RSS ----------
+            c_resp = page.goto(base + "c/", wait_until="domcontentloaded", timeout=45000)
+            c_cards = page.locator(".coll-card").count()
+            check("专题合辑索引", c_resp is not None and c_resp.status == 200 and c_cards >= 3,
+                  f"HTTP {c_resp.status if c_resp else '?'} / {c_cards} 个合辑")
+
+            c1 = page.goto(base + "c/zhuangji.html", wait_until="domcontentloaded", timeout=45000)
+            c_items = page.locator(".c-item").count()
+            check("合辑内页项目数", c1 is not None and c1.status == 200 and c_items >= 5,
+                  f"HTTP {c1.status if c1 else '?'} / {c_items} 个")
+
+            w_resp = page.goto(base + "weekly/", wait_until="domcontentloaded", timeout=45000)
+            w_issues = page.locator(".issue").count()
+            check("每周精选索引", w_resp is not None and w_resp.status == 200 and w_issues >= 1,
+                  f"HTTP {w_resp.status if w_resp else '?'} / {w_issues} 期")
+
+            r_resp = page.goto(base + "feed.xml", wait_until="domcontentloaded", timeout=45000)
+            r_body = page.content()
+            check("RSS feed.xml", r_resp is not None and r_resp.status == 200 and "<rss" in r_body,
+                  f"HTTP {r_resp.status if r_resp else '?'} / {len(r_body)} 字节")
 
             # 前端会主动取消上一轮搜索请求（cancelPendingSearch），aborted 属正常
             real_failures = [

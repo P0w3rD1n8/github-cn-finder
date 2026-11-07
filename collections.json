@@ -1,0 +1,94 @@
+{
+  "collections": [
+    {
+      "slug": "zhuangji",
+      "title": "装机必备：新电脑先装这 10 个",
+      "subtitle": "重装系统、换了新电脑，照着装一遍就够用",
+      "desc": "Windows 新机必备的 10 个开源工具：截图录屏、压缩解压、PDF 阅读、下载、密码管理、跨设备传文件、命令行装软件，全部免费无广告。",
+      "note": "按「装完立刻能用」排序，不需要折腾配置。",
+      "items": [
+        "microsoft/PowerToys",
+        "ShareX/ShareX",
+        "M2Team/NanaZip",
+        "sumatrapdfreader/sumatrapdf",
+        "localsend/localsend",
+        "qBittorrent/qBittorrent",
+        "videolan/vlc",
+        "keepassxreboot/keepassxc",
+        "NickeManarin/ScreenToGif",
+        "ScoopInstaller/Scoop"
+      ]
+    },
+    {
+      "slug": "zimeiti",
+      "title": "自媒体工具箱：拍、剪、配音、做图一条龙",
+      "subtitle": "一个人做视频，这 9 个开源工具能顶一个工作室",
+      "desc": "从录屏直播、视频剪辑、压缩转码，到配音变声、AI 修图、图表设计，全部开源免费，不用订阅付费软件。",
+      "note": "OBS 录、Kdenlive 剪、HandBrake 压、Audacity 修音，是最常见的一套组合。",
+      "items": [
+        "obsproject/obs-studio",
+        "KDE/kdenlive",
+        "HandBrake/HandBrake",
+        "audacity/audacity",
+        "debpalash/VoiceStudio",
+        "yt-dlp/yt-dlp",
+        "upscayl/upscayl",
+        "GNOME/gimp",
+        "cathrynlavery/diagram-design"
+      ]
+    },
+    {
+      "slug": "aibendi",
+      "title": "AI 本地部署入门：在自己电脑上跑大模型",
+      "subtitle": "不想按次付费、不想上传隐私，就从这几个开始",
+      "desc": "一条命令跑起本地大模型、给它配一个网页界面、再按需加上绘画和语音识别，全在自己机器上，断网也能用。",
+      "note": "按「先跑起来 → 再换界面 → 再加能力」的顺序装，别一上来就折腾编译。",
+      "items": [
+        "ollama/ollama",
+        "open-webui/open-webui",
+        "ggml-org/llama.cpp",
+        "lobehub/lobehub",
+        "LibreChat-AI/LibreChat",
+        "AUTOMATIC1111/stable-diffusion-webui",
+        "Comfy-Org/ComfyUI",
+        "openai/whisper"
+      ]
+    },
+    {
+      "slug": "zijian",
+      "title": "自建服务入门：把数据放回自己家",
+      "subtitle": "照片、影视、笔记、代码、自动化，都能自己托管",
+      "desc": "八個适合个人和小团队的自托管服务：照片备份、家庭影院、文件同步、网盘挂载、自动化、代码托管、监控告警、智能家居。",
+      "note": "需要一台常开的电脑或 NAS，装之前先想好备份方案。",
+      "items": [
+        "immich-app/immich",
+        "jellyfin/jellyfin",
+        "syncthing/syncthing",
+        "AlistGo/alist",
+        "n8n-io/n8n",
+        "go-gitea/gitea",
+        "prometheus/prometheus",
+        "home-assistant/core"
+      ]
+    },
+    {
+      "slug": "lingjichu",
+      "title": "零基础学编程：从这 10 个开始",
+      "subtitle": "不用先买课，这些免费资源够你从入门到找工作",
+      "desc": "路线图、免费书单、公开课、动手项目、中文面试笔记，按「先看路线 → 再选语言 → 边做边学」组织。",
+      "note": "别收藏完就完事，挑一个动手做，比看十个清单有用。",
+      "items": [
+        "nilbuild/developer-roadmap",
+        "freeCodeCamp/freeCodeCamp",
+        "EbookFoundation/free-programming-books",
+        "jackfrued/Python-100-Days",
+        "practical-tutorials/project-based-learning",
+        "codecrafters-io/build-your-own-x",
+        "ossu/computer-science",
+        "CyC2018/CS-Notes",
+        "521xueweihan/HelloGitHub",
+        "PKUFlyingPig/cs-self-learning"
+      ]
+    }
+  ]
+}

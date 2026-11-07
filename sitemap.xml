@@ -820,4 +820,44 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/c/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/c/zhuangji.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/c/zimeiti.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/c/aibendi.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/c/zijian.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/c/lingjichu.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/weekly/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://p0w3rd1n8.github.io/github-cn-finder/weekly/2026-11-07.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自建服务入门：把数据放回自己家 - GitHub 中文发现器</title>
+<meta name="description" content="八個适合个人和小团队的自托管服务：照片备份、家庭影院、文件同步、网盘挂载、自动化、代码托管、监控告警、智能家居。">
+<link rel="canonical" href="https://p0w3rd1n8.github.io/github-cn-finder/c/zijian.html">
+<link rel="icon" href="https://p0w3rd1n8.github.io/github-cn-finder/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0d1117">
+<style>
+:root{--bg:#0d1117;--card:#161b22;--text:#e6edf3;--text2:#8b949e;--border:#30363d;--accent:#58a6ff;--star:#f0b429}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;padding:0 0 40px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.site-head{background:var(--card);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
+.site-head .logo{font-weight:700;font-size:15px}
+.site-head .back{margin-left:auto;font-size:13px;color:var(--text2)}
+.container{max-width:760px;margin:0 auto;padding:24px 16px}
+h1{font-size:24px;line-height:1.4;margin-bottom:4px}
+h1 .en{color:var(--text2);font-size:14px;font-weight:400}
+.meta-row{color:var(--text2);font-size:13px;margin:8px 0 16px;display:flex;flex-wrap:wrap;gap:8px}
+.meta-row .tag{background:var(--card);border:1px solid var(--border);border-radius:999px;padding:2px 10px}
+.meta-row .star{color:var(--star)}
+.desc{font-size:15px;margin:0 0 18px}
+.detail{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:13.5px;white-space:pre-wrap;margin-bottom:18px}
+.detail-tip{font-size:12px;color:var(--text2);margin-top:8px;padding-top:6px;border-top:1px dashed var(--border)}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.btn{display:inline-block;background:var(--accent);color:#0d1117;font-weight:600;padding:10px 18px;border-radius:10px;font-size:14px}
+.btn.ghost{background:var(--card);color:var(--accent);border:1px solid var(--accent)}
+.foot-note{font-size:12px;color:var(--text2);border-top:1px dashed var(--border);padding-top:12px;margin-top:24px}
+footer{text-align:center;font-size:12px;color:var(--text2);margin-top:32px}
+.list-item{display:flex;align-items:baseline;gap:10px;padding:10px 0;border-bottom:1px dashed var(--border)}
+.list-item .nm{font-weight:600;font-size:14.5px}
+.list-item .ds{color:var(--text2);font-size:13px;flex:1}
+.list-item .st{color:var(--star);font-size:12px;white-space:nowrap}
+.related{margin:22px 0 4px;border-top:1px dashed var(--border);padding-top:16px}
+.related h2{font-size:16px;margin-bottom:8px}
+.related .list-item{padding:7px 0}
+.related-more{display:inline-block;margin-top:8px;font-size:13px}
+.docs{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:18px 0}
+.docs h2{font-size:16px;margin-bottom:10px}
+.docs .blk{margin-bottom:12px}
+.docs .blk:last-of-type{margin-bottom:0}
+.docs .lbl{font-size:12px;color:var(--text2);font-weight:600;margin-bottom:4px}
+.docs p{font-size:13.5px}
+.docs ul,.docs ol{padding-left:20px;font-size:13.5px}
+.docs li{margin:3px 0}
+.docs code{background:#1f2630;border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:12.5px;color:#7ee787}
+.docs .foot{font-size:12px;color:var(--text2);border-top:1px dashed var(--border);padding-top:8px;margin-top:8px}
+
+.cards{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0}
+.c-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.c-item .h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.c-item .zh{font-size:15px;font-weight:600;color:var(--text)}
+.c-item .repo{font-size:12px;color:var(--text2)}
+.c-item .st{margin-left:auto;color:var(--star);font-size:12px}
+.c-item .d{font-size:13px;color:var(--text2);margin-top:6px;line-height:1.6}
+.c-item a{color:inherit;text-decoration:none}
+.c-item:hover{border-color:var(--accent)}
+.intro{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:12px 14px;font-size:13.5px;line-height:1.7;margin:14px 0}
+.note{font-size:12px;color:var(--text2);margin-top:10px}
+.coll-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:18px 0}
+.coll-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--text)}
+.coll-card:hover{border-color:var(--accent)}
+.coll-card h2{font-size:16px;margin:0 0 4px}
+.coll-card p{font-size:12.5px;color:var(--text2);margin:0;line-height:1.6}
+.issue{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin:10px 0}
+.issue a{color:var(--accent);text-decoration:none}
+.issue .date{color:var(--text2);font-size:12px;margin-left:8px}
+ol.rank{padding-left:22px;font-size:13.5px;line-height:1.9}
+ol.rank .st{color:var(--star)}
+.delta{color:#3fb950;font-weight:600}
+nav.sub{margin:18px 0 0;font-size:13px}
+nav.sub a{color:var(--accent);text-decoration:none;margin-right:14px}
+
+</style>
+</head>
+<body>
+<header class="site-head"><span class="logo">🧭 GitHub 中文发现器</span><a class="back" href="https://p0w3rd1n8.github.io/github-cn-finder/">← 返回首页</a></header>
+<main class="container">
+<h1>自建服务入门：把数据放回自己家</h1>
+<div class="intro"><b>照片、影视、笔记、代码、自动化，都能自己托管</b><br>八個适合个人和小团队的自托管服务：照片备份、家庭影院、文件同步、网盘挂载、自动化、代码托管、监控告警、智能家居。<div class="note">💡 需要一台常开的电脑或 NAS，装之前先想好备份方案。</div></div>
+<div class="cards"><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/immich-app-immich.html">Immich 照片备份</a><span class="repo">immich-app/immich</span><span class="st">⭐ 117,342</span></div><div class="d">自托管照片备份，手机照片存到自己服务器</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/jellyfin-jellyfin.html">Jellyfin 影音库</a><span class="repo">jellyfin/jellyfin</span><span class="st">⭐ 58,666</span></div><div class="d">家庭影院服务器，自建流媒体影音库</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/syncthing-syncthing.html">Syncthing 同步</a><span class="repo">syncthing/syncthing</span><span class="st">⭐ 89,788</span></div><div class="d">多设备文件实时同步，自己的私有同步盘</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/AlistGo-alist.html">AList 网盘聚合</a><span class="repo">AlistGo/alist</span><span class="st">⭐ 50,365</span></div><div class="d">把阿里云盘百度网盘挂载成一个网盘，网页直接看</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/n8n-io-n8n.html">n8n 自动化流程</a><span class="repo">n8n-io/n8n</span><span class="st">⭐ 208,712</span></div><div class="d">自动化工作流神器，把重复劳动交给 AI 机器人</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/go-gitea-gitea.html">Gitea 代码托管</a><span class="repo">go-gitea/gitea</span><span class="st">⭐ 58,719</span></div><div class="d">自建代码托管平台，像迷你版 GitHub</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/prometheus-prometheus.html">Prometheus 监控</a><span class="repo">prometheus/prometheus</span><span class="st">⭐ 66,800</span></div><div class="d">开源监控告警系统，服务器运维必备</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/home-assistant-core.html">Home Assistant 智能家居</a><span class="repo">home-assistant/core</span><span class="st">⭐ 91,758</span></div><div class="d">智能家居中枢，让全屋设备听你指挥</div></div></div>
+<nav class="sub"><a href="https://p0w3rd1n8.github.io/github-cn-finder/c/">← 全部合辑</a><a href="https://p0w3rd1n8.github.io/github-cn-finder/">回首页</a><a href="https://p0w3rd1n8.github.io/github-cn-finder/weekly/">📮 每周精选</a></nav>
+</main>
+</body>
+</html>

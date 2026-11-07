@@ -14,7 +14,7 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | GitHub 仓库 | P0w3rD1n8/github-cn-finder（远端 main 分支） |
 | 本地仓库（ROG） | C:\Users\power\GitHub中文发现器 |
 | DSH 工作区 | C:\Users\power\Documents\发现器开发-建议（宣传/视频物料在此） |
-| 当前版本 | **v1.25.0**（2026-11-07 上线，SW 缓存 gh-cn-v18，162 个项目） |
+| 当前版本 | **v1.26.0**（2026-11-07 上线，SW 缓存 gh-cn-v19，162 个项目） |
 | 本地 commit | 与远端同步 = `ae355ac`（2026-11-07 v1.25.0 体验三件套 + 周快照） |
 | 远端 main | `ae355ac`（v1.25.0 / SW v18；线上 18 项浏览器断言全绿、7 文件逐字节一致） |
 
@@ -27,6 +27,9 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | `repos.json` | **自动产物，不要手改**：抓取结果（含 star/fork/hist 快照、`pa` 最近提交日、`ar` 是否归档），前端 fetch 使用；CI 每小时自动刷新并提交 |
 | `weekly.json` | **自动产物**：每周一张全库 star 快照（`{date, stars}`，保留 60 期），由 fetch-data.py 维护，供「周涨星」和周刊页使用 |
 | `build_pages.py` | 静态页生成器：由 data.js 生成 `p/<owner>-<repo>.html`（每个项目一个分享落地页）+ `list.html`（全列表）+ `sitemap.xml` |
+| `build_extra.py` | **v1.26.0 新增**：生成 `c/`（专题合辑）、`weekly/`（每周精选）、`feed.xml`（RSS），并重写 sitemap 把附加页纳入 |
+| `collections.json` | **人工策展数据**：专题合辑的标题/简介/项目清单，改这里增删合辑 |
+| `c/` `weekly/` `feed.xml` | 自动产物（合辑页 / 周刊页 / RSS），不要手改 |
 | `p/` | 152 个静态项目页（v1.24.1 现状） |
 | `index.html` | 首页全部前端逻辑：分页、分类、搜索、收藏、海报、主题；版本号在 `window.GH_VER` |
 | `sw.js` | Service Worker，缓存名 `gh-cn-v16`；**每次发版必须升级缓存名**，否则用户端不更新 |
@@ -73,7 +76,7 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
    - `index.html`：`window.GH_VER = "v1.x.y";`
    - `sw.js`：`const CACHE = "gh-cn-vXX";`（每次 +1，当前 v16 → v17）
    - `README.md`：当前版本 + 版本历史顶部加一条
-2. **重新生成产物**：fetch-data.py → build_pages.py（repos.json / p/ / list.html / sitemap.xml 全重建；data.js 是人工源不动）。
+2. **重新生成产物**：fetch-data.py → build_pages.py → build_extra.py（repos.json / p/ / list.html / sitemap.xml / c/ / weekly/ / feed.xml 全重建；data.js 是人工源不动）。
 3. **本地验证**：跑 `verify_browser.py --local`（Playwright + Edge，13 项浏览器级断言：首屏 24 卡、分页条、第 7 页 8 卡、AI 分类 23 个、搜索空态、搜索命中、静态页、无报错、375px 手机端）。**注意**：Playwright 需要命名管道和 TEMP 写权限，DSH 默认沙箱会报 `WinError 5`，必须用完整权限运行（见 §5.4）。
 4. **上线推送**：
    - 常规路径：git commit + push（**清代理 + `-c http.sslBackend=openssl` + `credential.helper=` + token 走 URL**，见 §5.1）。
@@ -174,7 +177,9 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - 同步 10 个仓库改名（`Qwen2.5` → `Qwen3` 文案已重写；llama.cpp / React / React Native / OpenHands / ComfyUI / alist / LobeChat / LibreChat / developer-roadmap）。
 - 已下架并确认线上 404：5 个大肥鱼插件（T-Auto/dsh-ops、QCYTSN/dsh-dafeiyu、liyupi/dafeiyu-cleaner、xiaoshihou514/dsh-desktop-pet、RYANFFY/deepseek-dafeiyu-pet）+ 早期下架的 legado（阅读）。
 - 说明：`repos.json` 每小时被 CI 刷新，本地与远端差一个快照属正常，不是漂移。
-- 工具：`verify_sync.py`（HTTP 级三方核验 + `--links` 链接巡检）+ `verify_browser.py`（18 项浏览器断言，期望值从 data.js 实时计算）。
+- 工具：`verify_sync.py`（HTTP 级三方核验 + `--links` 链接巡检）+ `verify_browser.py`（22 项浏览器断言，期望值从 data.js 实时计算）。
+- **v1.26.0（2026-11-07）内容板块**：专题合辑 5 个（装机必备 / 自媒体工具箱 / 本地 AI 入门 / 自建服务 / 零基础学编程，数据在 `collections.json`，可人工增删）；每周精选周刊 `weekly/`（本周新增 + 周涨星 Top10 + 总榜 + 归档提醒）；RSS `feed.xml`；补了 `favicon.ico`。
+- 周刊首期（2026-11-07）是基线，**从第二期（约 11-14）开始才有「周涨星」**——依赖 `weekly.json` 累积两期以上。
 
 ### 待办/未决（等用户拍板，勿擅自做）
 1. **dsh-our-free-model 是否收录**：Ebony-Vinyl/dsh-our-free-model（★64.8k）——用户未表态；按"插件非应用"的既有口径，建议维持不收。
@@ -197,6 +202,10 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - 接手项目：在 DSH 里打开 `C:\Users\power\GitHub中文发现器` 作为工作区，配合本手册即可独立迭代。DSH 是本地 AI 助手，不连接豆包云端技能，纯本地文件操作。
 
 ## 8. 验证清单（发版后线上必查）
+
+- [ ] 首页快捷入口能进合辑/周刊（v1.26.0）
+- [ ] `c/` 5 个合辑 + 合辑内页项目数正确（v1.26.0）
+- [ ] `weekly/` 有当期、`feed.xml` 可被解析（v1.26.0）
 
 - [ ] 筛选写入 URL：点分类后地址栏出现 `?cat=…`，刷新不丢（v1.25.0）
 - [ ] 停更项目的卡片有角标（半年未更 / 停更 / 已归档）（v1.25.0）

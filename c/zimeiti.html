@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自媒体工具箱：拍、剪、配音、做图一条龙 - GitHub 中文发现器</title>
+<meta name="description" content="从录屏直播、视频剪辑、压缩转码，到配音变声、AI 修图、图表设计，全部开源免费，不用订阅付费软件。">
+<link rel="canonical" href="https://p0w3rd1n8.github.io/github-cn-finder/c/zimeiti.html">
+<link rel="icon" href="https://p0w3rd1n8.github.io/github-cn-finder/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0d1117">
+<style>
+:root{--bg:#0d1117;--card:#161b22;--text:#e6edf3;--text2:#8b949e;--border:#30363d;--accent:#58a6ff;--star:#f0b429}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;padding:0 0 40px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.site-head{background:var(--card);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
+.site-head .logo{font-weight:700;font-size:15px}
+.site-head .back{margin-left:auto;font-size:13px;color:var(--text2)}
+.container{max-width:760px;margin:0 auto;padding:24px 16px}
+h1{font-size:24px;line-height:1.4;margin-bottom:4px}
+h1 .en{color:var(--text2);font-size:14px;font-weight:400}
+.meta-row{color:var(--text2);font-size:13px;margin:8px 0 16px;display:flex;flex-wrap:wrap;gap:8px}
+.meta-row .tag{background:var(--card);border:1px solid var(--border);border-radius:999px;padding:2px 10px}
+.meta-row .star{color:var(--star)}
+.desc{font-size:15px;margin:0 0 18px}
+.detail{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:13.5px;white-space:pre-wrap;margin-bottom:18px}
+.detail-tip{font-size:12px;color:var(--text2);margin-top:8px;padding-top:6px;border-top:1px dashed var(--border)}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.btn{display:inline-block;background:var(--accent);color:#0d1117;font-weight:600;padding:10px 18px;border-radius:10px;font-size:14px}
+.btn.ghost{background:var(--card);color:var(--accent);border:1px solid var(--accent)}
+.foot-note{font-size:12px;color:var(--text2);border-top:1px dashed var(--border);padding-top:12px;margin-top:24px}
+footer{text-align:center;font-size:12px;color:var(--text2);margin-top:32px}
+.list-item{display:flex;align-items:baseline;gap:10px;padding:10px 0;border-bottom:1px dashed var(--border)}
+.list-item .nm{font-weight:600;font-size:14.5px}
+.list-item .ds{color:var(--text2);font-size:13px;flex:1}
+.list-item .st{color:var(--star);font-size:12px;white-space:nowrap}
+.related{margin:22px 0 4px;border-top:1px dashed var(--border);padding-top:16px}
+.related h2{font-size:16px;margin-bottom:8px}
+.related .list-item{padding:7px 0}
+.related-more{display:inline-block;margin-top:8px;font-size:13px}
+.docs{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:18px 0}
+.docs h2{font-size:16px;margin-bottom:10px}
+.docs .blk{margin-bottom:12px}
+.docs .blk:last-of-type{margin-bottom:0}
+.docs .lbl{font-size:12px;color:var(--text2);font-weight:600;margin-bottom:4px}
+.docs p{font-size:13.5px}
+.docs ul,.docs ol{padding-left:20px;font-size:13.5px}
+.docs li{margin:3px 0}
+.docs code{background:#1f2630;border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:12.5px;color:#7ee787}
+.docs .foot{font-size:12px;color:var(--text2);border-top:1px dashed var(--border);padding-top:8px;margin-top:8px}
+
+.cards{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0}
+.c-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.c-item .h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.c-item .zh{font-size:15px;font-weight:600;color:var(--text)}
+.c-item .repo{font-size:12px;color:var(--text2)}
+.c-item .st{margin-left:auto;color:var(--star);font-size:12px}
+.c-item .d{font-size:13px;color:var(--text2);margin-top:6px;line-height:1.6}
+.c-item a{color:inherit;text-decoration:none}
+.c-item:hover{border-color:var(--accent)}
+.intro{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:12px 14px;font-size:13.5px;line-height:1.7;margin:14px 0}
+.note{font-size:12px;color:var(--text2);margin-top:10px}
+.coll-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:18px 0}
+.coll-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--text)}
+.coll-card:hover{border-color:var(--accent)}
+.coll-card h2{font-size:16px;margin:0 0 4px}
+.coll-card p{font-size:12.5px;color:var(--text2);margin:0;line-height:1.6}
+.issue{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin:10px 0}
+.issue a{color:var(--accent);text-decoration:none}
+.issue .date{color:var(--text2);font-size:12px;margin-left:8px}
+ol.rank{padding-left:22px;font-size:13.5px;line-height:1.9}
+ol.rank .st{color:var(--star)}
+.delta{color:#3fb950;font-weight:600}
+nav.sub{margin:18px 0 0;font-size:13px}
+nav.sub a{color:var(--accent);text-decoration:none;margin-right:14px}
+
+</style>
+</head>
+<body>
+<header class="site-head"><span class="logo">🧭 GitHub 中文发现器</span><a class="back" href="https://p0w3rd1n8.github.io/github-cn-finder/">← 返回首页</a></header>
+<main class="container">
+<h1>自媒体工具箱：拍、剪、配音、做图一条龙</h1>
+<div class="intro"><b>一个人做视频，这 9 个开源工具能顶一个工作室</b><br>从录屏直播、视频剪辑、压缩转码，到配音变声、AI 修图、图表设计，全部开源免费，不用订阅付费软件。<div class="note">💡 OBS 录、Kdenlive 剪、HandBrake 压、Audacity 修音，是最常见的一套组合。</div></div>
+<div class="cards"><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/obsproject-obs-studio.html">OBS 录屏直播</a><span class="repo">obsproject/obs-studio</span><span class="st">⭐ 78,309</span></div><div class="d">专业录屏直播软件，主播和网课老师必备</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/KDE-kdenlive.html">Kdenlive 免费剪辑</a><span class="repo">KDE/kdenlive</span><span class="st">⭐ 5,940</span></div><div class="d">开源非线性视频剪辑软件</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/HandBrake-HandBrake.html">HandBrake 转码</a><span class="repo">HandBrake/HandBrake</span><span class="st">⭐ 24,794</span></div><div class="d">视频压缩转码利器，大文件秒变清晰小文件</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/audacity-audacity.html">Audacity 音频剪辑</a><span class="repo">audacity/audacity</span><span class="st">⭐ 18,850</span></div><div class="d">免费开源的音频录制与剪辑软件</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/debpalash-VoiceStudio.html">VoiceStudio 本地声音工坊</a><span class="repo">debpalash/VoiceStudio</span><span class="st">⭐ 89,868</span></div><div class="d">本地运行的 AI 声音工具：克隆声音、视频配音、转写 646 种语言，完全免费</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/yt-dlp-yt-dlp.html">yt-dlp 视频下载</a><span class="repo">yt-dlp/yt-dlp</span><span class="st">⭐ 202,716</span></div><div class="d">强大的视频下载工具，支持上千个网站</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/upscayl-upscayl.html">Upscayl AI 图片放大</a><span class="repo">upscayl/upscayl</span><span class="st">⭐ 51,149</span></div><div class="d">AI 驱动的开源图片放大工具</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/GNOME-gimp.html">GIMP 免费修图</a><span class="repo">GNOME/gimp</span><span class="st">⭐ 6,547</span></div><div class="d">免费开源的图像编辑器，Photoshop 的替代品</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/cathrynlavery-diagram-design.html">Diagram Design 白话图表</a><span class="repo">cathrynlavery/diagram-design</span><span class="st">⭐ 61,493</span></div><div class="d">用大白话描述一张图，它按你的风格画出 45 种专业图表</div></div></div>
+<nav class="sub"><a href="https://p0w3rd1n8.github.io/github-cn-finder/c/">← 全部合辑</a><a href="https://p0w3rd1n8.github.io/github-cn-finder/">回首页</a><a href="https://p0w3rd1n8.github.io/github-cn-finder/weekly/">📮 每周精选</a></nav>
+</main>
+</body>
+</html>

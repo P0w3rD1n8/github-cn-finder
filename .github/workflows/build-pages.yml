@@ -30,11 +30,14 @@ jobs:
       - name: 生成静态项目页
         run: python build_pages.py
 
+      - name: 生成合辑 / 周刊 / RSS（v1.26.0）
+        run: python build_extra.py
+
       - name: 提交生成的页面
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add p list.html sitemap.xml
+          git add p list.html sitemap.xml c weekly feed.xml
           if git diff --cached --quiet; then
             echo "页面无变化，跳过提交"
           else

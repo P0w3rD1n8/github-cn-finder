@@ -374,6 +374,7 @@ def build_project_page(n, r, ctx):
 <title>__TITLE__</title>
 <meta name="description" content="__DESC__">
 <link rel="canonical" href="__CANONICAL__">
+<link rel="icon" href="__BASE__/icon.svg" type="image/svg+xml">
 __LDJSON__
 <meta property="og:site_name" content="GitHub 中文发现器">
 <meta property="og:type" content="article">
@@ -468,6 +469,7 @@ def build_list_page(repos, ctx):
 <title>全部精选 - GitHub 中文发现器</title>
 <meta name="description" content="GitHub 中文发现器：全部精选开源项目清单，共 __CNT__ 个，全中文介绍。">
 <link rel="canonical" href="__BASE__/list.html">
+<link rel="icon" href="__BASE__/icon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#0d1117">
 <style>
 __CSS__
@@ -509,7 +511,7 @@ var _hmt = _hmt || [];
     )
 
 
-def build_sitemap(repos, ctx):
+def build_sitemap(repos, ctx, extra_urls=None):
     urls = []
     # v1.19.2：去掉 lastmod（每次构建标"今天"会让搜索引擎判定字段不可信）
     urls.append(
@@ -524,6 +526,11 @@ def build_sitemap(repos, ctx):
         fname = owner + "-" + repo + ".html"
         urls.append(
             "  <url>\n    <loc>" + BASE_URL + "/p/" + fname + "</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>"
+        )
+    # v1.25.0：合辑 / 周刊 / RSS 等附加页（由 build_extra.py 传入）
+    for path, freq, prio in (extra_urls or []):
+        urls.append(
+            "  <url>\n    <loc>" + BASE_URL + "/" + path + "</loc>\n    <changefreq>" + freq + "</changefreq>\n    <priority>" + prio + "</priority>\n  </url>"
         )
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

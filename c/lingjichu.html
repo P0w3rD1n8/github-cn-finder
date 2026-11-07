@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>零基础学编程：从这 10 个开始 - GitHub 中文发现器</title>
+<meta name="description" content="路线图、免费书单、公开课、动手项目、中文面试笔记，按「先看路线 → 再选语言 → 边做边学」组织。">
+<link rel="canonical" href="https://p0w3rd1n8.github.io/github-cn-finder/c/lingjichu.html">
+<link rel="icon" href="https://p0w3rd1n8.github.io/github-cn-finder/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0d1117">
+<style>
+:root{--bg:#0d1117;--card:#161b22;--text:#e6edf3;--text2:#8b949e;--border:#30363d;--accent:#58a6ff;--star:#f0b429}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;padding:0 0 40px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.site-head{background:var(--card);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
+.site-head .logo{font-weight:700;font-size:15px}
+.site-head .back{margin-left:auto;font-size:13px;color:var(--text2)}
+.container{max-width:760px;margin:0 auto;padding:24px 16px}
+h1{font-size:24px;line-height:1.4;margin-bottom:4px}
+h1 .en{color:var(--text2);font-size:14px;font-weight:400}
+.meta-row{color:var(--text2);font-size:13px;margin:8px 0 16px;display:flex;flex-wrap:wrap;gap:8px}
+.meta-row .tag{background:var(--card);border:1px solid var(--border);border-radius:999px;padding:2px 10px}
+.meta-row .star{color:var(--star)}
+.desc{font-size:15px;margin:0 0 18px}
+.detail{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:13.5px;white-space:pre-wrap;margin-bottom:18px}
+.detail-tip{font-size:12px;color:var(--text2);margin-top:8px;padding-top:6px;border-top:1px dashed var(--border)}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.btn{display:inline-block;background:var(--accent);color:#0d1117;font-weight:600;padding:10px 18px;border-radius:10px;font-size:14px}
+.btn.ghost{background:var(--card);color:var(--accent);border:1px solid var(--accent)}
+.foot-note{font-size:12px;color:var(--text2);border-top:1px dashed var(--border);padding-top:12px;margin-top:24px}
+footer{text-align:center;font-size:12px;color:var(--text2);margin-top:32px}
+.list-item{display:flex;align-items:baseline;gap:10px;padding:10px 0;border-bottom:1px dashed var(--border)}
+.list-item .nm{font-weight:600;font-size:14.5px}
+.list-item .ds{color:var(--text2);font-size:13px;flex:1}
+.list-item .st{color:var(--star);font-size:12px;white-space:nowrap}
+.related{margin:22px 0 4px;border-top:1px dashed var(--border);padding-top:16px}
+.related h2{font-size:16px;margin-bottom:8px}
+.related .list-item{padding:7px 0}
+.related-more{display:inline-block;margin-top:8px;font-size:13px}
+.docs{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:18px 0}
+.docs h2{font-size:16px;margin-bottom:10px}
+.docs .blk{margin-bottom:12px}
+.docs .blk:last-of-type{margin-bottom:0}
+.docs .lbl{font-size:12px;color:var(--text2);font-weight:600;margin-bottom:4px}
+.docs p{font-size:13.5px}
+.docs ul,.docs ol{padding-left:20px;font-size:13.5px}
+.docs li{margin:3px 0}
+.docs code{background:#1f2630;border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:12.5px;color:#7ee787}
+.docs .foot{font-size:12px;color:var(--text2);border-top:1px dashed var(--border);padding-top:8px;margin-top:8px}
+
+.cards{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0}
+.c-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.c-item .h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.c-item .zh{font-size:15px;font-weight:600;color:var(--text)}
+.c-item .repo{font-size:12px;color:var(--text2)}
+.c-item .st{margin-left:auto;color:var(--star);font-size:12px}
+.c-item .d{font-size:13px;color:var(--text2);margin-top:6px;line-height:1.6}
+.c-item a{color:inherit;text-decoration:none}
+.c-item:hover{border-color:var(--accent)}
+.intro{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:12px 14px;font-size:13.5px;line-height:1.7;margin:14px 0}
+.note{font-size:12px;color:var(--text2);margin-top:10px}
+.coll-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:18px 0}
+.coll-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--text)}
+.coll-card:hover{border-color:var(--accent)}
+.coll-card h2{font-size:16px;margin:0 0 4px}
+.coll-card p{font-size:12.5px;color:var(--text2);margin:0;line-height:1.6}
+.issue{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin:10px 0}
+.issue a{color:var(--accent);text-decoration:none}
+.issue .date{color:var(--text2);font-size:12px;margin-left:8px}
+ol.rank{padding-left:22px;font-size:13.5px;line-height:1.9}
+ol.rank .st{color:var(--star)}
+.delta{color:#3fb950;font-weight:600}
+nav.sub{margin:18px 0 0;font-size:13px}
+nav.sub a{color:var(--accent);text-decoration:none;margin-right:14px}
+
+</style>
+</head>
+<body>
+<header class="site-head"><span class="logo">🧭 GitHub 中文发现器</span><a class="back" href="https://p0w3rd1n8.github.io/github-cn-finder/">← 返回首页</a></header>
+<main class="container">
+<h1>零基础学编程：从这 10 个开始</h1>
+<div class="intro"><b>不用先买课，这些免费资源够你从入门到找工作</b><br>路线图、免费书单、公开课、动手项目、中文面试笔记，按「先看路线 → 再选语言 → 边做边学」组织。<div class="note">💡 别收藏完就完事，挑一个动手做，比看十个清单有用。</div></div>
+<div class="cards"><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/nilbuild-developer-roadmap.html">程序员路线图</a><span class="repo">nilbuild/developer-roadmap</span><span class="st">⭐ 370,509</span></div><div class="d">程序员成长路线图，告诉你每一步该学什么</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/freeCodeCamp-freeCodeCamp.html">freeCodeCamp 编程学习</a><span class="repo">freeCodeCamp/freeCodeCamp</span><span class="st">⭐ 458,007</span></div><div class="d">全球最大的免费编程学习平台，GitHub 星标第一</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/EbookFoundation-free-programming-books.html">免费编程书大全</a><span class="repo">EbookFoundation/free-programming-books</span><span class="st">⭐ 400,233</span></div><div class="d">各种语言的免费编程书籍大全，含大量中文书</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/jackfrued-Python-100-Days.html">Python 100 天</a><span class="repo">jackfrued/Python-100-Days</span><span class="st">⭐ 187,473</span></div><div class="d">Python 100 天从新手到大师，优质中文教程</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/practical-tutorials-project-based-learning.html">项目实战教程</a><span class="repo">practical-tutorials/project-based-learning</span><span class="st">⭐ 288,134</span></div><div class="d">边做项目边学编程的教程合集，动手派最爱</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/codecrafters-io-build-your-own-x.html">手把手造轮子</a><span class="repo">codecrafters-io/build-your-own-x</span><span class="st">⭐ 556,507</span></div><div class="d">通过动手复刻数据库、操作系统等经典项目来精通编程</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/ossu-computer-science.html">计算机科学自学</a><span class="repo">ossu/computer-science</span><span class="st">⭐ 210,393</span></div><div class="d">免费的计算机科学完整自学课程计划</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/CyC2018-CS-Notes.html">CS 面试笔记</a><span class="repo">CyC2018/CS-Notes</span><span class="st">⭐ 186,352</span></div><div class="d">中文技术面试必备：计算机基础与算法笔记</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/521xueweihan-HelloGitHub.html">HelloGitHub 月刊</a><span class="repo">521xueweihan/HelloGitHub</span><span class="st">⭐ 184,817</span></div><div class="d">每月一期，分享 GitHub 上有趣入门项目的开源月刊</div></div><div class="c-item"><div class="h"><a class="zh" href="https://p0w3rd1n8.github.io/github-cn-finder/p/PKUFlyingPig-cs-self-learning.html">CS 自学指南</a><span class="repo">PKUFlyingPig/cs-self-learning</span><span class="st">⭐ 76,459</span></div><div class="d">北大出品的计算机科学自学指南</div></div></div>
+<nav class="sub"><a href="https://p0w3rd1n8.github.io/github-cn-finder/c/">← 全部合辑</a><a href="https://p0w3rd1n8.github.io/github-cn-finder/">回首页</a><a href="https://p0w3rd1n8.github.io/github-cn-finder/weekly/">📮 每周精选</a></nav>
+</main>
+</body>
+</html>
