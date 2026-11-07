@@ -14,9 +14,9 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | GitHub 仓库 | P0w3rD1n8/github-cn-finder（远端 main 分支） |
 | 本地仓库（ROG） | C:\Users\power\GitHub中文发现器 |
 | DSH 工作区 | C:\Users\power\Documents\发现器开发-建议（宣传/视频物料在此） |
-| 当前版本 | **v1.27.0**（2026-11-07 上线，SW 缓存 gh-cn-v20，162 个项目） |
-| 本地 commit | 与远端同步 = `ed1630c`（2026-11-07 v1.27.0 对比模式 + OG 图） |
-| 远端 main | `ed1630c`（v1.27.0 / SW v20；线上 24 项断言全绿、7 文件逐字节一致） |
+| 当前版本 | **v1.27.1**（2026-11-07 上线，SW 缓存 gh-cn-v21，162 个项目） |
+| 本地 commit | 与远端同步 = `69d5d14`（2026-11-07 v1.27.1 手机端一次刷新即更新） |
+| 远端 main | `69d5d14`（v1.27.1 / SW v21；线上 24 项断言全绿、7 文件逐字节一致） |
 
 ## 2. 文件职责一览
 
@@ -168,6 +168,14 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
   4. **必须用完整权限（danger-full-access）跑**：Playwright 启动 Edge 要建命名管道，默认沙箱报 `PermissionError: [WinError 5]`；另外 `TEMP` 要指到工作区内（`$env:TEMP="$PWD\.tmp-pw"`），否则 `mkdtemp EPERM`。
   5. 浏览器用本机 Edge（`channel="msedge"`），**不需要** `playwright install chromium`。
 
+### 5.5 Service Worker 缓存策略（v1.27.1，别改回去）
+- **问题**：安卓 Edge 上要刷新好几次才看到新版。两层原因：① 导航走 stale-while-revalidate 先给旧缓存；② `sw.js` 自己也被 HTTP 缓存（GitHub Pages `max-age=600`），旧 SW 不退。
+- **现在的策略**：页面导航、`data.js`、`repos.json` 一律 network-first，且 `fetch(req, {cache: "reload"})` 绕过 HTTP 缓存。
+- **坑**：导航请求用 `cache: "no-store"` 会失败并静默回退到缓存（表现为「怎么刷都是旧版」），**必须用 `reload`**。
+- **注册**：`register("sw.js", {updateViaCache: "none"})` + 页面可见时主动 `reg.update()`。
+- **自动刷新**：`controllerchange` 时刷新一次（`sessionStorage` 防循环）；收到 `APP_UPDATED` 且用户还没滚动/点击过就静默刷新，动过手则只弹提示。
+- **上线次次生效，但用户侧仍有一次滞后**：新 SW 要装到设备上才会用新策略，所以 v1.27.1 这次用户可能还要多刷一次；之后每次发版都是「一次刷新」或自动刷新。
+
 ## 6. 当前状态与待办
 
 ### 已上线（v1.25.0）
@@ -209,6 +217,7 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - [ ] 卡片有「⇄ 对比」，选 2 个能弹出对比表（v1.27.0）
 - [ ] p 页 `og:image` 指向 `og/<owner>-<repo>.png` 且图片可访问（v1.27.0）
 
+- [ ] 手机端刷新一次即看到新版本；SW 缓存名为当前版本（v1.27.1）
 - [ ] 首页快捷入口能进合辑/周刊（v1.26.0）
 - [ ] `c/` 5 个合辑 + 合辑内页项目数正确（v1.26.0）
 - [ ] `weekly/` 有当期、`feed.xml` 可被解析（v1.26.0）
