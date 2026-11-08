@@ -16,8 +16,9 @@
    版本 v19（v1.26.0）：新增「专题合辑」5 个（装机/自媒体/本地 AI/自建服务/学编程）、「每周精选」周刊页与 RSS 订阅。
    版本 v20（v1.27.0）：新增「对比模式」（勾选 2–3 个项目并排比较）与每个项目的专属分享封面图（og/*.png）。
    版本 v21（v1.27.1）：导航与 data.js 改为 network-first（no-store），sw.js 用 updateViaCache:none 注册，
-   新版本一次刷新即可生效；未操作页面时收到更新会静默刷新。 */
-const CACHE = "gh-cn-v21";
+   新版本一次刷新即可生效；未操作页面时收到更新会静默刷新。
+   版本 v22（v1.27.2）：补齐 13 个项目的 GitCode 镜像（均通过 owner/repo 精确校验），缺镜像从 27 降到 14。 */
+const CACHE = "gh-cn-v22";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html"];

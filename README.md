@@ -1,7 +1,7 @@
 # GitHub 中文发现器 🧭
 
 > 不懂英文，也能轻松逛 GitHub
-> 当前版本：**v1.27.1**（2026-11-07）
+> 当前版本：**v1.27.2**（2026-11-08）
 
 一个面向中文用户的 GitHub 优质开源项目发现工具，把 GitHub 上最值得关注的项目翻译成大白话，让完全不懂英文、不懂编程的小白也能轻松找到好东西。
 
@@ -53,6 +53,10 @@
 | README.md | 项目说明 |
 
 ## 📜 版本历史
+
+**v1.27.2（2026-11-08）**
+- 补齐 13 个项目的国内镜像（GitCode），首页「国内镜像直达」从 135 → **148** 个，暂无镜像从 27 → 14 个
+- 镜像逐个校验：必须 GitCode 页面标题里的 owner/repo 与 GitHub 完全一致才算数——同名不同主的地址（如 `gh_mirrors/op/openclaw` 实际指向 `pjasicek/OpenClaw`）已全部排除（Service Worker v22）
 
 **v1.27.1（2026-11-07）**
 - 修复「手机上要刷新好几次才看到新版」：页面导航与 data.js 改为 network-first（绕过 HTTP 缓存），Service Worker 用 `updateViaCache: "none"` 注册并主动 `update()`，新版本一次刷新即生效
