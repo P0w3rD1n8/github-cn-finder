@@ -14,9 +14,9 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | GitHub 仓库 | P0w3rD1n8/github-cn-finder（远端 main 分支） |
 | 本地仓库（ROG） | C:\Users\power\GitHub中文发现器 |
 | DSH 工作区 | C:\Users\power\Documents\发现器开发-建议（宣传/视频物料在此） |
-| 当前版本 | **v1.27.1**（2026-11-07 上线，SW 缓存 gh-cn-v21，162 个项目） |
-| 本地 commit | 与远端同步 = `69d5d14`（2026-11-07 v1.27.1 手机端一次刷新即更新） |
-| 远端 main | `69d5d14`（v1.27.1 / SW v21；线上 24 项断言全绿、7 文件逐字节一致） |
+| 当前版本 | **v1.27.2**（2026-11-08 上线，SW 缓存 gh-cn-v22，162 个项目 / 148 个有国内镜像） |
+| 本地 commit | 与远端同步 = `53b100e`（2026-11-08 v1.27.2 补 13 个镜像） |
+| 远端 main | `53b100e`（v1.27.2 / SW v22；线上 24 项断言全绿、data.js 逐字节一致） |
 
 ## 2. 文件职责一览
 
@@ -190,6 +190,7 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - 工具：`verify_sync.py`（HTTP 级三方核验 + `--links` 链接巡检）+ `verify_browser.py`（24 项浏览器断言，期望值从 data.js 实时计算）。
 - **v1.26.0（2026-11-07）内容板块**：专题合辑 5 个（装机必备 / 自媒体工具箱 / 本地 AI 入门 / 自建服务 / 零基础学编程，数据在 `collections.json`，可人工增删）；每周精选周刊 `weekly/`（本周新增 + 周涨星 Top10 + 总榜 + 归档提醒）；RSS `feed.xml`；补了 `favicon.ico`。
 - 周刊首期（2026-11-07）是基线，**从第二期（约 11-14）开始才有「周涨星」**——依赖 `weekly.json` 累积两期以上。
+- **v1.27.2（2026-11-08）补镜像**：GitCode 镜像 131 → 144 条，缺镜像 27 → 14。做法是枚举 `GitHub_Trending/` 与 `gh_mirrors/` 的候选前缀，**再用页面 `<title>` 精确解析 `owner/repo` 比对**；只靠"页面里出现仓库名"会误判（`gh_mirrors/op/openclaw` 实际是 `pjasicek/OpenClaw`、`GitHub_Trending/co/core` 实际是 `home-assistant/core`）。
 - **v1.27.0（2026-11-07）**：新增「对比模式」（卡片点 ⇄ 对比，最多 3 个，弹窗并排比较 8 项）与每项目专属分享封面 `og/*.png`；分享卡片 `og:image` 指向各自封面。
 
 ### 待办/未决（等用户拍板，勿擅自做）
