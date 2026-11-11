@@ -37,7 +37,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.29.0";
+window.GH_VER = "v1.29.1";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -373,9 +373,13 @@ nav{
   border-top:1px solid var(--border);
   display:flex;padding-bottom:env(safe-area-inset-bottom);
 }
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+.nav-item{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:9px 0 8px;color:var(--text2);font-size:11px;cursor:pointer;transition:color .2s}
 .nav-item.active{color:var(--accent)}
+/* v1.29.1：底部导航「更新」的本周上新徽标 */
+.nav-badge{display:none;position:absolute;top:1px;left:50%;transform:translateX(14px);min-width:16px;height:16px;
+  border-radius:8px;background:#f85149;color:#fff;font-size:10px;line-height:16px;text-align:center;padding:0 4px;font-weight:700}
+.nav-badge.show{display:block}
 .nav-item svg{width:22px;height:22px;fill:currentColor}
 /* v1.19.1：底部导航的"全部"是链接（a.nav-item），去掉默认下划线/蓝色 */
 a.nav-item{text-decoration:none;color:inherit}
@@ -466,7 +470,7 @@ a.nav-item{text-decoration:none;color:inherit}
       <a href="c/zijian.html">🏠 自建服务</a>
       <a href="c/lingjichu.html">📚 零基础学编程</a>
       <a href="weekly/">📮 每周精选</a>
-      <a href="timeline/">🕒 更新记录</a>
+      <a href="list.html">📋 全部项目</a>
     </div>
     <div id="dailyPick"></div>
     <div class="recent-adds" id="recentAdds"></div>
@@ -611,9 +615,9 @@ a.nav-item{text-decoration:none;color:inherit}
     <svg viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm3-3a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v1H2v-1Z"/></svg>
     我的
   </div>
-  <a class="nav-item" href="list.html" rel="noopener">
-    <svg viewBox="0 0 16 16"><path d="M1 2.75A.75.75 0 0 1 1.75 2h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 2.75Zm0 5A.75.75 0 0 1 1.75 7h12.5a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 7.75Zm0 5a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1-.75-.75Z"/></svg>
-    全部
+  <a class="nav-item" href="timeline/" rel="noopener" id="navUpdate">
+    <svg viewBox="0 0 16 16"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8.75-4.25v3.69l2.6 2.6-1.06 1.06L7.25 8.1V3.75h1.5Z"/></svg>
+    更新<span class="nav-badge" id="navUpdateBadge"></span>
   </a>
 </nav>
 
@@ -1461,6 +1465,12 @@ function renderUpdates(){
       + (weekAdd ? ` · <b>本周上新 ${weekAdd} 个</b>` : ` · 最近上新 ${esc(last.date)}`)
       + ' · <a href="timeline/">全部更新记录 →</a>';
     strip.classList.add("show");
+
+    const badge = $("#navUpdateBadge");
+    if(badge){
+      if(weekAdd > 0){ badge.textContent = weekAdd; badge.classList.add("show"); }
+      else { badge.classList.remove("show"); }
+    }
 
     const recent = [];
     for(const e of d.events){
