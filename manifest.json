@@ -2,16 +2,64 @@
   "name": "GitHub 中文发现器",
   "short_name": "GitHub发现器",
   "description": "不懂英文，也能轻松逛 GitHub：精选项目中文介绍、热门榜单、一键收藏",
+  "id": "/github-cn-finder/",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0d1117",
   "theme_color": "#0d1117",
   "lang": "zh-CN",
+  "categories": ["developer", "productivity", "education"],
   "icons": [
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/mobile-home.png",
+      "sizes": "750x1624",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "首页：分类、搜索、今日推荐"
+    },
+    {
+      "src": "screenshots/desktop-home.png",
+      "sizes": "1280x900",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "桌面端：两列卡片 + 分页"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "每日推荐",
+      "short_name": "推荐",
+      "description": "今天值得看的那个项目",
+      "url": "./?tab=home",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "排行榜",
+      "short_name": "榜单",
+      "description": "今日 / 本周 / 本月涨星榜",
+      "url": "./?tab=rank",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "我的收藏",
+      "short_name": "收藏",
+      "description": "我收藏的项目",
+      "url": "./?tab=me",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "每周精选",
+      "short_name": "周刊",
+      "description": "本周新增与涨星榜",
+      "url": "./weekly/",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
   ]
 }

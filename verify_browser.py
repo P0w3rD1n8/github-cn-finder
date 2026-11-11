@@ -294,6 +294,23 @@ def main():
             check("项目分享封面 OG 图", og.status == 200 and "image" in (og.headers.get("content-type") or "")
                   and has_meta, f"HTTP {og.status} / meta={has_meta}")
 
+            # ---------- v1.28.0 更新记录 / PWA 安装体验 ----------
+            t_resp = page.goto(base + "timeline/", wait_until="domcontentloaded", timeout=45000)
+            tl_days = page.locator(".tl-day").count()
+            check("更新记录时间线", t_resp is not None and t_resp.status == 200 and tl_days >= 1,
+                  f"HTTP {t_resp.status if t_resp else '?'} / {tl_days} 个日期")
+
+            page.goto(base + "?tab=rank", wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(900)
+            rank_shown = page.locator("#page-rank.show").count()
+            check("快捷方式 ?tab=rank 直达榜单", rank_shown == 1, f"page-rank.show={rank_shown}")
+
+            man = page.request.get(base + "manifest.json")
+            man_json = man.json() if man.status == 200 else {}
+            check("PWA 快捷方式与安装预览",
+                  len(man_json.get("shortcuts", [])) >= 3 and len(man_json.get("screenshots", [])) >= 1,
+                  f"shortcuts={len(man_json.get('shortcuts', []))} screenshots={len(man_json.get('screenshots', []))}")
+
             # 前端会主动取消上一轮搜索请求（cancelPendingSearch），aborted 属正常
             real_failures = [
                 f for f in failures

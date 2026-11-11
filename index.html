@@ -37,7 +37,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.27.2";
+window.GH_VER = "v1.28.0";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -450,6 +450,7 @@ a.nav-item{text-decoration:none;color:inherit}
       <a href="c/zijian.html">🏠 自建服务</a>
       <a href="c/lingjichu.html">📚 零基础学编程</a>
       <a href="weekly/">📮 每周精选</a>
+      <a href="timeline/">🕒 更新记录</a>
     </div>
     <div id="dailyPick"></div>
     <div class="filter-row">
@@ -1769,17 +1770,24 @@ $("#dictModal").addEventListener("click", e=>{ if(e.target.id==="dictModal") $("
 $("#dictSearch").addEventListener("input", e=>renderDict(e.target.value));
 
 /* ================= 导航 & 主题 ================= */
+/* v1.28.0：抽成函数，供底部导航和「PWA 快捷方式 ?tab=」共用 */
+function switchPage(name){
+  const item = document.querySelector('.nav-item[data-page="' + name + '"]');
+  if(!item) return false;
+  document.querySelectorAll(".nav-item").forEach(i=>i.classList.remove("active"));
+  item.classList.add("active");
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
+  const pg = $("#page-"+name);
+  if(pg) pg.classList.add("show");
+  window.scrollTo(0,0);
+  if(name==="me") renderFavs();
+  if(name==="rank" && !rankLoaded){ rankLoaded = true; loadRank(); loadNewStars(); }
+  return true;
+}
 document.querySelectorAll(".nav-item").forEach(item=>{
   item.addEventListener("click", ()=>{
     if(!item.dataset.page) return;   // 纯链接项（顶部"全部"→list.html）不参与页面切换，避免 #page-undefined 报错
-    document.querySelectorAll(".nav-item").forEach(i=>i.classList.remove("active"));
-    item.classList.add("active");
-    document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
-    const pg = $("#page-"+item.dataset.page);
-    if(pg) pg.classList.add("show");
-    window.scrollTo(0,0);
-    if(item.dataset.page==="me") renderFavs();
-    if(item.dataset.page==="rank" && !rankLoaded){ rankLoaded = true; loadRank(); loadNewStars(); }
+    switchPage(item.dataset.page);
   });
 });
 const themeBtn = $("#themeBtn");
@@ -1965,10 +1973,13 @@ if (typeof REPOS !== "undefined" && Array.isArray(REPOS) && REPOS.length){
   const repoCountEl = document.getElementById("repoCount");
   if(repoCountEl) repoCountEl.textContent = REPOS.length;
   try{
+    /* v1.28.0：PWA 快捷方式的 ?tab= 要在 renderHome 重写 URL 之前先读出来 */
+    const initialTab = new URLSearchParams(location.search).get("tab");
     const restoredQ = applyURLState();
     document.querySelectorAll("#sortTabs .sort-tab").forEach(b=>b.classList.toggle("active", b.dataset.sort===curSort));
     renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs(); renderCmpTray();
     if(restoredQ){ clearTimeout(searchTimer); doSearch(); }
+    if(initialTab && ["home","rank","me"].includes(initialTab)) switchPage(initialTab);
   }catch(err){
     showDataError();
   }

@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: 拉取仓库
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # v1.28.0：更新记录页要读 data.js 的完整提交历史
 
       - name: 配置 Python
         uses: actions/setup-python@v5
@@ -41,11 +43,14 @@ jobs:
       - name: 生成合辑 / 周刊 / RSS（v1.26.0）
         run: python build_extra.py
 
+      - name: 生成更新记录时间线（v1.28.0）
+        run: python build_timeline.py
+
       - name: 提交生成的页面
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add p list.html sitemap.xml c weekly feed.xml og
+          git add p list.html sitemap.xml c weekly feed.xml og timeline
           if git diff --cached --quiet; then
             echo "页面无变化，跳过提交"
           else

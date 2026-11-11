@@ -270,7 +270,7 @@ def main():
     issues = weekly_pages(data)
     build_feed(issues)
 
-    extra = [("c/", "weekly", "0.7")]
+    extra = [("c/", "weekly", "0.7"), ("timeline/", "weekly", "0.7")]
     extra += [(f"c/{s}.html", "monthly", "0.7") for s in slugs]
     extra += [("weekly/", "weekly", "0.7")]
     extra += [(f"weekly/{it['file']}", "yearly", "0.5") for it in issues]
