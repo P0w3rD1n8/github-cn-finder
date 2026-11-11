@@ -309,8 +309,9 @@ table.cmp a{color:var(--accent);text-decoration:none}
 .mirror-stats b{color:var(--accent);font-weight:700}
 .mirror-stats .m-no{color:#8b949e}
 /* v1.26.0 快捷入口：专题合辑 + 每周精选 */
-.quick-links{display:flex;gap:8px;flex-wrap:wrap;padding:0 2px 12px}
-.quick-links a{font-size:11.5px;color:var(--accent);text-decoration:none;background:var(--card2);border:1px solid var(--border);border-radius:999px;padding:4px 10px;line-height:1.2}
+.quick-links{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;padding:0 2px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.quick-links::-webkit-scrollbar{display:none}
+.quick-links a{flex:0 0 auto;white-space:nowrap;font-size:11.5px;color:var(--accent);text-decoration:none;background:var(--card2);border:1px solid var(--border);border-radius:999px;padding:4px 10px;line-height:1.2}
 .quick-links a:hover{border-color:var(--accent)}
 /* v1.29.0：让"一直在更新"在首页第一屏就能看到 */
 .update-strip{display:none;font-size:11.5px;color:var(--text2);padding:0 2px 8px;line-height:1.7}
@@ -1467,7 +1468,7 @@ function renderUpdates(){
       if(recent.length >= 10) break;
     }
     if(!recent.length) return;
-    box.innerHTML = '<span class="ra-label">🆕 最近上新</span>' + recent.slice(0,10).map(([n,date])=>{
+    box.innerHTML = '<span class="ra-label">✨ 最近上新</span>' + recent.slice(0,10).map(([n,date])=>{
       const zh = repoZh(n);
       const parts = n.split("/");
       const has = PAGEMAP.has(n.toLowerCase());
