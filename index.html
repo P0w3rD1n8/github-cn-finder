@@ -37,7 +37,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.29.1";
+window.GH_VER = "v1.30.0";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -313,6 +313,17 @@ table.cmp a{color:var(--accent);text-decoration:none}
 .quick-links::-webkit-scrollbar{display:none}
 .quick-links a{flex:0 0 auto;white-space:nowrap;font-size:11.5px;color:var(--accent);text-decoration:none;background:var(--card2);border:1px solid var(--border);border-radius:999px;padding:4px 10px;line-height:1.2}
 .quick-links a:hover{border-color:var(--accent)}
+/* v1.30.0：首页顶部年度精选横幅 */
+.annual-banner{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding:11px 14px;border-radius:12px;
+  text-decoration:none;color:var(--text);
+  background:linear-gradient(135deg,rgba(163,113,247,.22),rgba(88,166,255,.18));
+  border:1px solid rgba(163,113,247,.45)}
+.annual-banner:hover{border-color:#a371f7;text-decoration:none}
+.annual-banner .ab-tag{flex:0 0 auto;font-size:11px;font-weight:700;color:#0d1117;background:#a371f7;
+  border-radius:6px;padding:2px 7px}
+.annual-banner .ab-text{flex:1;min-width:0;font-size:12.5px;color:var(--text);line-height:1.5}
+.annual-banner .ab-text b{color:#c9a7ff}
+.annual-banner .ab-arrow{flex:0 0 auto;color:#a371f7;font-weight:700}
 /* v1.29.0：让"一直在更新"在首页第一屏就能看到 */
 .update-strip{display:none;font-size:11.5px;color:var(--text2);padding:0 2px 8px;line-height:1.7}
 .update-strip.show{display:block}
@@ -450,6 +461,11 @@ a.nav-item{text-decoration:none;color:inherit}
   <!-- 发现页 -->
   <section class="page show" id="page-home">
     <h1 class="sr-only">GitHub 中文发现器</h1>
+    <a class="annual-banner" href="annual/2026.html" id="annualBanner">
+      <span class="ab-tag">🏆 年度</span>
+      <span class="ab-text"><b>2026 年度精选</b> · 20 个今年最值得知道的开源项目</span>
+      <span class="ab-arrow">→</span>
+    </a>
     <div class="banner">
       <span class="b-icon">🧭</span>
       <div class="b-text">

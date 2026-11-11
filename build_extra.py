@@ -271,6 +271,12 @@ def main():
     build_feed(issues)
 
     extra = [("c/", "weekly", "0.7"), ("timeline/", "weekly", "0.7")]
+    # 年度精选（人工策展页）
+    try:
+        _ann = json.load(open(os.path.join(ROOT, "annual.json"), encoding="utf-8"))
+        extra.append(("annual/%s.html" % _ann["year"], "monthly", "0.9"))
+    except Exception:
+        pass
     extra += [(f"c/{s}.html", "monthly", "0.7") for s in slugs]
     extra += [("weekly/", "weekly", "0.7")]
     extra += [(f"weekly/{it['file']}", "yearly", "0.5") for it in issues]

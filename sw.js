@@ -20,8 +20,9 @@
    版本 v22（v1.27.2）：补齐 13 个项目的 GitCode 镜像（均通过 owner/repo 精确校验），缺镜像从 27 降到 14。
    版本 v23（v1.28.0）：新增「更新记录」时间线页；PWA 加长按快捷方式（推荐/榜单/收藏/周刊）与安装预览图。
    版本 v24（v1.29.0）：首页新增「更新状态条 + 最近上新」横排，数据来自 updates.json（与 timeline 同源）。
-   版本 v25（v1.29.1）：底部导航第三项改为「更新」（直达 timeline/，带本周上新数徽标），原「全部」移到快捷入口。 */
-const CACHE = "gh-cn-v25";
+   版本 v25（v1.29.1）：底部导航第三项改为「更新」（直达 timeline/，带本周上新数徽标），原「全部」移到快捷入口。
+   版本 v26（v1.30.0）：新增「2026 年度精选」（annual/2026.html，20 个项目 5 个主题）+ 首页顶部横幅 + 专属分享封面。 */
+const CACHE = "gh-cn-v26";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html", "./updates.json"];

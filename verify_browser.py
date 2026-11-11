@@ -284,6 +284,18 @@ def main():
             check("底部导航「更新」入口与徽标", badge == 1 and "timeline" in nav_href,
                   f"徽标={badge} 数字={badge_txt} href={nav_href}")
 
+            # ---------- v1.30.0 年度精选 ----------
+            a_resp = page.goto(base + "annual/2026.html", wait_until="domcontentloaded", timeout=45000)
+            a_items = page.locator(".ann-item").count()
+            a_h1 = page.locator("h1").first.inner_text() if page.locator("h1").count() else ""
+            check("年度精选页", a_resp is not None and a_resp.status == 200 and a_items == 20 and "年度" in a_h1,
+                  f"HTTP {a_resp.status if a_resp else '?'} / {a_items} 个项目")
+
+            page.goto(base, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(700)
+            banner = page.locator("#annualBanner").count()
+            check("首页年度横幅", banner == 1, f"banner={banner}")
+
             # ---------- v1.27.0 对比模式 + 项目 OG 图 ----------
             page.goto(base, wait_until="domcontentloaded", timeout=45000)
             page.wait_for_timeout(1200)
