@@ -18,11 +18,12 @@
    版本 v21（v1.27.1）：导航与 data.js 改为 network-first（no-store），sw.js 用 updateViaCache:none 注册，
    新版本一次刷新即可生效；未操作页面时收到更新会静默刷新。
    版本 v22（v1.27.2）：补齐 13 个项目的 GitCode 镜像（均通过 owner/repo 精确校验），缺镜像从 27 降到 14。
-   版本 v23（v1.28.0）：新增「更新记录」时间线页；PWA 加长按快捷方式（推荐/榜单/收藏/周刊）与安装预览图。 */
-const CACHE = "gh-cn-v23";
+   版本 v23（v1.28.0）：新增「更新记录」时间线页；PWA 加长按快捷方式（推荐/榜单/收藏/周刊）与安装预览图。
+   版本 v24（v1.29.0）：首页新增「更新状态条 + 最近上新」横排，数据来自 updates.json（与 timeline 同源）。 */
+const CACHE = "gh-cn-v24";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
-  "./list.html"];
+  "./list.html", "./updates.json"];
 
 self.addEventListener("install", e => {
   e.waitUntil((async () => {
@@ -67,6 +68,10 @@ self.addEventListener("fetch", e => {
   const isNav = e.request.mode === "navigate";
   if (isNav || u.pathname.endsWith("/index.html") || u.pathname.endsWith("/data.js")) {
     e.respondWith(networkFirst(e.request, isNav ? 3000 : 2500, "reload"));
+    return;
+  }
+  if (u.pathname.endsWith("/updates.json")) {   // v1.29.0：更新记录数据，同样要新
+    e.respondWith(networkFirst(e.request, 3000, "reload"));
     return;
   }
   if (u.pathname.endsWith("/repos.json")) {      // 实时数据：network-first（3 秒超时回退缓存），保证 star 是最新的

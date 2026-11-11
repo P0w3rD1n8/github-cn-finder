@@ -37,7 +37,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.28.0";
+window.GH_VER = "v1.29.0";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -312,6 +312,20 @@ table.cmp a{color:var(--accent);text-decoration:none}
 .quick-links{display:flex;gap:8px;flex-wrap:wrap;padding:0 2px 12px}
 .quick-links a{font-size:11.5px;color:var(--accent);text-decoration:none;background:var(--card2);border:1px solid var(--border);border-radius:999px;padding:4px 10px;line-height:1.2}
 .quick-links a:hover{border-color:var(--accent)}
+/* v1.29.0：让"一直在更新"在首页第一屏就能看到 */
+.update-strip{display:none;font-size:11.5px;color:var(--text2);padding:0 2px 8px;line-height:1.7}
+.update-strip.show{display:block}
+.update-strip .us-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#3fb950;
+  margin-right:5px;vertical-align:middle;box-shadow:0 0 0 3px rgba(63,185,80,.15)}
+.update-strip b{color:var(--accent);font-weight:700}
+.update-strip a{color:var(--accent);text-decoration:none}
+.recent-adds{display:none;gap:6px;overflow-x:auto;padding:0 0 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.recent-adds::-webkit-scrollbar{display:none}
+.recent-adds.show{display:flex}
+.ra-label{flex:0 0 auto;font-size:11.5px;color:var(--text2);align-self:center}
+.ra-chip{flex:0 0 auto;font-size:11.5px;color:var(--text);background:var(--card2);border:1px solid var(--border);
+  border-radius:999px;padding:4px 10px;text-decoration:none;white-space:nowrap}
+.ra-chip:hover{border-color:var(--accent);color:var(--accent)}
 .repo-path{font-size:11.5px;color:var(--text2);margin:1px 0 3px;font-weight:400}
 .dp-sub{font-size:11px;color:var(--text2);font-weight:400;margin-left:6px}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
@@ -443,6 +457,7 @@ a.nav-item{text-decoration:none;color:inherit}
       <button id="searchBtn">搜索</button>
     </div>
     <div class="mirror-stats" id="mirrorStats"></div>
+    <div class="update-strip" id="updateStrip"></div>
     <div class="quick-links" id="quickLinks">
       <a href="c/zhuangji.html">💻 装机必备</a>
       <a href="c/zimeiti.html">🎬 自媒体工具箱</a>
@@ -453,6 +468,7 @@ a.nav-item{text-decoration:none;color:inherit}
       <a href="timeline/">🕒 更新记录</a>
     </div>
     <div id="dailyPick"></div>
+    <div class="recent-adds" id="recentAdds"></div>
     <div class="filter-row">
       <div class="sort-tabs" id="sortTabs">
         <div class="sort-tab active" data-sort="star">⭐ 热门</div>
@@ -1429,6 +1445,39 @@ function renderDailyPick(){
   </div>`;
   $("#dailyPick").querySelector(".daily-pick").addEventListener("click", ()=>window.open(`https://github.com/${r.n}`,"_blank"));
 }
+/* v1.29.0：把"这站一直在更新"摆到第一屏——状态条 + 最近上新横排 */
+function renderUpdates(){
+  const strip = $("#updateStrip"), box = $("#recentAdds");
+  if(!strip || !box || !window.fetch) return;
+  fetch("updates.json", {cache:"no-store"}).then(r=> r.ok ? r.json() : null).then(d=>{
+    if(!d || !d.events || !d.events.length) return;
+    const weekAgo = Date.now() - 7*86400000;
+    const week = d.events.filter(e=> new Date(e.date+"T00:00:00").getTime() >= weekAgo);
+    const weekAdd = week.reduce((s,e)=> s + e.added.length, 0);
+    const last = d.events[0];
+    strip.innerHTML = '<span class="us-dot"></span>每小时自动刷新 star'
+      + (DATA_UPDATED ? ` · 数据 ${fmtLocalU(DATA_UPDATED)}` : "")
+      + (weekAdd ? ` · <b>本周上新 ${weekAdd} 个</b>` : ` · 最近上新 ${esc(last.date)}`)
+      + ' · <a href="timeline/">全部更新记录 →</a>';
+    strip.classList.add("show");
+
+    const recent = [];
+    for(const e of d.events){
+      for(const n of e.added) recent.push([n, e.date]);
+      if(recent.length >= 10) break;
+    }
+    if(!recent.length) return;
+    box.innerHTML = '<span class="ra-label">🆕 最近上新</span>' + recent.slice(0,10).map(([n,date])=>{
+      const zh = repoZh(n);
+      const parts = n.split("/");
+      const has = PAGEMAP.has(n.toLowerCase());
+      const href = has ? `p/${esc(parts[0])}-${esc(parts[1])}.html` : `https://github.com/${esc(n)}`;
+      const attr = has ? "" : ' target="_blank" rel="noopener"';
+      return `<a class="ra-chip" href="${href}"${attr} title="${esc(n)} · ${esc(date)} 上新">${esc(zh)}</a>`;
+    }).join("");
+    box.classList.add("show");
+  }).catch(()=>{});
+}
 $("#catBar").addEventListener("click", e=>{
   const t = e.target.closest(".cat"); if(!t) return;
   curCat = t.dataset.cat; renderCats();
@@ -1977,7 +2026,7 @@ if (typeof REPOS !== "undefined" && Array.isArray(REPOS) && REPOS.length){
     const initialTab = new URLSearchParams(location.search).get("tab");
     const restoredQ = applyURLState();
     document.querySelectorAll("#sortTabs .sort-tab").forEach(b=>b.classList.toggle("active", b.dataset.sort===curSort));
-    renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs(); renderCmpTray();
+    renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs(); renderCmpTray(); renderUpdates();
     if(restoredQ){ clearTimeout(searchTimer); doSearch(); }
     if(initialTab && ["home","rank","me"].includes(initialTab)) switchPage(initialTab);
   }catch(err){

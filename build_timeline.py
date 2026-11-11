@@ -8,6 +8,7 @@
 注意：CI 里 checkout 需要 fetch-depth: 0，否则只有 1 个提交、时间线为空。
 """
 import html as html_mod
+import json
 import os
 import re
 import subprocess
@@ -173,6 +174,21 @@ def main():
     )
 
     os.makedirs(OUT_DIR, exist_ok=True)
+    # 供首页读取的轻量数据（更新状态条 + 最近上新）
+    upd = {
+        "generated": events[-1]["date"] if events else "",
+        "latest": events[-1]["date"] if events else "",
+        "total_added": total_added,
+        "total_now": total,
+        "events": [
+            {"date": e["date"], "subject": e["subject"], "added": e["added"],
+             "removed": e["removed"], "renames": e["renames"]}
+            for e in reversed(events)  # 新的在前
+        ],
+    }
+    with open(os.path.join(ROOT, "updates.json"), "w", encoding="utf-8", newline="\n") as f:
+        json.dump(upd, f, ensure_ascii=False, separators=(",", ":"))
+
     html = (
         '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'

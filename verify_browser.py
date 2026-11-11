@@ -270,6 +270,15 @@ def main():
             check("RSS feed.xml", r_resp is not None and r_resp.status == 200 and "<rss" in r_body,
                   f"HTTP {r_resp.status if r_resp else '?'} / {len(r_body)} 字节")
 
+            # ---------- v1.29.0 首页「一直在更新」 ----------
+            page.goto(base, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(1800)
+            strip_on = page.locator("#updateStrip.show").count()
+            strip_txt = page.locator("#updateStrip").inner_text() if strip_on else ""
+            chips = page.locator("#recentAdds .ra-chip").count()
+            check("首页更新状态条 + 最近上新", strip_on == 1 and chips >= 3,
+                  f"状态条={strip_on} 上新={chips} / {strip_txt[:46]}")
+
             # ---------- v1.27.0 对比模式 + 项目 OG 图 ----------
             page.goto(base, wait_until="domcontentloaded", timeout=45000)
             page.wait_for_timeout(1200)
