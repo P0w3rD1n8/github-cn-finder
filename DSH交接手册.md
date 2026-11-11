@@ -14,8 +14,8 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | GitHub 仓库 | P0w3rD1n8/github-cn-finder（远端 main 分支） |
 | 本地仓库（ROG） | C:\Users\power\GitHub中文发现器 |
 | DSH 工作区 | C:\Users\power\Documents\发现器开发-建议（宣传/视频物料在此） |
-| 当前版本 | **v1.29.1**（2026-11-11 上线，SW 缓存 gh-cn-v25，162 个项目 / 148 个有国内镜像） |
-| 本地 commit | 与远端同步 = `15dbad8`（2026-11-11 v1.29.1 导航加「更新」入口） |
+| 当前版本 | **v1.30.0**（2026-11-11 上线，SW 缓存 gh-cn-v26，162 个项目 + 2026 年度精选） |
+| 本地 commit | 与远端同步 = `3f39448`（2026-11-11 v1.30.0 年度精选） |
 | 远端 main | `a7643e8`（v1.28.0 / SW v23；线上 27 项断言全绿、timeline/data.js/manifest 逐字节一致） |
 
 ## 2. 文件职责一览
@@ -36,6 +36,9 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | `timeline/` | 自动产物：更新记录页（按日期倒序） |
 | `screenshots/` | PWA 安装预览图（manifest screenshots 引用，手工放进去的静态资源） |
 | `updates.json` | **自动产物**（build_timeline.py 生成）：首页更新状态条与最近上新读它，SW 里走 network-first |
+| `annual.json` | **人工策展**：年度精选的年份/标题/分组/每个项目的「为什么选它」，改这里换榜 |
+| `build_annual.py` | 生成 `annual/<year>.html` + `og/annual-<year>.png`；首页顶部横幅指向它 |
+| `annual/` | 自动产物：年度精选页（index.html 自动跳当年） |
 | `p/` | 152 个静态项目页（v1.24.1 现状） |
 | `index.html` | 首页全部前端逻辑：分页、分类、搜索、收藏、海报、主题；版本号在 `window.GH_VER` |
 | `sw.js` | Service Worker，缓存名 `gh-cn-v16`；**每次发版必须升级缓存名**，否则用户端不更新 |
@@ -194,6 +197,7 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - 工具：`verify_sync.py`（HTTP 级三方核验 + `--links` 链接巡检）+ `verify_browser.py`（24 项浏览器断言，期望值从 data.js 实时计算）。
 - **v1.26.0（2026-11-07）内容板块**：专题合辑 5 个（装机必备 / 自媒体工具箱 / 本地 AI 入门 / 自建服务 / 零基础学编程，数据在 `collections.json`，可人工增删）；每周精选周刊 `weekly/`（本周新增 + 周涨星 Top10 + 总榜 + 归档提醒）；RSS `feed.xml`；补了 `favicon.ico`。
 - 周刊首期（2026-11-07）是基线，**从第二期（约 11-14）开始才有「周涨星」**——依赖 `weekly.json` 累积两期以上。
+- **v1.30.0（2026-11-11）年度精选**：`annual/2026.html`，20 个项目分 5 组（装机必装 / AI 这一年 / 程序员利器 / 创作者工具 / 学与玩），每个项目一句「为什么选它」；首页顶部紫色横幅入口 + 专属分享封面。策展在 `annual.json`，每年改这个文件即可复用。
 - **v1.29.0（2026-11-11）首页露出更新**：更新记录不能只藏在快捷入口——首页第一屏加「🟢 每小时自动刷新 star · 数据时间 · 本周上新 N 个 · 全部更新记录 →」状态条，外加「✨ 最近上新」横排（最近 10 个新项目）。数据来自 `updates.json`，本周上新按 7 天窗口从 git 历史统计；本周无新增时降级显示「最近上新 日期」。快捷入口改成单行横滑（`flex:0 0 auto` + `nowrap`，否则中文会被压成竖排）。
 - **v1.28.0（2026-11-11）**：新增「更新记录」时间线页 `timeline/`（从 git 历史算新增/下架/改名，改名识别先用仓库名、再用 owner 配对）；PWA 加 4 个长按快捷方式（推荐/榜单/收藏/周刊，`?tab=` 直达）、安装预览截图、稳定 `id`。
 - **v1.27.2（2026-11-08）补镜像**：GitCode 镜像 131 → 144 条，缺镜像 27 → 14。做法是枚举 `GitHub_Trending/` 与 `gh_mirrors/` 的候选前缀，**再用页面 `<title>` 精确解析 `owner/repo` 比对**；只靠"页面里出现仓库名"会误判（`gh_mirrors/op/openclaw` 实际是 `pjasicek/OpenClaw`、`GitHub_Trending/co/core` 实际是 `home-assistant/core`）。
@@ -226,6 +230,7 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 
 - [ ] 手机端刷新一次即看到新版本；SW 缓存名为当前版本（v1.27.1）
 - [ ] `timeline/` 有更新记录、`?tab=rank` 能直达榜单、manifest 里有 4 个快捷方式（v1.28.0）
+- [ ] `annual/2026.html` 有 20 个项目、首页顶部有年度横幅（v1.30.0）
 - [ ] 首页快捷入口能进合辑/周刊（v1.26.0）
 - [ ] `c/` 5 个合辑 + 合辑内页项目数正确（v1.26.0）
 - [ ] `weekly/` 有当期、`feed.xml` 可被解析（v1.26.0）
