@@ -14,9 +14,9 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | GitHub 仓库 | P0w3rD1n8/github-cn-finder（远端 main 分支） |
 | 本地仓库（ROG） | C:\Users\power\GitHub中文发现器 |
 | DSH 工作区 | C:\Users\power\Documents\发现器开发-建议（宣传/视频物料在此） |
-| 当前版本 | **v1.27.2**（2026-11-08 上线，SW 缓存 gh-cn-v22，162 个项目 / 148 个有国内镜像） |
-| 本地 commit | 与远端同步 = `53b100e`（2026-11-08 v1.27.2 补 13 个镜像） |
-| 远端 main | `53b100e`（v1.27.2 / SW v22；线上 24 项断言全绿、data.js 逐字节一致） |
+| 当前版本 | **v1.28.0**（2026-11-11 上线，SW 缓存 gh-cn-v23，162 个项目 / 148 个有国内镜像） |
+| 本地 commit | 与远端同步 = `a7643e8`（2026-11-11 v1.28.0 更新记录 + PWA 快捷方式） |
+| 远端 main | `a7643e8`（v1.28.0 / SW v23；线上 27 项断言全绿、timeline/data.js/manifest 逐字节一致） |
 
 ## 2. 文件职责一览
 
@@ -32,6 +32,9 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | `c/` `weekly/` `feed.xml` | 自动产物（合辑页 / 周刊页 / RSS），不要手改 |
 | `build_og.py` | **v1.27.0 新增**：用 Pillow 生成每个项目的 1200×630 分享封面（`og/<owner>-<repo>.png`），CI 里先装 pillow + fonts-noto-cjk 再跑 |
 | `og/` | 自动产物：162 张分享封面（约 8MB）；**不加 star 数**，否则每小时都要重生成 |
+| `build_timeline.py` | **v1.28.0 新增**：读 data.js 的 git 历史，比对前后 REPOS 名单，生成 `timeline/`（新增/下架/改名）。**CI 必须 `fetch-depth: 0`**，否则只有 1 个提交、页面为空 |
+| `timeline/` | 自动产物：更新记录页（按日期倒序） |
+| `screenshots/` | PWA 安装预览图（manifest screenshots 引用，手工放进去的静态资源） |
 | `p/` | 152 个静态项目页（v1.24.1 现状） |
 | `index.html` | 首页全部前端逻辑：分页、分类、搜索、收藏、海报、主题；版本号在 `window.GH_VER` |
 | `sw.js` | Service Worker，缓存名 `gh-cn-v16`；**每次发版必须升级缓存名**，否则用户端不更新 |
@@ -78,7 +81,7 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
    - `index.html`：`window.GH_VER = "v1.x.y";`
    - `sw.js`：`const CACHE = "gh-cn-vXX";`（每次 +1，当前 v16 → v17）
    - `README.md`：当前版本 + 版本历史顶部加一条
-2. **重新生成产物**：fetch-data.py → build_og.py → build_pages.py → build_extra.py（repos.json / og/ / p/ / list.html / sitemap.xml / c/ / weekly/ / feed.xml 全重建；data.js 是人工源不动）。
+2. **重新生成产物**：fetch-data.py → build_og.py → build_pages.py → build_extra.py → build_timeline.py（repos.json / og/ / p/ / list.html / sitemap.xml / c/ / weekly/ / feed.xml / timeline/ 全重建；data.js 是人工源不动）。
 3. **本地验证**：跑 `verify_browser.py --local`（Playwright + Edge，13 项浏览器级断言：首屏 24 卡、分页条、第 7 页 8 卡、AI 分类 23 个、搜索空态、搜索命中、静态页、无报错、375px 手机端）。**注意**：Playwright 需要命名管道和 TEMP 写权限，DSH 默认沙箱会报 `WinError 5`，必须用完整权限运行（见 §5.4）。
 4. **上线推送**：
    - 常规路径：git commit + push（**清代理 + `-c http.sslBackend=openssl` + `credential.helper=` + token 走 URL**，见 §5.1）。
@@ -190,6 +193,7 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - 工具：`verify_sync.py`（HTTP 级三方核验 + `--links` 链接巡检）+ `verify_browser.py`（24 项浏览器断言，期望值从 data.js 实时计算）。
 - **v1.26.0（2026-11-07）内容板块**：专题合辑 5 个（装机必备 / 自媒体工具箱 / 本地 AI 入门 / 自建服务 / 零基础学编程，数据在 `collections.json`，可人工增删）；每周精选周刊 `weekly/`（本周新增 + 周涨星 Top10 + 总榜 + 归档提醒）；RSS `feed.xml`；补了 `favicon.ico`。
 - 周刊首期（2026-11-07）是基线，**从第二期（约 11-14）开始才有「周涨星」**——依赖 `weekly.json` 累积两期以上。
+- **v1.28.0（2026-11-11）**：新增「更新记录」时间线页 `timeline/`（从 git 历史算新增/下架/改名，改名识别先用仓库名、再用 owner 配对）；PWA 加 4 个长按快捷方式（推荐/榜单/收藏/周刊，`?tab=` 直达）、安装预览截图、稳定 `id`。
 - **v1.27.2（2026-11-08）补镜像**：GitCode 镜像 131 → 144 条，缺镜像 27 → 14。做法是枚举 `GitHub_Trending/` 与 `gh_mirrors/` 的候选前缀，**再用页面 `<title>` 精确解析 `owner/repo` 比对**；只靠"页面里出现仓库名"会误判（`gh_mirrors/op/openclaw` 实际是 `pjasicek/OpenClaw`、`GitHub_Trending/co/core` 实际是 `home-assistant/core`）。
 - **v1.27.0（2026-11-07）**：新增「对比模式」（卡片点 ⇄ 对比，最多 3 个，弹窗并排比较 8 项）与每项目专属分享封面 `og/*.png`；分享卡片 `og:image` 指向各自封面。
 
@@ -219,6 +223,7 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - [ ] p 页 `og:image` 指向 `og/<owner>-<repo>.png` 且图片可访问（v1.27.0）
 
 - [ ] 手机端刷新一次即看到新版本；SW 缓存名为当前版本（v1.27.1）
+- [ ] `timeline/` 有更新记录、`?tab=rank` 能直达榜单、manifest 里有 4 个快捷方式（v1.28.0）
 - [ ] 首页快捷入口能进合辑/周刊（v1.26.0）
 - [ ] `c/` 5 个合辑 + 合辑内页项目数正确（v1.26.0）
 - [ ] `weekly/` 有当期、`feed.xml` 可被解析（v1.26.0）
