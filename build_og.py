@@ -71,25 +71,25 @@ def font(size, bold=False):
 
 def wrap(text, f, max_w, draw, max_lines=2):
     lines, cur = [], ""
-    for ch in text:
+    consumed = 0
+    for i, ch in enumerate(text):
         if draw.textlength(cur + ch, font=f) <= max_w:
             cur += ch
+            consumed = i + 1
         else:
             lines.append(cur)
             cur = ch
+            consumed = i + 1
             if len(lines) == max_lines:
                 break
     if cur and len(lines) < max_lines:
         lines.append(cur)
-    if len(lines) == max_lines:
-        # 超长补省略号
+    if consumed < len(text) and lines:
+        # 只有真的被截断才补省略号
         last = lines[-1]
-        if draw.textlength(last + "…", font=f) <= max_w:
-            lines[-1] = last + "…"
-        else:
-            while last and draw.textlength(last + "…", font=f) > max_w:
-                last = last[:-1]
-            lines[-1] = last + "…"
+        while last and draw.textlength(last + "…", font=f) > max_w:
+            last = last[:-1]
+        lines[-1] = last + "…"
     return lines
 
 
@@ -155,6 +155,7 @@ def render(zh, full, cat, desc, stars, path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", default="")
+    ap.add_argument("--force", action="store_true", help="已存在的图也重新生成")
     args = ap.parse_args()
 
     sys.path.insert(0, ROOT)
@@ -170,7 +171,7 @@ def main():
         zh = data["repo_zh"].get(n) or repo
         desc = data["cn_desc"].get(n) or r.get("d", "")
         path = os.path.join(OUT, f"{owner}-{repo}.png")
-        if os.path.exists(path) and not args.only:
+        if os.path.exists(path) and not args.only and not args.force:
             skipped += 1
             continue
         render(zh, n, r.get("c", ""), desc, r.get("s", 0), path)
