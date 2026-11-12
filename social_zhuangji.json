@@ -1,0 +1,51 @@
+{
+  "title": "装机必备",
+  "kicker": "专 题 推 荐 · 第 2 期",
+  "subtitle": "新电脑先装这 9 个，全部免费无广告",
+  "brand": "GitHub 中文发现器",
+  "stats": [
+    ["9", "个工具"],
+    ["3", "类"],
+    ["0", "元"]
+  ],
+  "cover_cta": "每个都写了为什么值得装，站里能搜到",
+  "footer": "GitHub 中文发现器 · 装机必备",
+  "cta_kicker": "怎 么 拿",
+  "cta_title": "收藏这篇，",
+  "cta_title2": "重装系统时照着装",
+  "cta_box_title": "这 9 个分三类：",
+  "steps": [
+    ["1", "搜索「GitHub 中文发现器」"],
+    ["2", "站内搜「装机必备」，或看专题合辑"],
+    ["3", "9 个都有中文说明、官网链接和国内镜像"]
+  ],
+  "groups": [
+    {
+      "name": "系统增强",
+      "desc": "装完立刻感觉到不一样的三件套。",
+      "items": [
+        { "n": "microsoft/PowerToys", "why": "窗口分屏、批量重命名、取色、快捷启动，微软自己出的，装完回不去。" },
+        { "n": "M2Team/NanaZip", "why": "国产开源压缩工具，右键直接解压各种格式，比系统自带好用太多。" },
+        { "n": "NickeManarin/ScreenToGif", "why": "录屏直接转 GIF，做教程、发表情包、录 bug 复现都靠它。" }
+      ]
+    },
+    {
+      "name": "传文件与下载",
+      "desc": "手机电脑互传、下片下资料，这三个人人用得上。",
+      "items": [
+        { "n": "localsend/localsend", "why": "同一个 Wi-Fi 下手机电脑互传，不用数据线、不用微信传自己，苹果安卓互通。" },
+        { "n": "qBittorrent/qBittorrent", "why": "开源 BT 下载工具，干净无广告，界面比同类清爽得多。" },
+        { "n": "videolan/vlc", "why": "万能播放器，什么格式都能播，装完就不用再找解码器。" }
+      ]
+    },
+    {
+      "name": "安全与效率",
+      "desc": "密码、电子书、装软件——三件容易被忽略但天天用的。",
+      "items": [
+        { "n": "keepassxreboot/keepassxc", "why": "开源密码保险库，所有账号一把锁，数据存在自己电脑上。" },
+        { "n": "sumatrapdfreader/sumatrapdf", "why": "秒开的 PDF 阅读器，轻巧不占内存，看文档比浏览器舒服。" },
+        { "n": "ScoopInstaller/Scoop", "why": "命令行装软件，一条命令装好、一条命令卸载，不留垃圾。" }
+      ]
+    }
+  ]
+}

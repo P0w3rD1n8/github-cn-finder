@@ -69,11 +69,20 @@ def font(size, bold=False):
     return ImageFont.truetype(path, size, index=idx)
 
 
+PUNCT = "，。、；：！？）》】…·"
+
+
 def wrap(text, f, max_w, draw, max_lines=2):
     lines, cur = [], ""
     consumed = 0
     for i, ch in enumerate(text):
-        if draw.textlength(cur + ch, font=f) <= max_w:
+        fits = draw.textlength(cur + ch, font=f) <= max_w
+        # 标点悬挂：句号/逗号等不要单独掉到下一行开头，允许略微超宽
+        if not fits and ch in PUNCT and cur:
+            cur += ch
+            consumed = i + 1
+            continue
+        if fits:
             cur += ch
             consumed = i + 1
         else:

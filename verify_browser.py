@@ -276,11 +276,13 @@ def main():
             strip_on = page.locator("#updateStrip.show").count()
             strip_txt = page.locator("#updateStrip").inner_text() if strip_on else ""
             chips = page.locator("#recentAdds .ra-chip").count()
+            rss = page.locator("#rssLink").count()
             badge = page.locator("#navUpdateBadge.show").count()
             nav_href = page.locator("#navUpdate").get_attribute("href") or ""
             check("首页更新状态条 + 最近上新", strip_on == 1 and chips >= 3,
                   f"状态条={strip_on} 上新={chips} / {strip_txt[:46]}")
             badge_txt = page.locator("#navUpdateBadge").inner_text() if badge else "-"
+            check("首页订阅入口", rss == 1, f"rssLink={rss}")
             check("底部导航「更新」入口与徽标", badge == 1 and "timeline" in nav_href,
                   f"徽标={badge} 数字={badge_txt} href={nav_href}")
 
