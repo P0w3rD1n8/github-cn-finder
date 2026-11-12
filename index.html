@@ -37,7 +37,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.30.2";
+window.GH_VER = "v1.31.0";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -331,6 +331,8 @@ table.cmp a{color:var(--accent);text-decoration:none}
   margin-right:5px;vertical-align:middle;box-shadow:0 0 0 3px rgba(63,185,80,.15)}
 .update-strip b{color:var(--accent);font-weight:700}
 .update-strip a{color:var(--accent);text-decoration:none}
+.week-next{display:none;font-size:11.5px;color:var(--text2);padding:0 2px 10px}
+.week-next.show{display:block}
 .recent-adds{display:none;gap:6px;overflow-x:auto;padding:0 0 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .recent-adds::-webkit-scrollbar{display:none}
 .recent-adds.show{display:flex}
@@ -479,6 +481,7 @@ a.nav-item{text-decoration:none;color:inherit}
     </div>
     <div class="mirror-stats" id="mirrorStats"></div>
     <div class="update-strip" id="updateStrip"></div>
+    <div class="week-next" id="weekNext"></div>
     <div class="quick-links" id="quickLinks">
       <a href="c/zhuangji.html">💻 装机必备</a>
       <a href="c/zimeiti.html">🎬 自媒体工具箱</a>
@@ -487,7 +490,6 @@ a.nav-item{text-decoration:none;color:inherit}
       <a href="c/lingjichu.html">📚 零基础学编程</a>
       <a href="weekly/">📮 每周精选</a>
       <a href="list.html">📋 全部项目</a>
-      <a href="subscribe/" id="rssLink">📡 订阅更新</a>
     </div>
     <div id="dailyPick"></div>
     <div class="recent-adds" id="recentAdds"></div>
@@ -540,6 +542,7 @@ a.nav-item{text-decoration:none;color:inherit}
       · 访问统计：本站使用百度统计记录匿名访问数据（页面浏览、来源渠道），用于了解内容受欢迎程度；不会读取你的收藏和搜索内容<br>
       · 📮 联系/合作：<b class="contact-mail" id="contactMail">11589839@qq.com</b>（点一下复制）<br>
       · 🌐 项目主页：<a class="repo-link" href="https://github.com/P0w3rD1n8/github-cn-finder" target="_blank" rel="noopener">GitHub 仓库</a>（点⭐支持 / 反馈问题）<br>
+      · 🗓 每周一期 <a class="repo-link" href="weekly/">📮 每周精选</a> · 📡 <a class="repo-link" href="feed.xml">RSS 订阅</a>（<a class="repo-link" href="subscribe/">怎么用</a> / <a class="repo-link" href="subscribe/#install">装到桌面</a>）<br>
       <br>
       项目还在成长中，我知道它还不够好：精选项目数量有限、部分中文介绍可能不够准确、功能也在不断完善中。<br>
       如果你有<b>好项目推荐、翻译修正或功能建议</b>，欢迎随时告诉我 📮，每一条建议我都会认真看。<br>
@@ -1468,6 +1471,20 @@ function renderDailyPick(){
   $("#dailyPick").querySelector(".daily-pick").addEventListener("click", ()=>window.open(`https://github.com/${r.n}`,"_blank"));
 }
 /* v1.29.0：把"这站一直在更新"摆到第一屏——状态条 + 最近上新横排 */
+function renderWeekNext(){
+  const el = $("#weekNext");
+  if(!el || !window.fetch) return;
+  fetch("weekly/next.json", {cache:"no-store"}).then(r=> r.ok ? r.json() : null).then(d=>{
+    if(!d || !d.next) return;
+    const now = new Date();
+    const t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const nd = new Date(d.next + "T00:00:00");
+    const diff = Math.round((nd - t0) / 86400000);
+    const tail = diff > 0 ? `下一期 ${d.label}` : (diff === 0 ? "今天出刊" : "新一期已发布");
+    el.textContent = `🗓 ${d.weekday}一期 · ${tail}`;
+    el.classList.add("show");
+  }).catch(()=>{});
+}
 function renderUpdates(){
   const strip = $("#updateStrip"), box = $("#recentAdds");
   if(!strip || !box || !window.fetch) return;
@@ -2054,7 +2071,7 @@ if (typeof REPOS !== "undefined" && Array.isArray(REPOS) && REPOS.length){
     const initialTab = new URLSearchParams(location.search).get("tab");
     const restoredQ = applyURLState();
     document.querySelectorAll("#sortTabs .sort-tab").forEach(b=>b.classList.toggle("active", b.dataset.sort===curSort));
-    renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs(); renderCmpTray(); renderUpdates();
+    renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs(); renderCmpTray(); renderUpdates(); renderWeekNext();
     if(restoredQ){ clearTimeout(searchTimer); doSearch(); }
     if(initialTab && ["home","rank","me"].includes(initialTab)) switchPage(initialTab);
   }catch(err){

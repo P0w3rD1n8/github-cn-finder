@@ -23,8 +23,9 @@
    版本 v25（v1.29.1）：底部导航第三项改为「更新」（直达 timeline/，带本周上新数徽标），原「全部」移到快捷入口。
    版本 v26（v1.30.0）：新增「2026 年度精选」（annual/2026.html，20 个项目 5 个主题）+ 首页顶部横幅 + 专属分享封面。
    版本 v27（v1.30.1）：首页快捷入口增加「📡 订阅更新」（RSS），开始积累回访。
-   版本 v28（v1.30.2）：订阅入口改到说明页（不再直接打开 XML）；feed.xml 加 XSL 样式；首期措辞改为「首期基线」。 */
-const CACHE = "gh-cn-v28";
+   版本 v28（v1.30.2）：订阅入口改到说明页（不再直接打开 XML）；feed.xml 加 XSL 样式；首期措辞改为「首期基线」。
+   版本 v29（v1.31.0）：首页改为「周六更新一期 · 下一期 日期」提示；RSS 挪到页脚；订阅页加「装到桌面」（安卓/iPhone/电脑）。 */
+const CACHE = "gh-cn-v29";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html", "./updates.json"];

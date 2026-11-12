@@ -276,17 +276,21 @@ def main():
             strip_on = page.locator("#updateStrip.show").count()
             strip_txt = page.locator("#updateStrip").inner_text() if strip_on else ""
             chips = page.locator("#recentAdds .ra-chip").count()
-            rss = page.locator("#rssLink").count()
+            week_on = page.locator("#weekNext.show").count()
+            week_txt = page.locator("#weekNext").inner_text() if week_on else ""
             badge = page.locator("#navUpdateBadge.show").count()
             nav_href = page.locator("#navUpdate").get_attribute("href") or ""
             check("首页更新状态条 + 最近上新", strip_on == 1 and chips >= 3,
                   f"状态条={strip_on} 上新={chips} / {strip_txt[:46]}")
             badge_txt = page.locator("#navUpdateBadge").inner_text() if badge else "-"
-            check("首页订阅入口", rss == 1, f"rssLink={rss}")
+            check("首页每周出刊提示", week_on == 1 and "下一期" in week_txt,
+                  f"weekNext={week_on} / {week_txt[:40]}")
             s_resp = page.goto(base + "subscribe/", wait_until="domcontentloaded", timeout=45000)
             s_txt = page.locator("body").inner_text()
-            check("订阅说明页", s_resp is not None and s_resp.status == 200
-                  and "feed.xml" in s_txt and "阅读器" in s_txt,
+            s_html = page.content()
+            check("订阅说明页（含装到桌面）", s_resp is not None and s_resp.status == 200
+                  and "feed.xml" in s_txt and "阅读器" in s_txt
+                  and 'id="install"' in s_html and "添加到主屏幕" in s_txt,
                   f"HTTP {s_resp.status if s_resp else '?'}")
             check("底部导航「更新」入口与徽标", badge == 1 and "timeline" in nav_href,
                   f"徽标={badge} 数字={badge_txt} href={nav_href}")

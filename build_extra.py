@@ -142,6 +142,27 @@ def build_collections(data):
     return made
 
 
+def write_next_weekly():
+    """写 weekly/next.json：首页显示「周X更新一期 · 下一期 日期」"""
+    import datetime as _dt
+    snaps = load_json(WEEKLY_FILE, {"snapshots": []})["snapshots"]
+    today = _dt.date.today()
+    if snaps:
+        last = _dt.date.fromisoformat(snaps[-1]["date"])
+        nxt = last + _dt.timedelta(days=7)
+    else:
+        nxt = today
+    while nxt < today:
+        nxt += _dt.timedelta(days=7)
+    wd = "周" + "一二三四五六日"[nxt.weekday()]
+    payload = {"last": snaps[-1]["date"] if snaps else "", "next": nxt.isoformat(),
+               "weekday": wd + "更新", "label": f"{nxt.month} 月 {nxt.day} 日"}
+    os.makedirs(W_DIR, exist_ok=True)
+    with open(os.path.join(W_DIR, "next.json"), "w", encoding="utf-8", newline="\n") as f:
+        json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
+    return payload
+
+
 def weekly_pages(data):
     snaps = load_json(WEEKLY_FILE, {"snapshots": []})["snapshots"]
     os.makedirs(W_DIR, exist_ok=True)
@@ -279,7 +300,18 @@ def build_subscribe():
         f'<div class="d" style="word-break:break-all">{esc(feed_url)}</div>'
         '<div class="d" style="margin-top:8px">把上面这个链接粘到任意阅读器里就行。</div></div>'
         "</div>\n"
-        "<h2>怎么用（三步）</h2>\n"
+        '<h2 id="install">📲 装到桌面（比 RSS 简单）</h2>\n'
+        '<div class="cards">'
+        '<div class="c-item"><div class="h"><span class="zh">安卓（Edge / Chrome）</span></div>'
+        '<div class="d">点右上角「⋮」菜单 → 选「安装应用」或「添加到主屏幕」→ 确认。<br>'
+        "之后桌面会多一个图标，点开就是完整版，和 App 一样。</div></div>"
+        '<div class="c-item"><div class="h"><span class="zh">iPhone / iPad（Safari）</span></div>'
+        '<div class="d">点底部「分享」按钮（方框带向上箭头）→ 往下滑选「添加到主屏幕」→ 右上角「添加」。<br>'
+        "注意要用 Safari 打开；在微信里点开不会出现这个选项。</div></div>"
+        '<div class="c-item"><div class="h"><span class="zh">电脑（Edge / Chrome）</span></div>'
+        '<div class="d">地址栏右侧有个「安装」小图标，点一下就是独立窗口。</div></div>'
+        "</div>\n"
+        "<h2>RSS 怎么用（三步）</h2>\n"
         '<div class="cards">'
         '<div class="c-item"><div class="h"><span class="zh">1. 装一个阅读器</span></div>'
         '<div class="d">安卓：Feeder、Fluent Reader<br>'
@@ -305,6 +337,7 @@ def main():
     data = bp.load_data()
     slugs = build_collections(data)
     build_subscribe()
+    nxt = write_next_weekly()
     issues = weekly_pages(data)
     build_feed(issues)
 
