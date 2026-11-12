@@ -265,10 +265,10 @@ def main():
             check("每周精选索引", w_resp is not None and w_resp.status == 200 and w_issues >= 1,
                   f"HTTP {w_resp.status if w_resp else '?'} / {w_issues} 期")
 
-            r_resp = page.goto(base + "feed.xml", wait_until="domcontentloaded", timeout=45000)
-            r_body = page.content()
-            check("RSS feed.xml", r_resp is not None and r_resp.status == 200 and "<rss" in r_body,
-                  f"HTTP {r_resp.status if r_resp else '?'} / {len(r_body)} 字节")
+            r_req = page.request.get(base + "feed.xml")
+            r_body = r_req.text()
+            check("RSS feed.xml", r_req.status == 200 and "<rss" in r_body,
+                  f"HTTP {r_req.status} / {len(r_body)} 字节")
 
             # ---------- v1.29.0 首页「一直在更新」 ----------
             page.goto(base, wait_until="domcontentloaded", timeout=45000)
@@ -283,6 +283,11 @@ def main():
                   f"状态条={strip_on} 上新={chips} / {strip_txt[:46]}")
             badge_txt = page.locator("#navUpdateBadge").inner_text() if badge else "-"
             check("首页订阅入口", rss == 1, f"rssLink={rss}")
+            s_resp = page.goto(base + "subscribe/", wait_until="domcontentloaded", timeout=45000)
+            s_txt = page.locator("body").inner_text()
+            check("订阅说明页", s_resp is not None and s_resp.status == 200
+                  and "feed.xml" in s_txt and "阅读器" in s_txt,
+                  f"HTTP {s_resp.status if s_resp else '?'}")
             check("底部导航「更新」入口与徽标", badge == 1 and "timeline" in nav_href,
                   f"徽标={badge} 数字={badge_txt} href={nav_href}")
 

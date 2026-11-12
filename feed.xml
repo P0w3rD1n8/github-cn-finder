@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="feed.xsl"?>
 <rss version="2.0"><channel>
   <title>GitHub 中文发现器 · 每周精选</title>
   <link>https://p0w3rd1n8.github.io/github-cn-finder/weekly/</link>
   <description>每周一期：新增项目、涨星榜、总榜与归档提醒</description>
   <language>zh-cn</language>
-  <lastBuildDate>Wed, 11 Nov 2026 13:10:30 +0000</lastBuildDate>
+  <lastBuildDate>Thu, 12 Nov 2026 12:20:50 +0000</lastBuildDate>
     <item>
       <title>每周精选 第 1 期（2026-11-07）</title>
       <link>https://p0w3rd1n8.github.io/github-cn-finder/weekly/2026-11-07.html</link>
       <guid isPermaLink="false">weekly-2026-11-07</guid>
       <pubDate>Sat, 07 Nov 2026 00:00:00 +0000</pubDate>
-      <description>第 1 期：新增 0 个项目</description>
+      <description>首期基线：记录全部项目的星标基准</description>
     </item>
 </channel></rss>
