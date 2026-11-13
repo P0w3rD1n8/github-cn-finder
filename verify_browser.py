@@ -201,7 +201,12 @@ def main():
             page.locator('#catBar [data-cat="全部"]').click()
             page.wait_for_timeout(300)
             page.fill("#searchInput", "zzqqxx不存在的项目")
-            page.wait_for_timeout(2000)
+            # 等空态文案真正出现（线上 API 可能 2~5 秒才回；固定 sleep 会偶发失败）
+            try:
+                page.wait_for_selector(".empty", timeout=12000)
+            except Exception:
+                pass
+            page.wait_for_timeout(300)
             n_empty = count_cards(page)
             body_text = page.locator("body").inner_text()
             has_empty_tip = ("没有找到" in body_text) or ("没有匹配项" in body_text)

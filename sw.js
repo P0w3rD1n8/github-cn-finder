@@ -26,7 +26,7 @@
    版本 v28（v1.30.2）：订阅入口改到说明页（不再直接打开 XML）；feed.xml 加 XSL 样式；首期措辞改为「首期基线」。
    版本 v29（v1.31.0）：首页改为「周六更新一期 · 下一期 日期」提示；RSS 挪到页脚；订阅页加「装到桌面」（安卓/iPhone/电脑）。
    版本 v30（v1.32.0）：首屏加「第一次来？直接点你想找的」4 个意图按钮；今日推荐改用真实涨星（一周优先，退回 24h）。 */
-const CACHE = "gh-cn-v30";
+const CACHE = "gh-cn-v31";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html", "./updates.json"];

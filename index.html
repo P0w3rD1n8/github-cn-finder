@@ -37,7 +37,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.32.0";
+window.GH_VER = "v1.32.1";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -1643,9 +1643,12 @@ async function doSearch(){
   // 调 GitHub 官方接口，失败自动降级
   cancelPendingSearch();
   abortCtrl = new AbortController();
+  const myCtrl = abortCtrl;
+  // v1.32.1：接口 10 秒不回来就降级到本地结果，别让人一直看转圈
+  const killTimer = setTimeout(()=>{ try{ myCtrl.abort(); }catch(e){} }, 10000);
   try{
     const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=20`;
-    const res = await fetch(url, {signal:abortCtrl.signal, headers:{"Accept":"application/vnd.github+json"}});
+    const res = await fetch(url, {signal:myCtrl.signal, headers:{"Accept":"application/vnd.github+json"}});
     if(!res.ok) throw new Error(res.status);
     const data = await res.json();
     const localNames = new Set(local.map(r=>r.n.toLowerCase()));
@@ -1659,8 +1662,16 @@ async function doSearch(){
       (local.length? `<div class="notice">📚 精选库命中 ${local.length} 个 · 🌐 GitHub 实时补充 ${remote.length} 个</div>` + local.map(r=>cardHTML(r,"精选")).join("") : "")
       + (remote.length? remote.map(r=>cardHTML(r,"GitHub")).join("") : "")
       + (!local.length && !remote.length ? `<div class="empty"><span class="big">😅</span>没有找到相关项目，换个关键词试试</div>` : "");
+    clearTimeout(killTimer);
   }catch(err){
-    if(err.name==="AbortError") return;
+    clearTimeout(killTimer);
+    if(err.name==="AbortError"){
+      // 被新的搜索取代：什么都不做；若是超时兜底，则展示本地结果
+      if(abortCtrl !== myCtrl && abortCtrl !== null) return;
+      box.innerHTML = `<div class="notice warn">⚠️ GitHub 接口响应太慢，先为你展示本地精选结果</div>`
+        + (local.length? local.map(r=>cardHTML(r,"精选")).join("") : `<div class="empty"><span class="big">😅</span>精选库中也没有匹配项，换个关键词试试</div>`);
+      return;
+    }
     box.innerHTML = `<div class="notice warn">⚠️ GitHub 接口暂时不可用（可能网络受限），已为你展示本地精选结果</div>`
       + (local.length? local.map(r=>cardHTML(r,"精选")).join("") : `<div class="empty"><span class="big">😅</span>精选库中也没有匹配项，换个关键词试试</div>`);
   }
