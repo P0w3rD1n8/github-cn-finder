@@ -143,6 +143,11 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
   git -c credential.helper= -c http.sslBackend=openssl fetch origin main
   ```
 - **注意**：`git fetch` 在 `--fetch` 场景偶发挂死（git-remote-https 子进程不被超时杀掉），需要时单独跑、别塞进自动化脚本。
+- **v1.32.1 补充（重要）：加速器开着时必须走代理，不能清空**。`git config --global http.proxy` = `http://127.0.0.1:7897`；
+  2026-11-13 晚实测：直连（`-c http.proxy=`）报 `Recv failure: Connection was reset` / `Failed to connect`，
+  而 `-c http.proxy=http://127.0.0.1:7897 -c https.proxy=...` 一次成功。
+  **判据**：先 `Test-NetConnection github.com -Port 443`，通了再试；两种模式各试一次，哪个通用哪个。
+  另一个坑：GitHub 不可达时 push 默认超时可达 **5 分钟**，批量重试前先探端口，避免白等。
 - git 在 `C:\Program Files\Git\cmd\git.exe`（不在 PATH，需全路径调用或用 `git` 若已配）。
 
 ### 5.2 push 仍失败时的备用通道：REST API 上传
