@@ -109,7 +109,7 @@ $env:PYTHONIOENCODING="utf-8"     # 否则中文/emoji 输出会 GBK 报错
 - 下架页清单**不再手写**：从 `git log --diff-filter=D -- p/` 自动推算"历史存在、现已删除"的页面，逐个要求 404。
 - `--links` 的探测方式：有 `GH_TOKEN`/`GITHUB_TOKEN` 或 `~/.git-credentials` 时走 API（162 个约 10 秒，直接拿到新 `full_name`）；无 token 退回 HEAD 探测（慢且易受网络影响）。**404 记为问题，改名只记为提示**（改完 REPOS 与四张表才算修完）。
 
-**verify_browser.py — 浏览器级行为验收（18 项）**
+**verify_browser.py — 浏览器级行为验收（33 项）**
 ```powershell
 $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 §5.4）
 & $py verify_browser.py --local      # 本地起 http.server 测当前工作区
@@ -119,6 +119,8 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - 覆盖：首屏卡数 / 分页条 / 末页卡数 / AI 分类 / 搜索空态 / 搜索命中 / 静态页 / 控制台无报错 / 请求无失败 / 375px 手机端 / **v1.25.0 新增：筛选写 URL、刷新保持筛选、活跃度判定、停更角标、相似项目**。
 - 截图落在 `_shots/`（已 gitignore）。
 - 已知口径：搜索会同时查 GitHub API，**无意义关键词才会 0 结果**；前端会主动取消上一轮搜索请求，`ERR_ABORTED` 不计为失败。
+- **v1.31.1 起：验收不再污染百度统计**。脚本对每个 context 调 `block_analytics()`，把 `hm.baidu.com` / `hmcdn.baidu.com` / `zz.bdstatic.com` 的请求**返回空脚本**（用 fulfill 而不是 abort，否则控制台会报 ERR_FAILED 干扰断言）。跑完会打印「已拦截统计上报 N 次」。
+  背景：v1.31.0 那天连跑 4 次线上验收，给自己刷了 50~80 PV，导致当天峰值判断失真。**以后线上验收想跑几次都行，数据是干净的。**
 
 ## 5. 已知坑与对策（血泪经验，必须遵守）
 

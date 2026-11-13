@@ -92,6 +92,26 @@ def load_expectations(root):
     }
 
 
+BLOCKED_ANALYTICS = []
+
+
+def block_analytics(context):
+    """v1.31.1：验收时屏蔽百度统计脚本。
+
+    自动化验收会反复打开线上页面，若不拦截，这些访问会被百度统计记成真实流量，
+    导致 PV 虚高、峰值判断失真（v1.31.0 及以前踩过这个坑）。
+    拦截后照样验证线上的 HTML/资源/交互，但统计后端一条也不会收到。
+    用"返回空脚本"而不是 abort：abort 会让控制台报 ERR_FAILED，反而干扰报错检查。
+    """
+    def _fake(route):
+        BLOCKED_ANALYTICS.append(route.request.url)
+        route.fulfill(status=200, content_type="application/javascript", body="/* blocked in verify */")
+
+    context.route("**/hm.baidu.com/**", _fake)
+    context.route("**/hmcdn.baidu.com/**", _fake)
+    context.route("**/zz.bdstatic.com/**", _fake)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--url", default=None)
@@ -122,6 +142,7 @@ def main():
             # ---------- 桌面端 ----------
             ctx = browser.new_context(viewport={"width": 1280, "height": 900},
                                       service_workers="block")
+            block_analytics(ctx)
             page = ctx.new_page()
             errors, failures = [], []
             page.on("pageerror", lambda e: errors.append(str(e)))
@@ -362,6 +383,7 @@ def main():
             m = browser.new_context(viewport={"width": 375, "height": 812},
                                     is_mobile=True, has_touch=True, device_scale_factor=2,
                                     service_workers="block")
+            block_analytics(m)
             mp = m.new_page()
             mob_errors = []
             mp.on("pageerror", lambda e: mob_errors.append(str(e)))
@@ -388,6 +410,8 @@ def main():
     total = len(results)
     print("\n" + "=" * 60)
     print(f"结果: {passed}/{total} 通过")
+    if BLOCKED_ANALYTICS:
+        print(f"已拦截统计上报 {len(BLOCKED_ANALYTICS)} 次（本次验收不计入百度统计）")
     if args.json:
         print(json.dumps({"target": base, "passed": passed, "total": total, "results": results},
                          ensure_ascii=False, indent=2))
