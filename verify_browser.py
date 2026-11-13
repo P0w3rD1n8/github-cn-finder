@@ -316,6 +316,19 @@ def main():
             check("底部导航「更新」入口与徽标", badge == 1 and "timeline" in nav_href,
                   f"徽标={badge} 数字={badge_txt} href={nav_href}")
 
+            # ---------- v1.32.0 首屏意图入口 + 真实涨星推荐 ----------
+            page.goto(base, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(1600)
+            ib = page.locator(".intent-btn").count()
+            page.locator('.intent-btn[data-intent="AI 人工智能"]').click()
+            page.wait_for_timeout(700)
+            cat_active = page.locator("#catBar .cat.active").inner_text().strip()
+            n_ai = page.locator(".card").count()
+            dp_head = page.locator(".dp-head").inner_text() if page.locator(".dp-head").count() else ""
+            check("首屏意图入口（点一下直接筛）", ib == 4 and cat_active == "AI 人工智能" and n_ai >= 20,
+                  f"按钮={ib} 分类={cat_active} 卡={n_ai}")
+            check("今日推荐用真实涨星", ("最热" in dp_head) or ("今日推荐" in dp_head), dp_head[:36])
+
             # ---------- v1.30.0 年度精选 ----------
             a_resp = page.goto(base + "annual/2026.html", wait_until="domcontentloaded", timeout=45000)
             a_items = page.locator(".ann-item").count()

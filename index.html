@@ -37,7 +37,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.31.0";
+window.GH_VER = "v1.32.0";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -333,6 +333,17 @@ table.cmp a{color:var(--accent);text-decoration:none}
 .update-strip a{color:var(--accent);text-decoration:none}
 .week-next{display:none;font-size:11.5px;color:var(--text2);padding:0 2px 10px}
 .week-next.show{display:block}
+/* v1.32.0：首屏意图入口（新访客 44 秒就走，给一条最短路径） */
+.intent{margin:0 0 14px}
+.intent-title{font-size:12px;color:var(--text2);margin-bottom:8px}
+.intent-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.intent-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;
+  background:var(--card2);border:1px solid var(--border);border-radius:12px;color:var(--text);
+  font-size:11.5px;cursor:pointer;transition:border-color .2s,transform .1s}
+.intent-btn:hover{border-color:var(--accent);color:var(--accent)}
+.intent-btn:active{transform:scale(.97)}
+.intent-btn span{white-space:nowrap}
+@media(max-width:400px){.intent-btn{font-size:11px;padding:9px 2px}}
 .recent-adds{display:none;gap:6px;overflow-x:auto;padding:0 0 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .recent-adds::-webkit-scrollbar{display:none}
 .recent-adds.show{display:flex}
@@ -478,6 +489,16 @@ a.nav-item{text-decoration:none;color:inherit}
     <div class="search-wrap">
       <input id="searchInput" type="search" placeholder="输入中文或英文关键词，如：AI、画图、Vue" autocomplete="off">
       <button id="searchBtn">搜索</button>
+    </div>
+    <!-- v1.32.0：首屏意图入口——新访客不用理解分类体系，点一下就到 -->
+    <div class="intent" id="intentBox">
+      <div class="intent-title">第一次来？直接点你想找的：</div>
+      <div class="intent-grid">
+        <button class="intent-btn" data-intent="实用工具">💻<span>装机必装</span></button>
+        <button class="intent-btn" data-intent="AI 人工智能">🤖<span>AI 工具</span></button>
+        <button class="intent-btn" data-intent="学编程">📚<span>学编程</span></button>
+        <button class="intent-btn" data-intent="手机 App">📱<span>手机 App</span></button>
+      </div>
     </div>
     <div class="mirror-stats" id="mirrorStats"></div>
     <div class="update-strip" id="updateStrip"></div>
@@ -1458,17 +1479,47 @@ function fmtLocalU(s){
     return `${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
   }catch(e){ return String(s).slice(5,16).replace("T"," "); }
 }
-function renderDailyPick(){
+let WEEKLY_TOP = null;   // v1.32.0：weekly.json 有两期以上时，用「一周涨星」挑最热
+function growth24(r){
+  if(r && Array.isArray(r.hist) && r.hist.length >= 2 && typeof r.s === "number" && typeof r.hist[0] === "number"){
+    return r.s - r.hist[0];
+  }
+  if(r && typeof r.s === "number" && typeof r.ps === "number") return r.s - r.ps;
+  return null;
+}
+function pickHot(){
   const dayIdx = Math.floor((Date.now() - new Date().getTimezoneOffset()*60000)/86400000);
-  const idx = dayIdx % REPOS.length;
-  const r = REPOS[idx];
-  $("#dailyPick").innerHTML = `<div class="daily-pick" title="去 GitHub 查看这个项目">
-    <div class="dp-head">🔥 今日推荐${DATA_UPDATED?`<span class="dp-upd" style="font-size:11px;color:var(--text2);font-weight:400;margin-left:8px">数据每小时自动同步 · ${fmtLocalU(DATA_UPDATED)}</span>`:""}</div>
-    <div class="dp-name">${esc(repoZh(r.n))}<span class="go-ico">↗</span><span class="dp-sub">${esc(r.n)}</span></div>
+  // 优先：一周涨星（数据来自每周快照）
+  if(WEEKLY_TOP && WEEKLY_TOP.length){
+    const cand = WEEKLY_TOP.slice(0, 5);
+    const it = cand[dayIdx % cand.length];
+    const r = REPOS_MAP.get(it.n);
+    if(r) return { r, label: "本周最热", delta: `一周 +${it.delta.toLocaleString()} ⭐` };
+  }
+  // 次选：近 24 小时涨星
+  const grew = REPOS.map(r => ({ r, g: growth24(r) })).filter(o => typeof o.g === "number" && o.g > 0)
+    .sort((a, b) => b.g - a.g).slice(0, 5);
+  if(grew.length){
+    const pick = grew[dayIdx % grew.length];
+    return { r: pick.r, label: "近 24 小时最热", delta: `24h +${pick.g.toLocaleString()} ⭐` };
+  }
+  return { r: REPOS[dayIdx % REPOS.length], label: "今日推荐", delta: "" };
+}
+function renderDailyPick(){
+  const { r, label, delta } = pickHot();
+  const hasPage = PAGEMAP.has((r.n || "").toLowerCase());
+  const owner = (r.n || "").split("/")[0], repo = (r.n || "").split("/")[1];
+  const href = hasPage ? `p/${esc(owner)}-${esc(repo)}.html` : `https://github.com/${esc(r.n)}`;
+  $("#dailyPick").innerHTML = `<div class="daily-pick" title="查看这个项目">
+    <div class="dp-head">🔥 ${label}${delta?`<span class="dp-delta" style="font-size:11.5px;color:#3fb950;font-weight:600;margin-left:8px">${delta}</span>`:""}${DATA_UPDATED?`<span class="dp-upd" style="font-size:11px;color:var(--text2);font-weight:400;margin-left:8px">数据 ${fmtLocalU(DATA_UPDATED)}</span>`:""}</div>
+    <div class="dp-name">${esc(repoZh(r.n))}<span class="go-ico">${hasPage?"→":"↗"}</span><span class="dp-sub">${esc(r.n)}</span></div>
     <div class="dp-desc">${esc(r.d)}</div>
     <button class="poster-btn" onclick="event.stopPropagation();openPoster('${esc(r.n).replace(/'/g,"\\'")}')">🖼 生成海报</button>
   </div>`;
-  $("#dailyPick").querySelector(".daily-pick").addEventListener("click", ()=>window.open(`https://github.com/${r.n}`,"_blank"));
+  $("#dailyPick").querySelector(".daily-pick").addEventListener("click", ()=>{
+    if(hasPage){ location.href = href; }
+    else { window.open(href, "_blank", "noopener"); }
+  });
 }
 /* v1.29.0：把"这站一直在更新"摆到第一屏——状态条 + 最近上新横排 */
 function renderWeekNext(){
@@ -1523,6 +1574,22 @@ function renderUpdates(){
     box.classList.add("show");
   }).catch(()=>{});
 }
+/* v1.32.0：首屏意图入口——点一下直接筛到对应分类 */
+document.querySelectorAll(".intent-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const cat = btn.dataset.intent;
+    if(!cat) return;
+    curCat = cat; curUsage = "全部"; homePage = 1;
+    const si = $("#searchInput"); if(si) si.value = "";
+    const ut = $("#usageLabel"); if(ut) ut.textContent = curUsage;
+    renderCats(); renderUsages(); renderHome(true);
+    const bar = $("#catBar");
+    const active = bar && bar.querySelector(".cat.active");
+    if(active) active.scrollIntoView({behavior:"smooth", block:"nearest", inline:"center"});
+    const dp = $("#dailyPick");
+    if(dp) window.scrollTo({top: dp.offsetTop - 60, behavior:"smooth"});
+  });
+});
 $("#catBar").addEventListener("click", e=>{
   const t = e.target.closest(".cat"); if(!t) return;
   curCat = t.dataset.cat; renderCats();
@@ -1919,6 +1986,24 @@ fetch("./repos.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{
   if(active && active.dataset.page==="home") renderHome(true);
   if(active && active.dataset.page==="me") renderFavs();
 }).catch(()=>{ /* repos.json 缺失或网络失败：沿用内置兜底数据 */ });
+
+/* v1.32.0：读每周快照，能算出「一周涨星」时把今日推荐升级为「本周最热」 */
+fetch("./weekly.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(w=>{
+  const snaps = w && w.snapshots;
+  if(!Array.isArray(snaps) || snaps.length < 2) return;
+  const prev = snaps[snaps.length-2].stars || {}; const cur = snaps[snaps.length-1].stars || {};
+  const arr = [];
+  for(const n in cur){
+    if(typeof cur[n]==="number" && typeof prev[n]==="number"){
+      const d = cur[n] - prev[n];
+      if(d > 0) arr.push({n, delta:d});
+    }
+  }
+  if(!arr.length) return;
+  arr.sort((a,b)=>b.delta-a.delta);
+  WEEKLY_TOP = arr.slice(0, 20);
+  renderDailyPick();
+}).catch(()=>{ /* 没有周快照就退回 24 小时口径 */ });
 
 /* 版本号动态显示（单源：head 里的 GH_VER，发版只改一处） */
 (function(){ var v = document.getElementById("appVer"); if(v) v.textContent = window.GH_VER || ""; })();
