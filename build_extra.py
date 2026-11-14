@@ -188,10 +188,11 @@ def weekly_pages(data):
                     gains.append((s - p, n, s))
             gains.sort(reverse=True)
         if prev:
+            new_txt = (f"本周新增 {len(new_names)} 个项目" if new_names else "本周没有新增项目")
             parts.append('<div class="intro"><b>本期看点</b><br>'
-                         f'本周新增 {len(new_names)} 个项目，涨星最快的是 '
+                         f'{new_txt}，涨星最快的是 '
                          f'{esc(zh_of(gains[0][1]))}（+{gains[0][0]:,}）。</div>' if gains
-                         else '<div class="intro">本周没有明显涨星的项目。</div>')
+                         else f'<div class="intro">本周没有明显涨星的项目（{new_txt}）。</div>')
         else:
             parts.append('<div class="intro"><b>首期基线</b><br>'
                          '这是第一份周快照，先记录全部项目的星标作为基准。'

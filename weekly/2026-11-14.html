@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每周精选 · 2026-11-14 - GitHub 中文发现器</title>
+<meta name="description" content="GitHub 中文发现器每周精选：本周新增、涨星榜、总榜。">
+<link rel="canonical" href="https://p0w3rd1n8.github.io/github-cn-finder/weekly/2026-11-14">
+<link rel="icon" href="https://p0w3rd1n8.github.io/github-cn-finder/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0d1117">
+<style>
+:root{--bg:#0d1117;--card:#161b22;--text:#e6edf3;--text2:#8b949e;--border:#30363d;--accent:#58a6ff;--star:#f0b429}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;padding:0 0 40px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.site-head{background:var(--card);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
+.site-head .logo{font-weight:700;font-size:15px}
+.site-head .back{margin-left:auto;font-size:13px;color:var(--text2)}
+.container{max-width:760px;margin:0 auto;padding:24px 16px}
+h1{font-size:24px;line-height:1.4;margin-bottom:4px}
+h1 .en{color:var(--text2);font-size:14px;font-weight:400}
+.meta-row{color:var(--text2);font-size:13px;margin:8px 0 16px;display:flex;flex-wrap:wrap;gap:8px}
+.meta-row .tag{background:var(--card);border:1px solid var(--border);border-radius:999px;padding:2px 10px}
+.meta-row .star{color:var(--star)}
+.desc{font-size:15px;margin:0 0 18px}
+.detail{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:13.5px;white-space:pre-wrap;margin-bottom:18px}
+.detail-tip{font-size:12px;color:var(--text2);margin-top:8px;padding-top:6px;border-top:1px dashed var(--border)}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.btn{display:inline-block;background:var(--accent);color:#0d1117;font-weight:600;padding:10px 18px;border-radius:10px;font-size:14px}
+.btn.ghost{background:var(--card);color:var(--accent);border:1px solid var(--accent)}
+.foot-note{font-size:12px;color:var(--text2);border-top:1px dashed var(--border);padding-top:12px;margin-top:24px}
+footer{text-align:center;font-size:12px;color:var(--text2);margin-top:32px}
+.list-item{display:flex;align-items:baseline;gap:10px;padding:10px 0;border-bottom:1px dashed var(--border)}
+.list-item .nm{font-weight:600;font-size:14.5px}
+.list-item .ds{color:var(--text2);font-size:13px;flex:1}
+.list-item .st{color:var(--star);font-size:12px;white-space:nowrap}
+.related{margin:22px 0 4px;border-top:1px dashed var(--border);padding-top:16px}
+.related h2{font-size:16px;margin-bottom:8px}
+.related .list-item{padding:7px 0}
+.related-more{display:inline-block;margin-top:8px;font-size:13px}
+.docs{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:18px 0}
+.docs h2{font-size:16px;margin-bottom:10px}
+.docs .blk{margin-bottom:12px}
+.docs .blk:last-of-type{margin-bottom:0}
+.docs .lbl{font-size:12px;color:var(--text2);font-weight:600;margin-bottom:4px}
+.docs p{font-size:13.5px}
+.docs ul,.docs ol{padding-left:20px;font-size:13.5px}
+.docs li{margin:3px 0}
+.docs code{background:#1f2630;border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-family:Consolas,Monaco,monospace;font-size:12.5px;color:#7ee787}
+.docs .foot{font-size:12px;color:var(--text2);border-top:1px dashed var(--border);padding-top:8px;margin-top:8px}
+
+.cards{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0}
+.c-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.c-item .h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.c-item .zh{font-size:15px;font-weight:600;color:var(--text)}
+.c-item .repo{font-size:12px;color:var(--text2)}
+.c-item .st{margin-left:auto;color:var(--star);font-size:12px}
+.c-item .d{font-size:13px;color:var(--text2);margin-top:6px;line-height:1.6}
+.c-item a{color:inherit;text-decoration:none}
+.c-item:hover{border-color:var(--accent)}
+.intro{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:12px 14px;font-size:13.5px;line-height:1.7;margin:14px 0}
+.note{font-size:12px;color:var(--text2);margin-top:10px}
+.coll-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:18px 0}
+.coll-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--text)}
+.coll-card:hover{border-color:var(--accent)}
+.coll-card h2{font-size:16px;margin:0 0 4px}
+.coll-card p{font-size:12.5px;color:var(--text2);margin:0;line-height:1.6}
+.issue{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin:10px 0}
+.issue a{color:var(--accent);text-decoration:none}
+.issue .date{color:var(--text2);font-size:12px;margin-left:8px}
+ol.rank{padding-left:22px;font-size:13.5px;line-height:1.9}
+ol.rank .st{color:var(--star)}
+.delta{color:#3fb950;font-weight:600}
+nav.sub{margin:18px 0 0;font-size:13px}
+nav.sub a{color:var(--accent);text-decoration:none;margin-right:14px}
+
+</style>
+</head>
+<body>
+<header class="site-head"><span class="logo">🧭 GitHub 中文发现器</span><a class="back" href="https://p0w3rd1n8.github.io/github-cn-finder/">← 返回首页</a></header>
+<main class="container">
+<h1>📮 第 2 期 · 2026-11-14</h1>
+<div class="intro"><b>本期看点</b><br>本周没有新增项目，涨星最快的是 REA AI 逆向拆解（+18,652）。</div>
+<h2>🚀 本周涨星 Top 10</h2>
+<ol class="rank"><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/morluto-rea.html">REA AI 逆向拆解</a> <span class="delta">+18,652</span> <span class="st">（458,140）</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/mattpocock-skills.html">Matt Pocock 编程技能包</a> <span class="delta">+6,787</span> <span class="st">（323,959）</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/debpalash-VoiceStudio.html">VoiceStudio 本地声音工坊</a> <span class="delta">+6,774</span> <span class="st">（110,124）</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/Gathin23-cleanyourtv.html">CleanYourTV 电视去广告</a> <span class="delta">+3,917</span> <span class="st">（57,518）</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/affaan-m-ECC.html">ECC AI 编程增强包</a> <span class="delta">+3,690</span> <span class="st">（302,553）</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/obra-superpowers.html">Superpowers 开发方法论</a> <span class="delta">+3,472</span> <span class="st">（317,321）</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/thedotmack-claude-mem.html">Claude Mem 记忆扩展</a> <span class="delta">+2,670</span> <span class="st">（116,904）</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/multica-ai-andrej-karpathy-skills.html">Karpathy AI 写码守则</a> <span class="delta">+2,485</span> <span class="st">（232,941）</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/firecrawl-firecrawl.html">Firecrawl 网页抓取</a> <span class="delta">+2,241</span> <span class="st">（201,625）</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/hugohe3-ppt-master.html">PPT Master 文档转幻灯片</a> <span class="delta">+2,215</span> <span class="st">（76,658）</span></li></ol>
+<h2>🔥 当前总榜 Top 10</h2>
+<ol class="rank"><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/codecrafters-io-build-your-own-x.html">手把手造轮子</a> <span class="st">⭐ 562,390</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/public-apis-public-apis.html">Public APIs 接口大全</a> <span class="st">⭐ 498,837</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/freeCodeCamp-freeCodeCamp.html">freeCodeCamp 编程学习</a> <span class="st">⭐ 459,106</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/morluto-rea.html">REA AI 逆向拆解</a> <span class="st">⭐ 458,140</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/EbookFoundation-free-programming-books.html">免费编程书大全</a> <span class="st">⭐ 401,564</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/openclaw-openclaw.html">OpenClaw 私人 AI 助手</a> <span class="st">⭐ 394,412</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/donnemartin-system-design-primer.html">系统设计指南</a> <span class="st">⭐ 377,826</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/nilbuild-developer-roadmap.html">程序员路线图</a> <span class="st">⭐ 371,974</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/jwasham-coding-interview-university.html">面试自学计划</a> <span class="st">⭐ 364,361</span></li><li><a href="https://p0w3rd1n8.github.io/github-cn-finder/p/mattpocock-skills.html">Matt Pocock 编程技能包</a> <span class="st">⭐ 323,959</span></li></ol>
+<h2>⚠️ 已归档提醒</h2><p class="note">0 A.D. 即时战略、IOPaint AI 修图 已被作者归档，不再更新。</p>
+<p class="note">数据口径：每周抓一次全库星标（UTC 日期）。共 162 个项目。</p>
+<nav class="sub"><a href="https://p0w3rd1n8.github.io/github-cn-finder/weekly/">← 全部期数</a><a href="https://p0w3rd1n8.github.io/github-cn-finder/">回首页</a></nav>
+</main>
+</body>
+</html>

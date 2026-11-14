@@ -6,6 +6,7 @@ on:
   push:
     paths:
       - "data.js"
+      - "weekly.json"   # v1.32.2：每周快照写入后要重建 weekly/ 与 feed.xml，否则页面停在上一期
   workflow_dispatch: {}
 
 permissions:
