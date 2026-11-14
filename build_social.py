@@ -81,7 +81,7 @@ def cover(cfg, zh, total_pages):
         ty += 122
 
     f_sub = og.font(40)
-    sy = ty + 28
+    sy = ty + 42
     for ln in og.wrap(cfg.get("subtitle", ""), f_sub, W - 180, d, max_lines=2):
         d.text((80, sy), ln, font=f_sub, fill=(201, 209, 217))
         sy += 58
@@ -115,9 +115,8 @@ def cover(cfg, zh, total_pages):
     py = y + 110
     d.text((80, py - 56), "比如这几个：", font=og.font(24), fill=DIM)
     px = 80
-    for g in cfg["groups"]:
-        n = g["items"][0]["n"]
-        label = zh.get(n) or n.split("/")[1]
+    chips_src = cfg.get("chips") or [ (zh.get(g["items"][0]["n"]) or g["items"][0]["n"].split("/")[1]) for g in cfg["groups"] ]
+    for label in chips_src:
         w = d.textlength(label, font=f_pick) + 40
         if px + w > W - 80:
             px, py = 80, py + 62
