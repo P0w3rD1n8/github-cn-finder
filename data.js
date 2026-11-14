@@ -165,7 +165,13 @@ const USAGE = {
   "AppFlowy-IO/AppFlowy":["普通用户","程序员"],
   "KDE/kdenlive":["视频剪辑","自媒体创作者","普通用户"],
   "ventoy/Ventoy":["普通用户","程序员"],
-  "dulaiduwang003/Pavise-Game":["普通用户"]
+  "dulaiduwang003/Pavise-Game":["普通用户"],
+"gkd-kit/gkd":["普通用户"],
+"ankidroid/Anki-Android":["普通用户", "学编程"],
+"beemdevelopment/Aegis":["普通用户"],
+"organicmaps/organicmaps":["普通用户"],
+"ReadYouApp/ReadYou":["普通用户"],
+
 };
 
 const REPOS = [
@@ -348,7 +354,12 @@ const REPOS = [
 {n:"deepseek-ai/DeepInfer",d:"DeepSeek 官方开源的高性能推理框架，生产环境同款",s:25573,l:"Python",c:"AI 人工智能"},
 {n:"pengchujin/aerial-tv",d:"国产电视的干净桌面，照着 Apple TV 做的，没有广告",s:10493,l:"Kotlin",c:"实用工具"},
 {n:"rddmwmddr/android-ad-cleaner",d:"关掉国产安卓手机里的系统广告和热搜推送，不 root 可还原",s:6836,l:"Python",c:"手机 App"},
-{n:"xiaoyang111222/cn-math-taxonomy",d:"对齐中国课标的中小学知识图谱，1600+ 知识点带题库和诊断",s:6982,l:"Python",c:"学编程"}
+{n:"xiaoyang111222/cn-math-taxonomy",d:"对齐中国课标的中小学知识图谱，1600+ 知识点带题库和诊断",s:6982,l:"Python",c:"学编程"},
+{n:"gkd-kit/gkd",d:"安卓跳过开屏广告：按规则自动点掉「跳过」",s:44707,l:"Kotlin",c:"手机 App"},
+{n:"ankidroid/Anki-Android",d:"手机上的 Anki 记忆卡片，背单词/考证神器",s:12244,l:"Kotlin",c:"手机 App"},
+{n:"beemdevelopment/Aegis",d:"开源两步验证器，替代 Google 身份验证器",s:13540,l:"Java",c:"手机 App"},
+{n:"organicmaps/organicmaps",d:"免费离线地图导航，不联网也能用",s:15965,l:"C++",c:"手机 App"},
+{n:"ReadYouApp/ReadYou",d:"Material You 风格的安卓 RSS 阅读器",s:7668,l:"Kotlin",c:"手机 App"},
 ];
 /* 国内镜像直达表（2026-10-27 第三方核实报告提取）：owner/repo(小写) -> 镜像URL */
 /* GitCode：GitHub 官方合作镜像平台（gitcode.com/GitHub_Trending 或 gh_mirrors），114 个可用 */
@@ -520,6 +531,12 @@ const CN_DESC = {
   "KDE/kdenlive":"开源非线性视频剪辑软件",
   "ventoy/Ventoy":"开源启动U盘制作工具",
   "dulaiduwang003/Pavise-Game":"开源 Windows 游戏资源优化工具",
+"gkd-kit/gkd":"安卓手机自动跳过 App 开屏广告，按规则点「跳过」",
+"ankidroid/Anki-Android":"手机上的 Anki 记忆卡片，背单词、考证、记知识点都靠它",
+"beemdevelopment/Aegis":"开源两步验证器，验证码存在自己手机里，可加密备份",
+"organicmaps/organicmaps":"免费离线地图，提前下好地图包，没网也能导航",
+"ReadYouApp/ReadYou":"安卓上的 RSS 阅读器，界面好看，能订阅任何网站",
+
 };
 
 const AUTHORS = {
@@ -634,6 +651,12 @@ const AUTHORS = {
   "KDE":{t:"org",b:"KDE 是全球著名的开源社区，维护 KDE Plasma 桌面环境及 kdenlive 视频剪辑等大量应用。"},
   "ventoy":{t:"user",b:"longpanda，个人开发者，开发 Ventoy 启动盘制作工具，被全球装机与系统救援用户广泛使用。"},
   "dulaiduwang003":{t:"user",b:"bdth，独立开发者，开发 Pavise 游戏资源优化工具，主打'打完游戏自动恢复系统'的安全设计。"},
+"gkd-kit":{t:"org",b:"GKD 是国内的安卓自动化点击项目，用无障碍服务按规则帮你点掉开屏广告。"},
+"ankidroid":{t:"org",b:"AnkiDroid 是 Anki 记忆卡片的安卓开源客户端，与电脑版共用牌组。"},
+"beemdevelopment":{t:"org",b:"Beem Development 专注安卓安全工具，Aegis 两步验证器是代表作。"},
+"organicmaps":{t:"org",b:"Organic Maps 是基于 OpenStreetMap 的离线地图，由 MapsWithMe 原班团队维护。"},
+"ReadYouApp":{t:"org",b:"ReadYou 是遵循 Material You 设计的安卓 RSS 阅读器项目。"},
+
 };
 
 const REPO_ZH = {
@@ -723,7 +746,13 @@ const REPO_ZH = {
   "AppFlowy-IO/AppFlowy":"AppFlowy 开源笔记",
   "KDE/kdenlive":"Kdenlive 免费剪辑",
   "ventoy/Ventoy":"Ventoy 启动盘",
-  "dulaiduwang003/Pavise-Game":"Pavise 游戏优化"
+  "dulaiduwang003/Pavise-Game":"Pavise 游戏优化",
+"gkd-kit/gkd":"GKD 跳广告",
+"ankidroid/Anki-Android":"AnkiDroid 记忆卡",
+"beemdevelopment/Aegis":"Aegis 两步验证",
+"organicmaps/organicmaps":"Organic Maps 离线地图",
+"ReadYouApp/ReadYou":"ReadYou RSS 阅读器",
+
 };
 
 /* 实测组织名单：精选库作者里已知的组织（GitHub API 逐位实测），弥补正则猜测不可靠 */
@@ -892,6 +921,12 @@ const DETAIL = {
 "KDE/kdenlive":"🎯应用场景：免费剪视频，不需要付费装专业剪辑软件。\n✨主要功能：多轨时间线、字幕、转场特效、直接导出常用格式。\n💻适用平台：Windows / Mac / Linux。\n🛠怎么用起来：官网下载安装，导入素材拖上时间线即可剪；入门剪辑的首选。",
 "ventoy/Ventoy":"🎯应用场景：重装系统、系统救援、多系统启动盘，一个U盘装遍所有镜像。\n✨主要功能：把 ISO/WIM/IMG 等镜像直接拷进 U 盘就能启动，不用反复格式化；已测试 1300+ 系统镜像，Windows/Linux 全兼容；还能浏览本地磁盘镜像直接启动。\n💻适用平台：Windows / Linux / macOS。\n🛠怎么用起来：官网下载安装到 U 盘，把系统镜像文件拖进去，重启选择 U 盘启动即可。",
 "dulaiduwang003/Pavise-Game":"🎯应用场景：打游戏卡顿、掉帧、被后台程序抢资源时，给游戏让路。\n✨主要功能：自动压制后台进程、给游戏独占 CPU 核心、把设备中断挪出游戏核、按游戏单独调 GPU/内存/电源策略，打完游戏自动恢复原状；无注入、无遥测。\n💻适用平台：Windows 10/11（需管理员权限）。\n🛠怎么用起来：官网下载解压，添加游戏 → 选策略 → 开启守护，玩完自动还原。\n⚠️新项目：2026 年新上线，功能与稳定性尚待更多用户验证。",
+"gkd-kit/gkd":"🎯应用场景：每天开 App 被 3 秒开屏广告挡住，它按你定的规则自动点掉。\n✨主要功能：基于无障碍服务的选择器规则，内置规则库 + 可订阅别人的规则；触发时弹一张小卡片，可放行也可撤销，不会乱点。\n💻适用平台：Android（需要手动开启无障碍权限）。\n🛠怎么用起来：从 GitHub Releases 或 F-Droid 装 APK → 开无障碍权限 → 订阅规则列表，之后开 App 会自动跳过；不想用随时关掉权限。",
+"ankidroid/Anki-Android":"🎯应用场景：背单词、考证、记知识点——用「间隔重复」把短期记忆变成长期记忆。\n✨主要功能：导入 Anki 牌组（.apkg），支持十万级卡片、复习统计、离线复习，可与电脑版 Anki 同步。\n💻适用平台：Android。\n🛠怎么用起来：装 APK 后导入现成牌组（网上有大量免费四六级/考研/JLPT 词库），每天按它安排的复习量刷完即可。",
+"beemdevelopment/Aegis":"🎯应用场景：网站账号的两步验证（2FA）验证码，不想交给大公司托管，也不想换手机就丢光。\n✨主要功能：TOTP / HOTP / Steam 验证码，支持加密备份与导出、按图标分组，能从 Google Authenticator 导入已有数据。\n💻适用平台：Android。\n🛠怎么用起来：装 APK → 扫码添加账号 → **立刻导出一份加密备份**存到网盘，这是换手机不丢号的关键一步。",
+"organicmaps/organicmaps":"🎯应用场景：出国旅行、山区徒步、流量不够时导航——地图提前存进手机，全程不联网。\n✨主要功能：基于 OpenStreetMap，离线搜索/驾车步行骑行路线、收藏地点、无广告无账号无追踪。\n💻适用平台：Android / iOS。\n🛠怎么用起来：装好后下载需要的省/国家地图包（几百 MB），之后离线可用。**注意：国内大城市够用，小城市和乡村的道路数据不如商业地图。**",
+"ReadYouApp/ReadYou":"🎯应用场景：想集中看几个网站/博客的更新，又不想被算法推荐流牵着走。\n✨主要功能：RSS/Atom 订阅、Material You 动态取色、分组与收藏、全文抓取、支持导入 OPML。\n💻适用平台：Android。\n🛠怎么用起来：装 APK → 添加订阅源（粘贴网站或 RSS 地址）→ 有更新自动拉取；本站「订阅更新」页提供了现成的 RSS 地址。",
+
 };
 /* 分类圆标配色 */
 const CAT_COLORS = {"AI 人工智能":"#a371f7","实用工具":"#f78166","手机 App":"#3fb950","学编程":"#58a6ff","游戏娱乐":"#f778ba","网页界面":"#d29922","后台服务":"#39c5cf","开发者工具":"#8250df","影音与直播":"#ffb86c"};

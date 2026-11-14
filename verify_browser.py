@@ -318,8 +318,9 @@ def main():
                   and "feed.xml" in s_txt and "阅读器" in s_txt
                   and 'id="install"' in s_html and "添加到主屏幕" in s_txt,
                   f"HTTP {s_resp.status if s_resp else '?'}")
-            check("底部导航「更新」入口与徽标", badge == 1 and "timeline" in nav_href,
-                  f"徽标={badge} 数字={badge_txt} href={nav_href}")
+            check("底部导航「更新」入口与徽标", "timeline" in nav_href
+                  and (badge == 0 or badge_txt.strip().isdigit()),
+                  f"徽标={badge} 数字={badge_txt} href={nav_href}（本周无新增时隐藏属正常）")
 
             # ---------- v1.32.0 首屏意图入口 + 真实涨星推荐 ----------
             page.goto(base, wait_until="domcontentloaded", timeout=45000)

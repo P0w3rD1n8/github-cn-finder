@@ -259,7 +259,12 @@ def build_feed(issues):
     items = []
     for it in reversed(issues):
         pub = datetime.datetime.strptime(it["date"], "%Y-%m-%d").replace(tzinfo=datetime.timezone.utc)
-        desc = ("首期基线：记录全部项目的星标基准" if it.get("first") else f"第 {it['n']} 期：新增 {it['new']} 个项目")
+        if it.get("first"):
+            desc = "首期基线：记录全部项目的星标基准"
+        elif it["new"]:
+            desc = f"第 {it['n']} 期：新增 {it['new']} 个项目"
+        else:
+            desc = f"第 {it['n']} 期：本周没有新增项目"
         if it["top_gain"]:
             desc += f"，{it['top_gain'][1]} 涨星 +{it['top_gain'][0]:,}"
         items.append(
