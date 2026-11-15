@@ -50,6 +50,9 @@ jobs:
       - name: 生成更新记录时间线（v1.28.0）
         run: python build_timeline.py
 
+      - name: 推送给 Bing / 搜狗（IndexNow，v1.33.1）
+        run: python indexnow.py || true
+
       - name: 提交生成的页面
         run: |
           git config user.name "github-actions[bot]"
