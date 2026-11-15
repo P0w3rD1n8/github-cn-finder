@@ -14,7 +14,7 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | GitHub 仓库 | P0w3rD1n8/github-cn-finder（远端 main 分支） |
 | 本地仓库（ROG） | C:\Users\power\GitHub中文发现器 |
 | DSH 工作区 | C:\Users\power\Documents\发现器开发-建议（宣传/视频物料在此） |
-| 当前版本 | **v1.32.1**（2026-11-13 上线，SW 缓存 gh-cn-v31，162 个项目 + 2026 年度精选） |
+| 当前版本 | **v1.33.1**（2026-11-15 上线，SW 缓存 gh-cn-v33，167 个项目 + 2026 年度精选） |
 | 本地 commit | 与远端同步 = `6a14722`（2026-11-13 v1.32.1 搜索空态修复 + 手册） |
 | 远端 main | `6a14722`（v1.32.1 / SW v31；线上 35 项断言全绿、验收已屏蔽百度统计） |
 
@@ -36,6 +36,8 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | `timeline/` | 自动产物：更新记录页（按日期倒序） |
 | `screenshots/` | PWA 安装预览图（manifest screenshots 引用，手工放进去的静态资源） |
 | `updates.json` | **自动产物**（build_timeline.py 生成）：首页更新状态条与最近上新读它，SW 里走 network-first |
+| `indexnow.py` | **v1.33.1**：从 sitemap 取全部 URL 推给 Bing/搜狗（IndexNow 协议，无需账号）；CI 每次构建后自动跑 |
+| `599d85….txt` / `4c57b8….txt` | IndexNow 密钥文件（各 32 位，站根托管，内容即 key 本身） |
 | `annual.json` | **人工策展**：年度精选的年份/标题/分组/每个项目的「为什么选它」，改这里换榜 |
 | `build_annual.py` | 生成 `annual/<year>.html` + `og/annual-<year>.png`；首页顶部横幅指向它 |
 | `annual/` | 自动产物：年度精选页（index.html 自动跳当年） |
@@ -189,6 +191,34 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - **注册**：`register("sw.js", {updateViaCache: "none"})` + 页面可见时主动 `reg.update()`。
 - **自动刷新**：`controllerchange` 时刷新一次（`sessionStorage` 防循环）；收到 `APP_UPDATED` 且用户还没滚动/点击过就静默刷新，动过手则只弹提示。
 - **上线次次生效，但用户侧仍有一次滞后**：新 SW 要装到设备上才会用新策略，所以 v1.27.1 这次用户可能还要多刷一次；之后每次发版都是「一次刷新」或自动刷新。
+
+### 5.6 搜索引擎收录：Bing 站长 + IndexNow（v1.33.1 起）
+- **背景**：2026-11-15 实测搜「GitHub 中文发现器」**搜不到本站**（只出 GitHub 仓库），此前文案里写"搜站名"是无效引导。
+- **Bing 站长**：`https://www.bing.com/webmasters` → Microsoft 账号登录 → 添加站点，**必须填完整子路径**
+  `https://p0w3rd1n8.github.io/github-cn-finder/`（GitHub Pages 项目站不是域名根）。
+  验证方式选「HTML 元标记」，把 `<meta name="msvalidate.01" content="…">` 放进 `index.html` 的 `<head>`（已在第 9~10 行），推上去后点「验证」。
+- **网站地图**：左侧菜单叫「**网站地图**」（不是 Sitemaps），提交 `https://p0w3rd1n8.github.io/github-cn-finder/sitemap.xml`。
+  2026-11-15 结果：已知 1 个、错误 0、警告 0、**已发现 181 个 URL**、当天爬过。
+- **IndexNow**（Bing/搜狗/Yandex 主动推送）：**开放协议，不需要注册**，满足三条即可——
+  ① 站根有 `{key}.txt`，内容是这串 key；② 推送带同一个 key；③ 带 `keyLocation` 指向该文件。
+  脚本 `indexnow.py` 从 `sitemap.xml` 取全部 URL POST 到 `api.indexnow.org`，**200/202 都是受理**。
+  已接进 `build-pages.yml`（`python indexnow.py || true`，失败不阻断构建）。
+  **站点当前托管两个 key 文件**（`599d85…` 与 `4c57b8…`，都 32 位），对应后台可能显示的任一个。
+- **Portal 页面 ≠ 成效**：Bing 左侧「IndexNow」页是文档/统计，显示"未验证"不影响推送生效；判断是否收录只看两处——
+  `site:p0w3rd1n8.github.io` 搜索结果，以及「网站地图」里的"上次爬网时间/已发现 URL"。
+- **预期**：24 小时内开始抓，1 周内名称能搜到，2~4 周长尾词才有排名；**收录 ≠ 流量**，排名还靠外链和时间。
+- **百度**另需 `ziyuan.baidu.com`（国内手机号+实名），且对 GitHub Pages 收录很慢，暂不做。
+
+### 5.7 对外发布合规（小红书，2026-11-15 被判违规后总结）
+- **触发**：置顶评论放了 `https://p0w3rd1n8.github.io/github-cn-finder/`，被判「笔记存在外部平台信息或联系方式」→ **限制推荐和搜索展示**（粉丝可见，等于没流量）。
+- **红线（都要守）**：
+  1. **图片里不放网址/二维码/水印**——包括自动生成的封面（`build_social.py` 已改为不印域名，只写站名）
+  2. **评论区不放链接**，置顶也不行
+  3. 正文不写"搜索 xx""公众号 xx""主页简介有链接"这类引导
+  4. 站名可提，但**不加"去搜"**
+- **正确做法**：笔记必须**自包含**（读者看完这篇就够），收尾只用"想看的可以关注我"。
+- **处置后**：先申诉（话术：已删除外部链接+图片已更换，请求复核）；24 小时没恢复就删掉换干净图重发。
+- **教训**：写文案前先验证"读者照做能不能做到"——"搜站名"当时搜不到，等于让读者做无效动作。
 
 ## 6. 当前状态与待办
 
