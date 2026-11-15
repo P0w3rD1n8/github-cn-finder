@@ -124,7 +124,9 @@ def cover(cfg, zh, total_pages):
 
     f_cta = og.font(34, bold=True)
     d.text((80, H - 262), cfg.get("cover_cta", "完整清单就在站里，搜站名即可"), font=f_cta, fill=TEXT)
-    d.text((80, H - 212), "p0w3rd1n8.github.io/github-cn-finder", font=og.font(24), fill=DIM)
+    note = cfg.get("cover_note", "")
+    if note:
+        d.text((80, H - 212), note, font=og.font(24), fill=DIM)
     footer(d, 1, total_pages, cfg.get("footer", "GitHub 中文发现器"))
     return img
 

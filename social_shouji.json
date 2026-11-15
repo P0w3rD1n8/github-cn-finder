@@ -17,24 +17,24 @@
       "元"
     ]
   ],
-  "cover_cta": "每个都写了怎么装、要不要权限，站里能搜到",
+  "cover_cta": "每个都写了怎么装、要不要权限",
   "footer": "GitHub 中文发现器 · 手机开源 App",
-  "cta_kicker": "怎 么 拿",
-  "cta_title": "收藏这篇，",
-  "cta_title2": "换手机时照着装",
+  "cta_kicker": "用 之 前 先 知 道",
+  "cta_title": "三件容易",
+  "cta_title2": "踩坑的事",
   "cta_box_title": "这 5 个分两类：",
   "steps": [
     [
       "1",
-      "搜索「GitHub 中文发现器」"
+      "GKD 要开无障碍权限，不用时在系统里关掉即可"
     ],
     [
       "2",
-      "站内搜「手机 App」，或看手机分类"
+      "Aegis 装完先导出一份加密备份，换手机才不会丢号"
     ],
     [
       "3",
-      "5 个都有中文说明、安装方式和注意事项"
+      "Organic Maps 国内大城市够用，小城市数据一般"
     ]
   ],
   "groups": [
@@ -77,5 +77,6 @@
     "ReadYou 阅读器",
     "AnkiDroid 记忆卡",
     "Organic Maps 离线地图"
-  ]
+  ],
+  "cover_note": "GitHub 中文发现器"
 }
