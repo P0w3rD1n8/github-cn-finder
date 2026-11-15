@@ -18,7 +18,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 
 BASE = "https://p0w3rd1n8.github.io/github-cn-finder"
-KEY = "368a295189edb75841b81a2001eda524"
+KEY = "599d85c56a314155b3c66ff8d4a3c5f9"
 KEY_LOCATION = f"{BASE}/{KEY}.txt"
 HOST = "p0w3rd1n8.github.io"
 ENDPOINT = "https://api.indexnow.org/indexnow"
