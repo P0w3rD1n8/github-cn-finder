@@ -18,6 +18,7 @@ import re
 import sys
 import datetime
 import html as html_mod
+import urllib.parse
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA_JS = os.path.join(ROOT, "data.js")
@@ -59,6 +60,15 @@ footer{text-align:center;font-size:12px;color:var(--text2);margin-top:32px}
 .related h2{font-size:16px;margin-bottom:8px}
 .related .list-item{padding:7px 0}
 .related-more{display:inline-block;margin-top:8px;font-size:13px}
+/* v1.33.3：搜索落地页的回站入口——从搜索引擎进来的人只看一页就走 */
+.site-promo{margin:22px 0 6px;padding:14px 16px;background:var(--card);border:1px solid var(--border);
+  border-left:3px solid var(--accent);border-radius:10px}
+.site-promo .sp-title{font-size:14.5px;font-weight:700;margin-bottom:6px}
+.site-promo .sp-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px}
+.site-promo .sp-links{display:flex;flex-wrap:wrap;gap:8px}
+.site-promo .sp-btn{font-size:13px;padding:7px 12px;border-radius:999px;text-decoration:none;
+  background:var(--accent);color:#fff;white-space:nowrap}
+.site-promo .sp-btn.ghost{background:#21262d;color:var(--text);border:1px solid var(--border)}
 .docs{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:18px 0}
 .docs h2{font-size:16px;margin-bottom:10px}
 .docs .blk{margin-bottom:12px}
@@ -346,6 +356,26 @@ def build_project_page(n, r, ctx):
                 + '">查看全部 →</a></section>'
             )
 
+    # v1.33.3：搜索落地页的回站入口——搜索引擎来的人只看一页就走
+    total_repos = len(ctx["repos"])
+    cat_q = urllib.parse.quote(cat) if cat else ""
+    promo_html = (
+        '<section class="site-promo">'
+        '<div class="sp-title">🧭 这一页来自「GitHub 中文发现器」</div>'
+        '<div class="sp-desc">收录了 '
+        + str(total_repos)
+        + " 个开源项目，每个都有这种中文四段说明（应用场景 / 主要功能 / 适用平台 / 怎么用起来），"
+        "按分类和人群筛，不用懂英文。</div>"
+        '<div class="sp-links">'
+        + (
+            '<a class="sp-btn" href="' + esc(BASE_URL + "/?cat=" + cat_q) + '">看「' + esc(cat) + '」分类的更多项目 →</a>'
+            if cat else ""
+        )
+        + '<a class="sp-btn ghost" href="' + esc(BASE_URL + "/") + '">回首页逛逛</a>'
+        + '<a class="sp-btn ghost" href="' + esc(BASE_URL + "/list.html") + '">查看全部 ' + str(total_repos) + " 个 →</a>"
+        "</div></section>"
+    )
+
     # P2：官方文档摘要（无条目则为空串，不渲染）
     docs_html = build_docs_summary(ctx["docs"].get(n))
 
@@ -401,7 +431,7 @@ var _hmt = _hmt || [];
 <body>
 <header class="site-head">
   <span class="logo">🧭 GitHub 中文发现器</span>
-  <a class="back" href="__HOME__">← 返回首页</a>
+  <a class="back" href="__HOME__">← 回首页看全部项目</a>
 </header>
 <main class="container">
   <h1>__ZH__ <span class="en">__N__</span></h1>
@@ -415,6 +445,7 @@ var _hmt = _hmt || [];
   __DOCS__
   __AUTHOR__
   __RELATED__
+  __PROMO__
   <div class="foot-note">💡 说明：中文介绍与星标数据由「GitHub 中文发现器」人工整理与自动采集，仅供学习参考；安装/使用请以项目官方文档为准。</div>
 </main>
 <footer>© GitHub 中文发现器 · <a href="__HOME__">返回全部精选</a></footer>
@@ -438,6 +469,7 @@ __STARSCRIPT__
         .replace("__AUTHOR__", author_html)
         .replace("__LDJSON__", ld_html)
         .replace("__RELATED__", related_html)
+        .replace("__PROMO__", promo_html)
         .replace("__DOCS__", docs_html)
         .replace("__STARSCRIPT__", star_script)
     ), fname

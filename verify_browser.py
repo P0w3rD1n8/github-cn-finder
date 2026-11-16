@@ -272,8 +272,14 @@ def main():
             # 静态项目页
             p_resp = page.goto(base + "p/ollama-ollama.html", wait_until="domcontentloaded", timeout=45000)
             h1 = page.locator("h1").first.inner_text() if page.locator("h1").count() else ""
-            check("静态页 p/ollama-ollama.html", p_resp is not None and p_resp.status == 200 and len(h1) > 0,
-                  f"HTTP {p_resp.status if p_resp else '?'} / h1={h1[:24]}")
+            check("静态页 p/ollama-ollama.html", p_resp is not None and p_resp.status == 200 and len(h1) > 0,                  f"HTTP {p_resp.status if p_resp else '?'} / h1={h1[:24]}")
+
+            # ---------- v1.33.3 项目页回站入口（搜索落地页别只看一页就走） ----------
+            promo = page.locator(".site-promo").count()
+            promo_btns = page.locator(".site-promo .sp-btn").count()
+            promo_cat = page.locator(".site-promo a[href*='cat=']").count()
+            check("项目页回站入口", promo == 1 and promo_btns >= 2 and promo_cat == 1,
+                  f"模块={promo} 按钮={promo_btns} 分类链接={promo_cat}")
 
             # ---------- v1.26.0 专题合辑 / 周刊 / RSS ----------
             c_resp = page.goto(base + "c/", wait_until="domcontentloaded", timeout=45000)
