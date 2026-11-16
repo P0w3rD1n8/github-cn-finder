@@ -24,7 +24,7 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 |---|---|
 | `data.js` | **数据主源（人工维护）**：`REPOS`（精选清单 `{n:"owner/repo"}`）+ `REPO_ZH`（中文名）+ `DETAIL`（中文详情四段式）+ `USAGE`（一句话用法）+ `CATS`（分类表）。**增删项目/改中文简介改这里**，然后跑 fetch-data.py |
 | `fetch-data.py` | 数据抓取：读 `data.js` 的 `REPOS` 数组 → 调 GitHub API 抓 star/语言/描述等真实字段 → **写出** `repos.json`。CI 与本地均跑它 |
-| `repos.json` | **自动产物，不要手改**：抓取结果（含 star/fork/hist 快照、`pa` 最近提交日、`ar` 是否归档），前端 fetch 使用；CI 每小时自动刷新并提交 |
+| `repos.json` | **自动产物，不要手改**：抓取结果（含 star/fork/hist 快照、`pa` 最近提交日、`ar` 是否归档），前端 fetch 使用；CI 定时刷新并提交（**实际间隔 4.9~11.4 小时，被 Actions 限流**，别再对外说「每小时」） |
 | `weekly.json` | **自动产物**：每周一张全库 star 快照（`{date, stars}`，保留 60 期），由 fetch-data.py 维护，供「周涨星」和周刊页使用 |
 | `build_pages.py` | 静态页生成器：由 data.js 生成 `p/<owner>-<repo>.html`（每个项目一个分享落地页）+ `list.html`（全列表）+ `sitemap.xml` |
 | `build_extra.py` | **v1.26.0 新增**：生成 `c/`（专题合辑）、`weekly/`（每周精选）、`feed.xml`（RSS），并重写 sitemap 把附加页纳入 |
@@ -48,7 +48,7 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 | `docs_summary.json` | README 摘要缓存（AI 文档摘要用） |
 | `validate-data.js` | 数据校验脚本（CI 用） |
 | `verify_sync.py` | **三方一致性核验工具**（本地工作区 ↔ 远端 main ↔ 线上 Pages）：行尾归一化比对、版本三件套、数据表死键/重复键/大小写错配、p 页状态码。用法见 §4 末尾 |
-| `.github/workflows/data-update.yml` | 每小时第 15 分钟自动跑 fetch-data.py 并提交 repos.json 数据更新（GitHub Actions，无需本地） |
+| `.github/workflows/data-update.yml` | 名义每小时第 15 分钟跑 fetch-data.py 并提交 repos.json；**实测被 Actions 限流，实际间隔 4.9~11.4 小时**（2026-11-15~16 六次运行），所以页面文案不再承诺「每小时」 |
 | `.github/workflows/build-pages.yml` | 生成静态页 + 提交（CI 侧） |
 | `.github/workflows/validate.yml` | 数据格式校验 |
 
@@ -76,7 +76,7 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 4. 按 §4 发版上线，并到线上确认旧 p 页 404。
 
 ### 3.3 star 数据刷新
-- 自动：GitHub Actions 每小时第 15 分钟自动跑并提交（无需干预）。
+- 自动：GitHub Actions 定时跑并提交（无需干预）。**别再对外说「每小时」**——2026-11-15~16 实测间隔 4.9~11.4 小时，首页与关于页已改成「定时自动同步」并显示数据时间。
 - 手动：清代理 + openssl 后本地 `python fetch-data.py` 再提交。
 
 ## 4. 发版上线 SOP（v1.x.y）
