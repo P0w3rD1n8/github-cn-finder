@@ -39,7 +39,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.33.0";
+window.GH_VER = "v1.33.2";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -559,7 +559,7 @@ a.nav-item{text-decoration:none;color:inherit}
       <b>GitHub 中文发现器</b><span class="ver" id="appVer"></span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
       · 内置 <b><span id="repoCount">152</span> 个精选项目</b>，每条都有大白话中文简介，专为英文小白翻译<br>
       · 📂 <a class="repo-link" href="list.html" target="_blank" rel="noopener">全部精选项目（网页版）</a>——每页都有中文介绍和国内镜像直达<br>
-      · 星标等数据由 GitHub Actions <b>每小时自动抓取真实值</b>，不靠手填数字<br>
+      · 星标等数据由 GitHub Actions <b>定时自动抓取真实值</b>（间隔约数小时，页面会显示数据时间），不靠手填数字<br>
       · 搜索时会同时查询 <b>GitHub 官方接口</b>，网络不通时自动只展示本地精选<br>
       · 收藏保存在你的浏览器本地，不会被上传<br>
       · 访问统计：本站使用百度统计记录匿名访问数据（页面浏览、来源渠道），用于了解内容受欢迎程度；不会读取你的收藏和搜索内容<br>
@@ -688,7 +688,7 @@ let curUsage = "全部";
 const REPOS_MAP = new Map(REPOS.map(r=>[r.n,r]));
 /* 渲染过的项目快照登记处：搜索/榜单实时结果也会登记，收藏时抓快照用 */
 const KNOWN = {};
-/* repos.json 更新时间（GitHub Actions 每小时自动更新） */
+/* repos.json 更新时间（GitHub Actions 定时更新；实际间隔受 Actions 限流影响，通常数小时） */
 let DATA_UPDATED = "";
 
 const LANG_COLORS = {"JavaScript":"#f1e05a","TypeScript":"#3178c6","Python":"#3572A5","Go":"#00ADD8","Java":"#b07219","C++":"#f34b7d","C":"#555","C#":"#178600","Rust":"#dea584","Dart":"#00B4AB","Kotlin":"#A97BFF","Shell":"#89e051","Haskell":"#5e5086","CSS":"#563d7c","汇编":"#6E4C13","文档":"#888"};
@@ -746,7 +746,7 @@ function cnDesc(n, orig){
 /* Fork / Issues：实时数据优先（repos.json / API 字段），无数据时为 0 */
 const forkOf = r => r.fk ?? 0;
 const issueOf = r => r.iu ?? 0;
-/* 评分：按真实 star 数量级换算（数据每小时自动同步 GitHub，不再手填） */
+/* 评分：按真实 star 数量级换算（数据定时自动同步 GitHub，不再手填） */
 const ratingOf = r => (r.s>=100000?4.9 : r.s>=10000?4.6 : r.s>=1000?4.2 : r.s>=100?4.0 : 3.8);  // 保留兼容旧调用，卡片不再展示（伪指标，易误导）
 
 /* ================= 工具 ================= */
@@ -1547,7 +1547,7 @@ function renderUpdates(){
     const week = d.events.filter(e=> new Date(e.date+"T00:00:00").getTime() >= weekAgo);
     const weekAdd = week.reduce((s,e)=> s + e.added.length, 0);
     const last = d.events[0];
-    strip.innerHTML = '<span class="us-dot"></span>每小时自动刷新 star'
+    strip.innerHTML = '<span class="us-dot"></span>star 定时自动同步'
       + (DATA_UPDATED ? ` · 数据 ${fmtLocalU(DATA_UPDATED)}` : "")
       + (weekAdd ? ` · <b>本周上新 ${weekAdd} 个</b>` : ` · 最近上新 ${esc(last.date)}`)
       + ' · <a href="timeline/">全部更新记录 →</a>';
@@ -1717,7 +1717,7 @@ function renderDayGrowthRank(box){
   if(withD.length < 5){
     // 快照不足（首次采集/数据未加载）：兜底按总星标展示，口径写清楚
     const list = [...REPOS].sort((a,b)=>b.s-a.s).slice(0,20);
-    box.innerHTML = `<div class="notice">🔥 星标增速榜：快照数据准备中（每小时采集一次），先按总星标展示</div>`
+    box.innerHTML = `<div class="notice">🔥 星标增速榜：快照数据准备中（数据定时采集），先按总星标展示</div>`
       + list.map((r,i)=>cardHTML(r,"精选",i+1)).join("");
     return;
   }
@@ -1978,7 +1978,7 @@ applyTheme(localStorage.getItem("gh_theme") || (matchMedia("(prefers-color-schem
 /* 吸顶偏移：实测 header 高度写入 CSS 变量（renderCats 填充分类后再量，窗口尺寸变化时重算） */
 function measureHeader(){ try{ document.documentElement.style.setProperty("--header-h", document.querySelector("header").offsetHeight+"px"); }catch(e){} }
 
-/* ===== 真实数据自动同步：repos.json 由 GitHub Actions 每小时生成（失败时静默回退内置数据） ===== */
+/* ===== 真实数据自动同步：repos.json 由 GitHub Actions 定时生成（失败时静默回退内置数据） ===== */
 fetch("./repos.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{
   if(!j || !j.repos) return;
   DATA_UPDATED = j.updated || "";
