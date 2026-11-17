@@ -220,6 +220,20 @@ $env:PYTHONPATH = "$PWD\.pylibs"     # playwright 装在工作区 .pylibs（见 
 - **处置后**：先申诉（话术：已删除外部链接+图片已更换，请求复核）；24 小时没恢复就删掉换干净图重发。
 - **教训**：写文案前先验证"读者照做能不能做到"——"搜站名"当时搜不到，等于让读者做无效动作。
 
+### 5.8 CC Safety Net（用户 2026-11-16 装的执行前安全护栏）
+- **它会拦我**：装好后凡是读 ~/.git-credentials 的命令一律 BLOCKED by CC Safety Net（规则 secret.basename.git-credentials），
+  而本项目的 push 流程正好要读这个文件取 token → 直接把发版卡死。
+- **规矩**：policy.json（~/.cc-safety-net/policy.json 用户级、.cc-safety-net/policy.json 项目级）
+  **读可以、写不行**——必须写提案 → policy check <file> --global 校验 → **用户本人在终端**跑 policy apply（交互确认）。
+  **助手禁止执行 apply、禁止包装、禁止直接改文件**，这是它的设计。
+- **现状**：用户级策略已加 secret_protection.allow_paths: [~/.git-credentials]，push 恢复正常。
+  只放行了这一个文件，其他凭据（~/.ssh、.env）仍被拦。
+- **别提交**：不要把 policy.json、提案文件写进仓库（提案放 %TEMP% 即可）。
+- **自查命令**：cc-safety-net status / doctor / explain "<命令>" / logs，
+  bin 在 ~/.dsh/profiles/desktop/node_modules/cc-safety-net/dist/bin/cc-safety-net.js，用 DSH 自带 node 跑。
+- **审计日志**：~/.cc-safety-net/logs/<工作区>/<年月>/<session>.jsonl，每条记录我的命令与 allow/block 决策——
+  排查"我到底跑过什么"时先看这里。
+
 ## 6. 当前状态与待办
 
 ### 已上线（v1.25.0）
