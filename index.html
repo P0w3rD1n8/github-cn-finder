@@ -39,7 +39,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.33.3";
+window.GH_VER = "v1.34.0";
 </script>
 <!-- 百度统计（v1.22）：全站访问统计 -->
 <script>
@@ -335,6 +335,16 @@ table.cmp a{color:var(--accent);text-decoration:none}
 .update-strip a{color:var(--accent);text-decoration:none}
 .week-next{display:none;font-size:11.5px;color:var(--text2);padding:0 2px 10px}
 .week-next.show{display:block}
+/* v1.34.0：从社交平台（?from=xhs / dy）进来的访客，给三个最热入口 */
+.from-welcome{display:none;margin:0 0 10px;padding:12px 14px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(255,45,85,.16),rgba(163,113,247,.14));
+  border:1px solid rgba(255,45,85,.35)}
+.from-welcome.show{display:block}
+.from-welcome .fw-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:9px}
+.from-welcome .fw-links{display:flex;gap:8px;flex-wrap:wrap}
+.from-welcome .fw-btn{flex:1 1 auto;min-width:88px;padding:8px 10px;border-radius:10px;cursor:pointer;
+  background:var(--card2);border:1px solid var(--border);color:var(--text);font-size:12px;white-space:nowrap}
+.from-welcome .fw-btn:hover{border-color:var(--accent);color:var(--accent)}
 /* v1.32.0：首屏意图入口（新访客 44 秒就走，给一条最短路径） */
 .intent{margin:0 0 14px}
 .intent-title{font-size:12px;color:var(--text2);margin-bottom:8px}
@@ -476,6 +486,7 @@ a.nav-item{text-decoration:none;color:inherit}
   <!-- 发现页 -->
   <section class="page show" id="page-home">
     <h1 class="sr-only">GitHub 中文发现器</h1>
+    <div class="from-welcome" id="fromWelcome"></div>
     <a class="annual-banner" href="annual/2026.html" id="annualBanner">
       <span class="ab-tag">🏆 年度</span>
       <span class="ab-text"><b>2026 年度精选</b> · 20 个今年最值得知道的开源项目</span>
@@ -1538,6 +1549,31 @@ function renderWeekNext(){
     el.classList.add("show");
   }).catch(()=>{});
 }
+/* v1.34.0：按来源平台（小红书 / 抖音 / 知乎…）给出三个最热入口。
+   URL 用 ?from=xhs / ?from=dy，百度统计的「入口页面」里能直接看出各平台带来多少人。 */
+const FROM_LABELS = { xhs: "小红书", xiaohongshu: "小红书", dy: "抖音", douyin: "抖音", zhihu: "知乎" };
+function initFromWelcome(raw){
+  const el = $("#fromWelcome");
+  if(!el || !raw) return;
+  const from = String(raw).toLowerCase();
+  const label = FROM_LABELS[from];
+  if(!label) return;
+  try{ if(sessionStorage.getItem("gh_from_shown") === from) return; sessionStorage.setItem("gh_from_shown", from); }catch(e){}
+  el.innerHTML = `<div class="fw-title">👋 从${esc(label)}来的？先看这三个</div>
+    <div class="fw-links">
+      <button class="fw-btn" data-intent="手机 App">📱 手机 App</button>
+      <button class="fw-btn" data-intent="实用工具">💻 装机必装</button>
+      <button class="fw-btn" data-intent="AI 人工智能">🤖 AI 工具</button>
+    </div>`;
+  el.classList.add("show");
+  el.querySelectorAll(".fw-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const cat = btn.dataset.intent;
+      const target = document.querySelector('.intent-btn[data-intent="' + cat + '"]');
+      if(target){ target.click(); } else { curCat = cat; renderCats(); renderHome(true); }
+    });
+  });
+}
 function renderUpdates(){
   const strip = $("#updateStrip"), box = $("#recentAdds");
   if(!strip || !box || !window.fetch) return;
@@ -2167,9 +2203,11 @@ if (typeof REPOS !== "undefined" && Array.isArray(REPOS) && REPOS.length){
   try{
     /* v1.28.0：PWA 快捷方式的 ?tab= 要在 renderHome 重写 URL 之前先读出来 */
     const initialTab = new URLSearchParams(location.search).get("tab");
+    /* v1.34.0：?from= 也要在 renderHome 重写 URL 之前读出来 */
+    const initialFrom = new URLSearchParams(location.search).get("from");
     const restoredQ = applyURLState();
     document.querySelectorAll("#sortTabs .sort-tab").forEach(b=>b.classList.toggle("active", b.dataset.sort===curSort));
-    renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs(); renderCmpTray(); renderUpdates(); renderWeekNext();
+    renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs(); renderCmpTray(); renderUpdates(); renderWeekNext(); initFromWelcome(initialFrom);
     if(restoredQ){ clearTimeout(searchTimer); doSearch(); }
     if(initialTab && ["home","rank","me"].includes(initialTab)) switchPage(initialTab);
   }catch(err){

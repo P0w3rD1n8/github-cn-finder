@@ -317,6 +317,20 @@ def main():
             badge_txt = page.locator("#navUpdateBadge").inner_text() if badge else "-"
             check("首页每周出刊提示", week_on == 1 and "下一期" in week_txt,
                   f"weekNext={week_on} / {week_txt[:40]}")
+
+            # ---------- v1.34.0 来源欢迎条（?from=xhs / dy） ----------
+            page.goto(base + "?from=xhs", wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(900)
+            fw_on = page.locator("#fromWelcome.show").count()
+            fw_txt = page.locator("#fromWelcome").inner_text() if fw_on else ""
+            fw_btns = page.locator("#fromWelcome .fw-btn").count()
+            check("来源欢迎条（?from=xhs）",
+                  fw_on == 1 and fw_btns == 3 and "小红书" in fw_txt,
+                  f"显示={fw_on} 按钮={fw_btns} / {fw_txt[:34]}")
+            page.goto(base, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_timeout(500)
+            check("无来源参数时不显示欢迎条", page.locator("#fromWelcome.show").count() == 0,
+                  f"显示={page.locator('#fromWelcome.show').count()}")
             s_resp = page.goto(base + "subscribe/", wait_until="domcontentloaded", timeout=45000)
             s_txt = page.locator("body").inner_text()
             s_html = page.content()
