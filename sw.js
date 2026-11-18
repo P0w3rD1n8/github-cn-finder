@@ -27,8 +27,9 @@
    版本 v29（v1.31.0）：首页改为「周六更新一期 · 下一期 日期」提示；RSS 挪到页脚；订阅页加「装到桌面」（安卓/iPhone/电脑）。
    版本 v33（v1.33.0）：新增 5 个手机向项目（GKD 跳广告 / AnkiDroid / Aegis / Organic Maps / ReadYou），总数 167。
    版本 v30（v1.32.0）：首屏加「第一次来？直接点你想找的」4 个意图按钮；今日推荐改用真实涨星（一周优先，退回 24h）。
-   版本 v32（v1.32.2）：第二期周刊上线；build-pages 触发路径加 weekly.json，每周快照落库后自动重建周刊与 RSS。 */
-const CACHE = "gh-cn-v36";
+   版本 v32（v1.32.2）：第二期周刊上线；build-pages 触发路径加 weekly.json，每周快照落库后自动重建周刊与 RSS。
+   版本 v37（v1.34.1）：百度统计只在正式域名加载（本地验收/预览不再污染报表）；/index.html 归一成 /。 */
+const CACHE = "gh-cn-v37";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html", "./updates.json"];

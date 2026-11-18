@@ -39,15 +39,28 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.34.0";
+window.GH_VER = "v1.34.1";
 </script>
-<!-- 百度统计（v1.22）：全站访问统计 -->
+<!-- v1.34.1：把 /index.html 归一成 /（同一个首页两个入口，统计报表被劈成两半） -->
+<script>
+(function(){
+  try{
+    if(/\/index\.html$/.test(location.pathname)){
+      history.replaceState(null, "", location.pathname.replace(/\/index\.html$/, "/") + location.search + location.hash);
+    }
+  }catch(e){}
+})();
+</script>
+<!-- 百度统计（v1.22）：全站访问统计；v1.34.1 起只在正式域名加载，本地验收/预览不再污染报表 -->
 <script>
 var _hmt = _hmt || [];
 (function() {
+  // 只在正式站点上报：127.0.0.1 / localhost / file:// 等本地环境一律跳过。
+  // 此前 30 天里本地验收与预览贡献了约 15% 的虚假 PV（110/719），且把跳出率、时长都带偏了。
+  if(["p0w3rd1n8.github.io"].indexOf(location.hostname) === -1) return;
   var hm = document.createElement("script");
   hm.src = "https://hm.baidu.com/hm.js?d5056cee7f456be4851294452cc1e765";
-  var s = document.getElementsByTagName("script")[0]; 
+  var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
