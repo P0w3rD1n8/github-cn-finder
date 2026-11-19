@@ -28,8 +28,9 @@
    版本 v33（v1.33.0）：新增 5 个手机向项目（GKD 跳广告 / AnkiDroid / Aegis / Organic Maps / ReadYou），总数 167。
    版本 v30（v1.32.0）：首屏加「第一次来？直接点你想找的」4 个意图按钮；今日推荐改用真实涨星（一周优先，退回 24h）。
    版本 v32（v1.32.2）：第二期周刊上线；build-pages 触发路径加 weekly.json，每周快照落库后自动重建周刊与 RSS。
-   版本 v37（v1.34.1）：百度统计只在正式域名加载（本地验收/预览不再污染报表）；/index.html 归一成 /。 */
-const CACHE = "gh-cn-v37";
+   版本 v37（v1.34.1）：百度统计只在正式域名加载（本地验收/预览不再污染报表）；/index.html 归一成 /。
+   版本 v38（v1.35.0）：新增 5 个项目（172 个）：文件转换 Filee、录屏 OpenScreen、剪辑 Concat、音乐 MusicFree、网盘播放器 Ghosten Player。 */
+const CACHE = "gh-cn-v38";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html", "./updates.json"];

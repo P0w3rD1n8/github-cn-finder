@@ -171,6 +171,11 @@ const USAGE = {
 "beemdevelopment/Aegis":["普通用户"],
 "organicmaps/organicmaps":["普通用户"],
 "ReadYouApp/ReadYou":["普通用户"],
+"KnifeLemon/Filee":["普通用户","自媒体创作者"],
+"getopenscreen/openscreen":["自媒体创作者","普通用户"],
+"jub0t/Concat":["视频剪辑","自媒体创作者"],
+"maotoumao/MusicFree":["普通用户"],
+"GhostenEditor/Ghosten-Player":["普通用户"],
 
 };
 
@@ -360,6 +365,11 @@ const REPOS = [
 {n:"beemdevelopment/Aegis",d:"开源两步验证器，替代 Google 身份验证器",s:13540,l:"Java",c:"手机 App"},
 {n:"organicmaps/organicmaps",d:"免费离线地图导航，不联网也能用",s:15965,l:"C++",c:"手机 App"},
 {n:"ReadYouApp/ReadYou",d:"Material You 风格的安卓 RSS 阅读器",s:7668,l:"Kotlin",c:"手机 App"},
+{n:"KnifeLemon/Filee",d:"263 种格式的离线文件转换器，拖进去就转，文件不用传上网",s:28953,l:"C#",c:"实用工具"},
+{n:"getopenscreen/openscreen",d:"免费录屏工具，无水印、不限时长，Windows 也能用",s:7559,l:"TypeScript",c:"影音与直播"},
+{n:"jub0t/Concat",d:"完全免费的本机视频剪辑，不用订阅、不用联网（Beta）",s:18868,l:"Rust",c:"影音与直播"},
+{n:"maotoumao/MusicFree",d:"插件化、无广告、免费的音乐播放器，安卓和电脑都有",s:28701,l:"TypeScript",c:"影音与直播"},
+{n:"GhostenEditor/Ghosten-Player",d:"网盘直连的视频播放器：自动刮削海报，还能看直播",s:3451,l:"Dart",c:"影音与直播"},
 ];
 /* 国内镜像直达表（2026-10-27 第三方核实报告提取）：owner/repo(小写) -> 镜像URL */
 /* GitCode：GitHub 官方合作镜像平台（gitcode.com/GitHub_Trending 或 gh_mirrors），114 个可用 */
@@ -536,6 +546,11 @@ const CN_DESC = {
 "beemdevelopment/Aegis":"开源两步验证器，验证码存在自己手机里，可加密备份",
 "organicmaps/organicmaps":"免费离线地图，提前下好地图包，没网也能导航",
 "ReadYouApp/ReadYou":"安卓上的 RSS 阅读器，界面好看，能订阅任何网站",
+"KnifeLemon/Filee":"免费离线文件转换器，263 种格式拖进去就转，可替代各种在线转换网站",
+"getopenscreen/openscreen":"免费开源录屏，无水印、无时长限制，Windows / Mac / Linux 都能用",
+"jub0t/Concat":"完全免费的开源视频剪辑，本机运行，不用订阅也不用联网",
+"maotoumao/MusicFree":"插件化、无广告的免费音乐播放器，安卓和电脑都有",
+"GhostenEditor/Ghosten-Player":"安卓/电视上的视频播放器，能直连网盘、自动刮削海报、看直播",
 
 };
 
@@ -656,6 +671,11 @@ const AUTHORS = {
 "beemdevelopment":{t:"org",b:"Beem Development 专注安卓安全工具，Aegis 两步验证器是代表作。"},
 "organicmaps":{t:"org",b:"Organic Maps 是基于 OpenStreetMap 的离线地图，由 MapsWithMe 原班团队维护。"},
 "ReadYouApp":{t:"org",b:"ReadYou 是遵循 Material You 设计的安卓 RSS 阅读器项目。"},
+"KnifeLemon":{t:"user",b:"Myeonggu Kim，个人开发者，开发 Filee 文件转换器，主打完全离线、不上传用户文件。"},
+"getopenscreen":{t:"org",b:"getOpenScreen 是开源录屏与视频工具项目，由 Etienne Lescot 维护。"},
+"jub0t":{t:"user",b:"Jareer A.，个人开发者，开发 Concat 视频剪辑器，主打本机运行、不依赖订阅。"},
+"maotoumao":{t:"user",b:"猫头猫，国内个人开发者，MusicFree 音乐播放器的作者，主打插件化、无广告。"},
+"GhostenEditor":{t:"user",b:"Ghosten Editor，个人开发者，开发 Ghosten Player 网盘视频播放器。"},
 
 };
 
@@ -752,6 +772,11 @@ const REPO_ZH = {
 "beemdevelopment/Aegis":"Aegis 两步验证",
 "organicmaps/organicmaps":"Organic Maps 离线地图",
 "ReadYouApp/ReadYou":"ReadYou RSS 阅读器",
+"KnifeLemon/Filee":"Filee 文件转换",
+"getopenscreen/openscreen":"OpenScreen 录屏",
+"jub0t/Concat":"Concat 视频剪辑",
+"maotoumao/MusicFree":"MusicFree 音乐播放器",
+"GhostenEditor/Ghosten-Player":"Ghosten Player 网盘播放器",
 
 };
 
@@ -926,6 +951,11 @@ const DETAIL = {
 "beemdevelopment/Aegis":"🎯应用场景：网站账号的两步验证（2FA）验证码，不想交给大公司托管，也不想换手机就丢光。\n✨主要功能：TOTP / HOTP / Steam 验证码，支持加密备份与导出、按图标分组，能从 Google Authenticator 导入已有数据。\n💻适用平台：Android。\n🛠怎么用起来：装 APK → 扫码添加账号 → **立刻导出一份加密备份**存到网盘，这是换手机不丢号的关键一步。",
 "organicmaps/organicmaps":"🎯应用场景：出国旅行、山区徒步、流量不够时导航——地图提前存进手机，全程不联网。\n✨主要功能：基于 OpenStreetMap，离线搜索/驾车步行骑行路线、收藏地点、无广告无账号无追踪。\n💻适用平台：Android / iOS。\n🛠怎么用起来：装好后下载需要的省/国家地图包（几百 MB），之后离线可用。**注意：国内大城市够用，小城市和乡村的道路数据不如商业地图。**",
 "ReadYouApp/ReadYou":"🎯应用场景：想集中看几个网站/博客的更新，又不想被算法推荐流牵着走。\n✨主要功能：RSS/Atom 订阅、Material You 动态取色、分组与收藏、全文抓取、支持导入 OPML。\n💻适用平台：Android。\n🛠怎么用起来：装 APK → 添加订阅源（粘贴网站或 RSS 地址）→ 有更新自动拉取；本站「订阅更新」页提供了现成的 RSS 地址。",
+"KnifeLemon/Filee":"🎯应用场景：要把 PDF 转 Word、图片转格式、视频转码，又不想把文件传到别人网站上排队等。\n✨主要功能：支持 263 种格式互转（图片 / PDF / Word / Excel / PPT / 音频 / 视频 / HWP 等），全程本机处理、不联网、不限次数，支持批量转换。\n💻适用平台：Windows / Mac / Linux。\n🛠怎么用起来：官网下载安装 → 把文件拖进窗口 → 选目标格式 → 转换。替代那些「传上去、排队、还给你加水印」的在线转换站。\n⚠️新项目：2026 年 9 月上线，界面与稳定性仍在快速迭代。",
+"getopenscreen/openscreen":"🎯应用场景：录一段操作演示、做教程或发给同事看，又不想被录屏软件的时长限制和水印卡住。\n✨主要功能：全屏或指定窗口录制、GPU 加速、无水印、不限时长，导出常用视频格式。\n💻适用平台：Windows / macOS / Linux。\n🛠怎么用起来：官网下载安装 → 选录制区域 → 点录制 → 结束后导出。免费替代那些录完才发现要付费去水印的工具。\n⚠️新项目：2026 年上线，部分高级功能仍在补齐。",
+"jub0t/Concat":"🎯应用场景：想把几段手机视频剪成一条，又不想为剪辑软件订阅或会员付费。\n✨主要功能：多轨时间线、裁剪拼接、转场与字幕，本机离线渲染，还能用脚本 / MCP 做自动化。\n💻适用平台：Windows / macOS / Linux。\n🛠怎么用起来：官网下载安装 → 导入素材 → 拖到时间线剪 → 导出。需要花半小时熟悉一下界面。\n⚠️Beta 阶段：2026 年 8 月上线，作者自己标注测试中，复杂工程可能不稳定，重要素材建议先备份；另外不支持中文界面的截图教程较少。",
+"maotoumao/MusicFree":"🎯应用场景：想听歌，又不想被开屏广告、会员墙和推荐算法包围。\n✨主要功能：插件化音源（按需订阅插件）、无广告、支持歌单歌词与下载、本地音乐和在线音乐统一播放。\n💻适用平台：Android / Windows / macOS / Linux。\n🛠怎么用起来：装 App → 进「插件」页面订阅音源插件 → 搜索播放。插件由社区维护，音源可用性会随第三方站点变动，失效时更新插件即可。\n⚠️注意：音源来自第三方插件，能否使用、能否下载由插件决定，请自行判断使用场景与版权。",
+"GhostenEditor/Ghosten-Player":"🎯应用场景：电影存在网盘里想直接看，还想要海报墙，而不是面对一堆看不懂的文件名。\n✨主要功能：直连网盘播放（阿里云盘等）、自动刮削元数据生成海报墙、支持 IPTV 直播、文件管理，手机和电视通用。\n💻适用平台：Android / Android TV。\n🛠怎么用起来：装 APK → 添加网盘账号或本地/局域网目录 → 让它自动刮削 → 按海报点开播放。适合已经有网盘影视库的人，空盘用户价值不大。",
 
 };
 /* 分类圆标配色 */
