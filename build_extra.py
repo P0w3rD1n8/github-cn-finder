@@ -225,6 +225,16 @@ def weekly_pages(data):
             names = "、".join(esc(zh_of(n)) for n, _, _ in stale[:8])
             parts.append(f'<h2>⚠️ 已归档提醒</h2><p class="note">{names} 已被作者归档，不再更新。</p>')
 
+        # v1.36.1：把涨星榜图直接嵌进本期页面，手机上长按就能存，不用记路径
+        if os.path.exists(os.path.join(W_DIR, f"card-{date}.png")):
+            parts.append(
+                '<h2>📸 存图转发</h2>\n'
+                '<p class="note">手机长按图片保存到相册，电脑右键另存；可直接发微信群、朋友圈、小红书。</p>\n'
+                f'<a href="card-{date}.png"><img src="card-{date}.png" alt="本周涨星榜" '
+                'style="width:100%;border-radius:12px;border:1px solid var(--border);display:block"></a>\n'
+                f'<p class="note">→ 另有 <a href="card-{date}-clean.png">无二维码版</a>'
+                '（发小红书用，平台对二维码敏感）</p>')
+
         parts.append(f'<p class="note">数据口径：每周抓一次全库星标（UTC 日期）。共 {len(stars)} 个项目。</p>')
         parts.append(f'<nav class="sub"><a href="{BASE}/weekly/">← 全部期数</a><a href="{BASE}/">回首页</a></nav>')
         body = "\n".join(parts)
@@ -235,16 +245,24 @@ def weekly_pages(data):
         issues.append({"date": date, "n": i + 1, "file": fname, "new": len(new_names), "first": i == 0,
                        "top_gain": gains[0] if gains else None})
 
+    def card_html(it):
+        d = it["date"]
+        if not os.path.exists(os.path.join(W_DIR, f"card-{d}.png")):
+            return ""
+        return (f'<span class="date"> · <a href="{BASE}/weekly/card-{d}.png">📸 存图</a>'
+                f' · <a href="{BASE}/weekly/card-{d}-clean.png">无码版</a></span>')
+
     cards = "".join(
         f'<div class="issue"><a href="{BASE}/weekly/{esc(it["file"])}">第 {it["n"]} 期</a>'
         f'<span class="date">{esc(it["date"])}'
         + (f' · 新增 {it["new"]} 个' if it["new"] else "")
-        + "</span></div>"
+        + "</span>" + card_html(it) + "</div>"
         for it in reversed(issues)
     )
     index_body = (
         "<h1>📮 每周精选</h1>\n"
         '<div class="intro">每周更新一期：本周新增项目、涨星最快 Top 10、当前总榜、归档提醒。'
+        '每期还配一张<b>涨星榜图</b>，可直接存下来转发到微信群、朋友圈、小红书。'
         '也可以 <a href="' + BASE + '/feed.xml">用 RSS 订阅</a>。</div>\n'
         + (cards or '<p class="note">还没有周快照，CI 每周会自动写入。</p>')
         + f'<nav class="sub"><a href="{BASE}/">回首页</a><a href="{BASE}/c/">📚 专题合辑</a></nav>'

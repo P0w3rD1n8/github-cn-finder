@@ -41,12 +41,12 @@ jobs:
       - name: 生成静态项目页
         run: python build_pages.py
 
-      - name: 生成合辑 / 周刊 / RSS（v1.26.0）
-        run: python build_extra.py
-
       - name: 生成每周涨星榜图（v1.36.0）
         continue-on-error: true   # 配图是加分项，出图失败不能拖垮周刊重建
         run: python build_weekly_card.py
+
+      - name: 生成合辑 / 周刊 / RSS（v1.26.0）
+        run: python build_extra.py
 
       - name: 生成年度精选（v1.30.0）
         run: python build_annual.py
