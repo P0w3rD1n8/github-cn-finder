@@ -39,7 +39,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.36.1";
+window.GH_VER = "v1.36.2";
 </script>
 <!-- v1.34.1：把 /index.html 归一成 /（同一个首页两个入口，统计报表被劈成两半） -->
 <script>
@@ -328,6 +328,8 @@ table.cmp a{color:var(--accent);text-decoration:none}
 .quick-links::-webkit-scrollbar{display:none}
 .quick-links a{flex:0 0 auto;white-space:nowrap;font-size:11.5px;color:var(--accent);text-decoration:none;background:var(--card2);border:1px solid var(--border);border-radius:999px;padding:4px 10px;line-height:1.2}
 .quick-links a:hover{border-color:var(--accent)}
+/* v1.36.2：每周精选不是分类，是内容栏目——单独给个强调色，别混在分类里被忽略 */
+.quick-links a.weekly{color:var(--accent);border-color:rgba(88,166,255,.55);background:rgba(88,166,255,.10);font-weight:600}
 /* v1.30.0：首页顶部年度精选横幅 */
 .annual-banner{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding:11px 14px;border-radius:12px;
   text-decoration:none;color:var(--text);
@@ -346,8 +348,13 @@ table.cmp a{color:var(--accent);text-decoration:none}
   margin-right:5px;vertical-align:middle;box-shadow:0 0 0 3px rgba(63,185,80,.15)}
 .update-strip b{color:var(--accent);font-weight:700}
 .update-strip a{color:var(--accent);text-decoration:none}
-.week-next{display:none;font-size:11.5px;color:var(--text2);padding:0 2px 10px}
+.week-next{display:none;padding:0 2px 10px}
 .week-next.show{display:block}
+.week-next a{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  text-decoration:none;font-size:12px;color:var(--text);background:var(--card2);
+  border:1px solid var(--border);border-radius:10px;padding:9px 12px}
+.week-next a:hover{border-color:var(--accent)}
+.week-next .wn-go{color:var(--accent);white-space:nowrap;font-weight:600}
 /* v1.34.0：从社交平台（?from=xhs / dy）进来的访客，给三个最热入口 */
 .from-welcome{display:none;margin:0 0 10px;padding:12px 14px;border-radius:12px;
   background:linear-gradient(135deg,rgba(255,45,85,.16),rgba(163,113,247,.14));
@@ -531,11 +538,11 @@ a.nav-item{text-decoration:none;color:inherit}
     <div class="week-next" id="weekNext"></div>
     <div class="quick-links" id="quickLinks">
       <a href="c/zhuangji.html">💻 装机必备</a>
+      <a href="weekly/" class="weekly">📮 每周精选</a>
       <a href="c/zimeiti.html">🎬 自媒体工具箱</a>
       <a href="c/aibendi.html">🤖 本地 AI 入门</a>
       <a href="c/zijian.html">🏠 自建服务</a>
       <a href="c/lingjichu.html">📚 零基础学编程</a>
-      <a href="weekly/">📮 每周精选</a>
       <a href="list.html">📋 全部项目</a>
     </div>
     <div id="dailyPick"></div>
@@ -1564,7 +1571,12 @@ function renderWeekNext(){
     const nd = new Date(d.next + "T00:00:00");
     const diff = Math.round((nd - t0) / 86400000);
     const tail = diff > 0 ? `下一期 ${d.label}` : (diff === 0 ? "今天出刊" : "新一期已发布");
-    el.textContent = `🗓 ${d.weekday}一期 · ${tail}`;
+    /* v1.36.2：整条做成可点入口。之前这里是行死文字——首页最好的位置却没给出路。
+       周刊是「回访的理由」和「转发的物料」，比这排分类更值得被点到。 */
+    el.innerHTML = `<a href="weekly/">
+      <span>🗓 ${esc(d.weekday)}一期 · ${esc(tail)}</span>
+      <span class="wn-go">看往期涨星榜 →</span>
+    </a>`;
     el.classList.add("show");
   }).catch(()=>{});
 }

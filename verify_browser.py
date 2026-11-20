@@ -317,6 +317,10 @@ def main():
             badge_txt = page.locator("#navUpdateBadge").inner_text() if badge else "-"
             check("首页每周出刊提示", week_on == 1 and "下一期" in week_txt,
                   f"weekNext={week_on} / {week_txt[:40]}")
+            # v1.36.2：出刊提示整条可点进周刊（之前是行死文字）
+            week_link = page.locator("#weekNext a[href='weekly/']").count()
+            check("出刊提示可点击进周刊", week_on == 1 and week_link == 1,
+                  f"指向 weekly/ 的链接数={week_link}")
 
             # ---------- v1.34.0 来源欢迎条（?from=xhs / dy） ----------
             page.goto(base + "?from=xhs", wait_until="domcontentloaded", timeout=45000)
