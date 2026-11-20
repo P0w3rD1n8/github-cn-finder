@@ -39,7 +39,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.35.1";
+window.GH_VER = "v1.35.2";
 </script>
 <!-- v1.34.1：把 /index.html 归一成 /（同一个首页两个入口，统计报表被劈成两半） -->
 <script>
@@ -1579,7 +1579,10 @@ function initFromWelcome(raw){
   const from = String(raw).toLowerCase();
   const label = FROM_LABELS[from];
   if(!label) return;
-  try{ if(sessionStorage.getItem("gh_from_shown") === from) return; sessionStorage.setItem("gh_from_shown", from); }catch(e){}
+  /* v1.35.2：不能用 sessionStorage 当守卫。SW 首次激活会静默刷一次页面，
+     第二次加载时会话里已记着「显示过」→ 直接 return → 欢迎条被刷新吃掉，
+     而渠道新访客恰好就是触发 SW 的那次访问。改成看元素里有没有内容。 */
+  if(el.innerHTML.trim()) return;
   el.innerHTML = `<div class="fw-title">👋 从${esc(label)}来的？先看这三个</div>
     <div class="fw-links">
       <button class="fw-btn" data-intent="手机 App">📱 手机 App</button>
