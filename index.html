@@ -39,7 +39,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.35.0";
+window.GH_VER = "v1.35.1";
 </script>
 <!-- v1.34.1：把 /index.html 归一成 /（同一个首页两个入口，统计报表被劈成两半） -->
 <script>
@@ -1454,7 +1454,13 @@ function currentURLState(){
 function syncURL(){
   try{
     const qs = currentURLState();
-    history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+    /* v1.35.1：?from= 必须留在地址栏上。百度统计的 hm.js 是异步加载的，
+       等它初始化时如果 URL 已被重写掉 from，渠道流量就会被记成「直接访问」——归因等于白做。 */
+    const keep = new URLSearchParams(location.search).get("from");
+    const parts = [];
+    if(qs) parts.push(qs);
+    if(keep) parts.push("from=" + encodeURIComponent(keep));
+    history.replaceState(null, "", location.pathname + (parts.length ? "?" + parts.join("&") : "") + location.hash);
   }catch(e){ /* file:// 等环境忽略 */ }
 }
 function applyURLState(){
@@ -1563,8 +1569,10 @@ function renderWeekNext(){
   }).catch(()=>{});
 }
 /* v1.34.0：按来源平台（小红书 / 抖音 / 知乎…）给出三个最热入口。
-   URL 用 ?from=xhs / ?from=dy，百度统计的「入口页面」里能直接看出各平台带来多少人。 */
-const FROM_LABELS = { xhs: "小红书", xiaohongshu: "小红书", dy: "抖音", douyin: "抖音", zhihu: "知乎" };
+   URL 用 ?from=xhs / ?from=dy，百度统计的「入口页面」里能直接看出各平台带来多少人。
+   v1.35.1：补上 CSDN / 掘金 / 微信 / B站——这几个才是「链接能点」的渠道，不认就全被算成直接访问。 */
+const FROM_LABELS = { xhs: "小红书", xiaohongshu: "小红书", dy: "抖音", douyin: "抖音", zhihu: "知乎",
+  csdn: "CSDN", juejin: "掘金", wx: "微信", wechat: "微信", bili: "B站", bilibili: "B站", v2ex: "V2EX" };
 function initFromWelcome(raw){
   const el = $("#fromWelcome");
   if(!el || !raw) return;
