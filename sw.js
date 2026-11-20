@@ -31,8 +31,9 @@
    版本 v37（v1.34.1）：百度统计只在正式域名加载（本地验收/预览不再污染报表）；/index.html 归一成 /。
    版本 v38（v1.35.0）：新增 5 个项目（172 个）：文件转换 Filee、录屏 OpenScreen、剪辑 Concat、音乐 MusicFree、网盘播放器 Ghosten Player。
    版本 v39（v1.35.1）：来源识别补上 CSDN / 掘金 / 微信 / B站 / V2EX（这几个渠道链接可点，不认就等于白来）。
-   版本 v40（v1.35.2）：来源欢迎条去掉 sessionStorage 守卫，修掉「SW 首次激活刷新后欢迎条消失」。 */
-const CACHE = "gh-cn-v40";
+   版本 v40（v1.35.2）：来源欢迎条去掉 sessionStorage 守卫，修掉「SW 首次激活刷新后欢迎条消失」。
+   版本 v41（v1.36.0）：新增每周涨星榜图（build_weekly_card.py，随周刊自动生成，带/不带二维码两版）。 */
+const CACHE = "gh-cn-v41";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html", "./updates.json"];
