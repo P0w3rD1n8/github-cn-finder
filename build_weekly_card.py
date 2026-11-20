@@ -192,4 +192,11 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    # 出图是加分项：任何异常都只打印，不让它拖垮 build-pages 里的周刊重建
+    try:
+        sys.exit(main())
+    except SystemExit:
+        raise
+    except Exception as e:
+        print(f"⚠️ 涨星榜图生成失败（已忽略，不影响周刊）：{type(e).__name__}: {e}")
+        sys.exit(0)
