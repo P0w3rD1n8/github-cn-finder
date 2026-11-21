@@ -34,8 +34,9 @@
    版本 v40（v1.35.2）：来源欢迎条去掉 sessionStorage 守卫，修掉「SW 首次激活刷新后欢迎条消失」。
    版本 v41（v1.36.0）：新增每周涨星榜图（build_weekly_card.py，随周刊自动生成，带/不带二维码两版）。
    版本 v42（v1.36.1）：涨星榜图在周刊索引页和每期页面里露出（之前只有文件、页面上找不到）。
-   版本 v43（v1.36.2）：首页「周六更新一期」提示条整条可点进周刊；每周精选入口单独强调色。 */
-const CACHE = "gh-cn-v43";
+   版本 v43（v1.36.2）：首页「周六更新一期」提示条整条可点进周刊；每周精选入口单独强调色。
+   版本 v44（v1.36.3）：周刊第三期上线；修掉「周快照写入后不触发重建」（GITHUB_TOKEN 推送不触发其它 workflow）。 */
+const CACHE = "gh-cn-v44";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html", "./updates.json"];
