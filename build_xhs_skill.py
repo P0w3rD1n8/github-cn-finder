@@ -103,15 +103,28 @@ def main():
     print(f"   项目 {len(items)} 个 / 分类 {len(by_cat)} 个 / {len(text)} 字符")
 
     # 打包（平台限制：单文件 10MB，总计 30MB）
-    with zipfile.ZipFile(OUT_ZIP, "w", zipfile.ZIP_DEFLATED) as z:
-        for dirpath, _, files in os.walk(SKILL_DIR):
-            for f in sorted(files):
-                full = os.path.join(dirpath, f)
-                rel = os.path.relpath(full, os.path.dirname(SKILL_DIR))
-                z.write(full, rel.replace(os.sep, "/"))
-    size = os.path.getsize(OUT_ZIP)
-    print(f"✅ 已打包：{OUT_ZIP}（{size / 1024:.1f} KB）")
-    if size > 30 * 1024 * 1024:
+    def make_zip(out_path, skip_catalog=False):
+        with zipfile.ZipFile(out_path, "w", zipfile.ZIP_DEFLATED) as z:
+            for dirpath, _, files in os.walk(SKILL_DIR):
+                for f in sorted(files):
+                    if skip_catalog and f == "catalog.md":
+                        continue
+                    full = os.path.join(dirpath, f)
+                    rel = os.path.relpath(full, os.path.dirname(SKILL_DIR))
+                    z.write(full, rel.replace(os.sep, "/"))
+        return os.path.getsize(out_path)
+
+    full_size = make_zip(OUT_ZIP)
+    print(f"✅ 完整版：{OUT_ZIP}（{full_size / 1024:.1f} KB，含 catalog）")
+
+    # 安全版：去掉 catalog.md。
+    # 原因：catalog 里有 172 条 owner/repo 项目标识，还包含影视下载、去广告这类项目，
+    # 被平台判「外部平台信息」的风险最高。审核不通过时先摘掉它排查。
+    safe_path = os.path.join(ROOT, "content", "xhs-skill-safe.zip")
+    safe_size = make_zip(safe_path, skip_catalog=True)
+    print(f"✅ 安全版：{safe_path}（{safe_size / 1024:.1f} KB，无 catalog）")
+
+    if max(full_size, safe_size) > 30 * 1024 * 1024:
         print("⚠️ 超过平台 30MB 限制")
         return 1
     return 0
