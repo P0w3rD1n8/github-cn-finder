@@ -46,6 +46,14 @@ footer{text-align:center;font-size:12px;color:var(--text2);margin-top:32px}
 .related .list-item{padding:7px 0}
 .related-more{display:inline-block;margin-top:8px;font-size:13px}
 /* v1.33.3：搜索落地页的回站入口——从搜索引擎进来的人只看一页就走 */
+/* v1.38.3：项目数据块（服务端渲染，爬虫也能看到真实数字） */
+.stats{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin:0 0 18px}
+.stats h2{font-size:15px;margin:0 0 12px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 8px}
+.stat-grid>div{text-align:center}
+.stat-grid b{display:block;font-size:16px;color:var(--text);font-weight:700}
+.stat-grid span{font-size:11.5px;color:var(--text2)}
+.stats .note{font-size:11.5px;color:var(--text2);margin:12px 0 0;line-height:1.6}
 .site-promo{margin:22px 0 6px;padding:14px 16px;background:var(--card);border:1px solid var(--border);
   border-left:3px solid var(--accent);border-radius:10px}
 .site-promo .sp-title{font-size:14.5px;font-weight:700;margin-bottom:6px}
@@ -66,13 +74,16 @@ footer{text-align:center;font-size:12px;color:var(--text2);margin-top:32px}
 .docs .foot{font-size:12px;color:var(--text2);border-top:1px dashed var(--border);padding-top:8px;margin-top:8px}
 
 </style>
-<!-- 百度统计（v1.22）：全站访问统计 -->
+<!-- 百度统计（v1.22）：全站访问统计；v1.38.3 起与首页一致——只在正式域名、非自动化浏览器上报 -->
 <script>
 var _hmt = _hmt || [];
 (function() {
+  // 之前只给首页加了防护，项目页 / 清单页是全裸的：本地预览、自动化访问都会被记进报表
+  if(["p0w3rd1n8.github.io"].indexOf(location.hostname) === -1) return;
+  if(navigator.webdriver) return;
   var hm = document.createElement("script");
   hm.src = "https://hm.baidu.com/hm.js?d5056cee7f456be4851294452cc1e765";
-  var s = document.getElementsByTagName("script")[0]; 
+  var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
@@ -86,6 +97,7 @@ var _hmt = _hmt || [];
   <h1>Kivy 手机应用 <span class="en">kivy/kivy</span></h1>
   <div class="meta-row"><span class="tag">手机 App</span> · <span class="tag">Python</span> · <span class="star">⭐ 19,030 星标</span></div>
   <p class="desc">用 Python 开发跨平台手机应用的框架</p>
+  <section class="stats"><h2>📊 项目数据</h2><div class="stat-grid"><div><b>19,028</b><span>星标</span></div><div><b>3,144</b><span>Fork</span></div><div><b>890</b><span>未解决 Issue</span></div><div><b>Python</b><span>语言</span></div><div><b>2026-11-21</b><span>最后提交</span></div><div><b>正常维护</b><span>状态</span></div></div><p class="note">数据来自 GitHub 官方 API，采集于 2026-11-21。未解决 Issue 多不代表项目不好，只说明作者手头积压了多少；星标数是热度参考，不是质量保证。</p></section>
   <section class="detail">🎯应用场景：用 Python 开发跨平台手机 App。
 ✨主要功能：纯 Python 写界面，支持安卓、iOS、桌面。
 💻适用平台：Windows / Mac / Linux，Python 环境。

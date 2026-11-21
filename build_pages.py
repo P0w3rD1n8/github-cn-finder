@@ -61,6 +61,14 @@ footer{text-align:center;font-size:12px;color:var(--text2);margin-top:32px}
 .related .list-item{padding:7px 0}
 .related-more{display:inline-block;margin-top:8px;font-size:13px}
 /* v1.33.3：搜索落地页的回站入口——从搜索引擎进来的人只看一页就走 */
+/* v1.38.3：项目数据块（服务端渲染，爬虫也能看到真实数字） */
+.stats{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin:0 0 18px}
+.stats h2{font-size:15px;margin:0 0 12px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 8px}
+.stat-grid>div{text-align:center}
+.stat-grid b{display:block;font-size:16px;color:var(--text);font-weight:700}
+.stat-grid span{font-size:11.5px;color:var(--text2)}
+.stats .note{font-size:11.5px;color:var(--text2);margin:12px 0 0;line-height:1.6}
 .site-promo{margin:22px 0 6px;padding:14px 16px;background:var(--card);border:1px solid var(--border);
   border-left:3px solid var(--accent);border-radius:10px}
 .site-promo .sp-title{font-size:14.5px;font-weight:700;margin-bottom:6px}
@@ -327,6 +335,31 @@ def build_project_page(n, r, ctx):
     ld_json = json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")
     ld_html = '<script type="application/ld+json">' + ld_json + "</script>"
 
+    # v1.38.3：项目数据块。之前 star/fork/issue 只靠前端 JS 从 repos.json 注入，
+    # 静态 HTML 里没有 —— 爬虫看到的是旧快照，页面正文也只有 600 字左右。
+    stats_html = ""
+    live_all = ctx.get("live") or {}
+    live = (live_all.get("repos") or {}).get(n)
+    if live:
+        def _num(key):
+            v = live.get(key)
+            return "{:,}".format(int(v)) if isinstance(v, (int, float)) else "—"
+
+        stats_html = (
+            '<section class="stats"><h2>📊 项目数据</h2><div class="stat-grid">'
+            '<div><b>' + _num("s") + "</b><span>星标</span></div>"
+            '<div><b>' + _num("fk") + "</b><span>Fork</span></div>"
+            '<div><b>' + _num("iu") + "</b><span>未解决 Issue</span></div>"
+            "<div><b>" + esc(live.get("lg") or "—") + "</b><span>语言</span></div>"
+            "<div><b>" + esc(str(live.get("pa") or "—")) + "</b><span>最后提交</span></div>"
+            "<div><b>" + ("已归档" if live.get("ar") else "正常维护") + "</b><span>状态</span></div>"
+            "</div>"
+            '<p class="note">数据来自 GitHub 官方 API，采集于 '
+            + esc((live_all.get("updated") or "")[:10])
+            + "。未解决 Issue 多不代表项目不好，只说明作者手头积压了多少；"
+            "星标数是热度参考，不是质量保证。</p></section>"
+        )
+
     # P0：相关项目互链——同一 c 分类下的其他仓库，按星标降序取前 5，跳过自身
     related_html = ""
     cat = r.get("c") or ""
@@ -417,13 +450,16 @@ __LDJSON__
 <style>
 __CSS__
 </style>
-<!-- 百度统计（v1.22）：全站访问统计 -->
+<!-- 百度统计（v1.22）：全站访问统计；v1.38.3 起与首页一致——只在正式域名、非自动化浏览器上报 -->
 <script>
 var _hmt = _hmt || [];
 (function() {
+  // 之前只给首页加了防护，项目页 / 清单页是全裸的：本地预览、自动化访问都会被记进报表
+  if(["p0w3rd1n8.github.io"].indexOf(location.hostname) === -1) return;
+  if(navigator.webdriver) return;
   var hm = document.createElement("script");
   hm.src = "https://hm.baidu.com/hm.js?d5056cee7f456be4851294452cc1e765";
-  var s = document.getElementsByTagName("script")[0]; 
+  var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
@@ -437,6 +473,7 @@ var _hmt = _hmt || [];
   <h1>__ZH__ <span class="en">__N__</span></h1>
   <div class="meta-row">__META__</div>
   <p class="desc">__DESC__</p>
+  __STATS__
   __DETAIL__
   <div class="links">
     <a class="btn" href="https://github.com/__N__" target="_blank" rel="noopener">去 GitHub 查看 ↗</a>
@@ -465,6 +502,7 @@ __STARSCRIPT__
         .replace("__OGIMG__", OG_DIR_URL + "/" + esc(fname.replace(".html", ".png")) if os.path.exists(os.path.join(ROOT, "og", fname.replace(".html", ".png"))) else OG_IMAGE)
         .replace("__META__", meta_html)
         .replace("__DETAIL__", detail_html)
+        .replace("__STATS__", stats_html)
         .replace("__MIRROR__", mirror_html)
         .replace("__AUTHOR__", author_html)
         .replace("__LDJSON__", ld_html)
@@ -508,13 +546,16 @@ def build_list_page(repos, ctx):
 <style>
 __CSS__
 </style>
-<!-- 百度统计（v1.22）：全站访问统计 -->
+<!-- 百度统计（v1.22）：全站访问统计；v1.38.3 起与首页一致——只在正式域名、非自动化浏览器上报 -->
 <script>
 var _hmt = _hmt || [];
 (function() {
+  // 之前只给首页加了防护，项目页 / 清单页是全裸的：本地预览、自动化访问都会被记进报表
+  if(["p0w3rd1n8.github.io"].indexOf(location.hostname) === -1) return;
+  if(navigator.webdriver) return;
   var hm = document.createElement("script");
   hm.src = "https://hm.baidu.com/hm.js?d5056cee7f456be4851294452cc1e765";
-  var s = document.getElementsByTagName("script")[0]; 
+  var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
@@ -573,8 +614,23 @@ def build_sitemap(repos, ctx, extra_urls=None):
     )
 
 
+def load_live():
+    """v1.38.3：读 repos.json 的实时数据（star/fork/issue/最后提交/是否归档）。
+    拿不到就返回空，页面自动不渲染数据块，不影响构建。"""
+    path = os.path.join(ROOT, "repos.json")
+    if not os.path.exists(path):
+        return {"repos": {}, "updated": ""}
+    try:
+        with open(path, encoding="utf-8") as f:
+            d = json.load(f)
+        return {"repos": d.get("repos") or {}, "updated": d.get("updated", "")}
+    except Exception:
+        return {"repos": {}, "updated": ""}
+
+
 def main():
     data = load_data()
+    data["live"] = load_live()
     repos = data["repos"]
     os.makedirs(OUT_DIR, exist_ok=True)
 
