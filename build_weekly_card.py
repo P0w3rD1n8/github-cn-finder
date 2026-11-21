@@ -151,12 +151,16 @@ def render(date_prev, date_cur, rows, with_qr, out_path):
                             radius=10, fill=(255, 255, 255))
         img.paste(qimg, (qx, qy))
     else:
+        # v1.38.1：小红书版**不能出现任何网址**。
+        # 2026-11-15 有实盘教训：笔记里出现站外链接/网址会被判「外部平台信息」，
+        # 直接限制推荐和搜索展示（粉丝可见 = 没流量）。手册 §5.7 有完整红线。
         ty = 1226
-        lines = [("每周六更新一期", 26, DIM), ("172 个开源项目 · 中文四段说明", 26, (201, 209, 217)),
-                 (SITE_TEXT, 24, ACCENT)]
+        lines = [("GitHub 中文发现器", 30, ACCENT),
+                 ("每周六更新一期 · 172 个开源项目中文说明", 24, (201, 209, 217)),
+                 ("每个项目都写清了：干什么用 / 支持哪些平台 / 会踩什么坑", 22, DIM)]
         for s, size, color in lines:
             d.text((56, ty), s, font=font(size), fill=color)
-            ty += 40
+            ty += 46
 
     img.save(out_path, "PNG", optimize=True)
     return img.size

@@ -232,8 +232,8 @@ def weekly_pages(data):
                 '<p class="note">手机长按图片保存到相册，电脑右键另存；可直接发微信群、朋友圈、小红书。</p>\n'
                 f'<a href="card-{date}.png"><img src="card-{date}.png" alt="本周涨星榜" '
                 'style="width:100%;border-radius:12px;border:1px solid var(--border);display:block"></a>\n'
-                f'<p class="note">→ 另有 <a href="card-{date}-clean.png">无二维码版</a>'
-                '（发小红书用，平台对二维码敏感）</p>')
+                f'<p class="note">→ 另有 <a href="card-{date}-clean.png">小红书版</a>'
+                '（<b>无网址、无二维码</b>，按平台红线制作：图片里出现站外链接会被判「外部平台信息」而限流）</p>')
 
         parts.append(f'<p class="note">数据口径：每周抓一次全库星标（UTC 日期）。共 {len(stars)} 个项目。</p>')
         parts.append(f'<nav class="sub"><a href="{BASE}/weekly/">← 全部期数</a><a href="{BASE}/">回首页</a></nav>')
