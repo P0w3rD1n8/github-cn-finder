@@ -43,7 +43,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.37.0";
+window.GH_VER = "v1.37.1";
 </script>
 <!-- v1.34.1：把 /index.html 归一成 /（同一个首页两个入口，统计报表被劈成两半） -->
 <script>
@@ -62,6 +62,10 @@ var _hmt = _hmt || [];
   // 只在正式站点上报：127.0.0.1 / localhost / file:// 等本地环境一律跳过。
   // 此前 30 天里本地验收与预览贡献了约 15% 的虚假 PV（110/719），且把跳出率、时长都带偏了。
   if(["p0w3rd1n8.github.io"].indexOf(location.hostname) === -1) return;
+  // v1.37.1：自动化浏览器一律不上报。域名判断管不住「用正式域名做线上验证」——
+  // 11/20 那批假量正是这么来的（Playwright 打开 production URL，域名判断放行了）。
+  // navigator.webdriver 由浏览器自身标记，Playwright / Puppeteer 默认为 true。
+  if(navigator.webdriver) return;
   var hm = document.createElement("script");
   hm.src = "https://hm.baidu.com/hm.js?d5056cee7f456be4851294452cc1e765";
   var s = document.getElementsByTagName("script")[0];
