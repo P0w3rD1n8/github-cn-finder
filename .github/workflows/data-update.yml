@@ -75,4 +75,9 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git commit -m "chore: 新周快照 -> 重建周刊与涨星榜图 $(date -u +%Y-%m-%d_%H:%M)"
             git pull --rebase origin main && git push origin main && echo "✅ 周刊与涨星榜图已重建"
+            # v1.38.2：新周刊页要主动告诉 Bing。
+            # build-pages 不会因 weekly.json 变化触发（GITHUB_TOKEN 防递归），
+            # 而新一期周刊恰恰是在这里生成的 —— 之前这批新 URL 从来没被推送过。
+            sleep 90   # 等 Pages 部署，避免提交到 404
+            python indexnow.py || echo "⚠️ IndexNow 推送失败，不影响站点"
           fi

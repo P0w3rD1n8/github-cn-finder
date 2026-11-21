@@ -38,8 +38,9 @@
    版本 v44（v1.36.3）：周刊第三期上线；修掉「周快照写入后不触发重建」（GITHUB_TOKEN 推送不触发其它 workflow）。
    版本 v45（v1.37.0）：首页标题/描述按搜索意图重写，补站点级 JSON-LD（WebSite + SearchAction）。
    版本 v46（v1.37.1）：统计加 navigator.webdriver 判断，自动化浏览器（含线上验证）一律不上报。
-   版本 v47（v1.38.1）：涨星榜「小红书版」去掉网址（平台红线：图片含站外链接会限流）。 */
-const CACHE = "gh-cn-v47";
+   版本 v47（v1.38.1）：涨星榜「小红书版」去掉网址（平台红线：图片含站外链接会限流）。
+   版本 v48（v1.38.2）：新周刊页重建后主动推 IndexNow（之前这批新 URL 从没被推送过）。 */
+const CACHE = "gh-cn-v48";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html", "./updates.json"];
