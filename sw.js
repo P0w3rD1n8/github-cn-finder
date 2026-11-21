@@ -40,8 +40,9 @@
    版本 v46（v1.37.1）：统计加 navigator.webdriver 判断，自动化浏览器（含线上验证）一律不上报。
    版本 v47（v1.38.1）：涨星榜「小红书版」去掉网址（平台红线：图片含站外链接会限流）。
    版本 v48（v1.38.2）：新周刊页重建后主动推 IndexNow（之前这批新 URL 从没被推送过）。
-   版本 v49（v1.38.3）：项目页加服务端渲染的「项目数据」块；172 个项目页补上统计防护。 */
-const CACHE = "gh-cn-v49";
+   版本 v49（v1.38.3）：项目页加服务端渲染的「项目数据」块；172 个项目页补上统计防护。
+   版本 v50（v1.39.0）：新增小红书 Red Skill「开源项目选型助手」（四步判断法 + 172 项目目录）。 */
+const CACHE = "gh-cn-v50";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html", "./updates.json"];
