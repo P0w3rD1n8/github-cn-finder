@@ -12,7 +12,7 @@ GitHub 中文发现器：一个纯静态 PWA 网站，用中文名收录并展�
 |---|---|
 | 线上站点 | https://p0w3rd1n8.github.io/github-cn-finder/ |
 | GitHub 仓库 | P0w3rD1n8/github-cn-finder（远端 main 分支） |
-| 本地仓库（ROG） | C:\Users\power\GitHub中文发现器 |
+| 本地仓库（ROG） | `C:\work\github-cn-finder`（2026-11-24 从 `C:\Users\power\GitHub中文发现器` 迁入，两台电脑统一此路径） |
 | DSH 工作区 | C:\Users\power\Documents\发现器开发-建议（宣传/视频物料在此） |
 | 当前版本 | **v1.33.1**（2026-11-15 上线，SW 缓存 gh-cn-v33，167 个项目 + 2026 年度精选） |
 | 本地 commit | 与远端同步 = `6a14722`（2026-11-13 v1.32.1 搜索空态修复 + 手册） |
@@ -400,7 +400,7 @@ DSH **没有**云端会话同步；豆包那种跨设备记忆是云应用才有
   ```
   安装/卸载/更新后**必须重启 dsh web** 才生效。
 - **插件 duplicate 报错**（`duplicate factory registration`）＝ 同名 entry 装了两份（例如同时装了聚合包和独立包）。DSH 可正常启动后不损坏，卸载多余那份重启即可。**建议：只装一个来源，别混装。**
-- 接手项目：在 DSH 里打开 `C:\Users\power\GitHub中文发现器` 作为工作区，配合本手册即可独立迭代。DSH 是本地 AI 助手，不连接豆包云端技能，纯本地文件操作。
+- 接手项目：在 DSH 里打开 `C:\work\github-cn-finder` 作为工作区，配合本手册即可独立迭代。DSH 是本地 AI 助手，不连接豆包云端技能，纯本地文件操作。
 
 ## 8. 验证清单（发版后线上必查）
 
