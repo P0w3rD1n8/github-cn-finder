@@ -12,3 +12,7 @@ _shots/
 .pylibs/
 .tmp-pip/
 .tmp-pw/
+
+# 极空间（syncthing 内核）客户端在本目录生成的标记文件，不属于项目内容
+.stignore
+.stfolder/
