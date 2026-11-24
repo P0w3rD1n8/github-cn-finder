@@ -16,3 +16,6 @@ _shots/
 # 极空间（syncthing 内核）客户端在本目录生成的标记文件，不属于项目内容
 .stignore
 .stfolder/
+
+# 小红书小工具构建 Skill（第三方下载物，不入库）
+.skill/

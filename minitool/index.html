@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>开源项目速查</title>
+<link rel="stylesheet" href="./app.css" />
+</head>
+<body>
+<div class="app" id="app">
+
+  <header class="hd">
+    <h1 class="hd-t">开源项目速查</h1>
+    <p class="hd-s">星星多不等于好用。四步看完，再决定装不装。</p>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab is-on" id="tab-check" type="button">自己判一个</button>
+    <button class="tab" id="tab-lib" type="button">看内置 172 个</button>
+  </nav>
+
+  <!-- 自己判：问答 -->
+  <section class="view" id="view-check">
+    <p class="lead">不用懂技术。凭你看到的情况选，看完就知道该不该用。</p>
+    <div id="questions"></div>
+    <div class="bar" id="checkBar">
+      <button class="btn btn-main" id="btnJudge" type="button" disabled>看结论</button>
+    </div>
+    <p class="hint" id="checkHint">还有 5 题要选</p>
+  </section>
+
+  <!-- 内置库 -->
+  <section class="view is-hide" id="view-lib">
+    <div class="search">
+      <input id="q" class="inp" type="search" placeholder="搜项目名或中文说明" autocomplete="off" />
+    </div>
+    <div class="cats" id="cats"></div>
+    <div class="list" id="list"></div>
+    <p class="empty is-hide" id="empty">没找到，换个词试试</p>
+    <div class="bar is-hide" id="moreBar">
+      <button class="btn btn-ghost" id="btnMore" type="button">加载更多</button>
+    </div>
+  </section>
+
+  <!-- 详情 / 结果 -->
+  <section class="view is-hide" id="view-detail">
+    <button class="back" id="btnBack" type="button">‹ 返回</button>
+    <div id="detailBody"></div>
+  </section>
+
+  <footer class="ft">数据截至 2026-11-24，来自公开的星标变化。判的是「现在能不能放心用」，不是项目好坏的全部。</footer>
+</div>
+<script src="./tool-data.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
