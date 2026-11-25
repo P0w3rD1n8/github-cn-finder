@@ -19,3 +19,5 @@ _shots/
 
 # 小红书小工具构建 Skill（第三方下载物，不入库）
 .skill/
+
+_archive/
