@@ -1,4 +1,4 @@
-/* Service Worker：stale-while-revalidate + 超时兜底
+﻿/* Service Worker：stale-while-revalidate + 超时兜底
    首页/清单立即从缓存渲染（秒开 + 离线可开），网络更新在后台进行，下次打开即新内容；
    缓存未命中（首次访问）走网络，5 秒超时兜底，避免网络卡死时白等。
    版本 v10（v1.21.2）：install 改为逐个容错缓存（addAll 任一资源失败会让整个 SW 不激活，
@@ -41,8 +41,9 @@
    版本 v47（v1.38.1）：涨星榜「小红书版」去掉网址（平台红线：图片含站外链接会限流）。
    版本 v48（v1.38.2）：新周刊页重建后主动推 IndexNow（之前这批新 URL 从没被推送过）。
    版本 v49（v1.38.3）：项目页加服务端渲染的「项目数据」块；172 个项目页补上统计防护。
-   版本 v50（v1.39.0）：新增小红书 Red Skill「开源项目选型助手」（四步判断法 + 172 项目目录）。 */
-const CACHE = "gh-cn-v50";
+   版本 v50（v1.39.0）：新增小红书 Red Skill「开源项目选型助手」（四步判断法 + 172 项目目录）。
+   版本 v51（v1.40.0）：首页新增「涨星 Top 5」自动板块（数据每天变）。 */
+const CACHE = "gh-cn-v51";
 const ASSETS = ["./", "./index.html", "./data.js", "./qrcode.min.js", "./manifest.json", "./icon.svg",
   "./icon-192.png", "./icon-512.png", "./icon-maskable.svg", "./icon-maskable-512.png",
   "./list.html", "./updates.json"];

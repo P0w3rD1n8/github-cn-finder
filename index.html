@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -43,7 +43,7 @@
     if(mc) mc.setAttribute("content", t==="light" ? "#f6f8fa" : "#0d1117");
   }catch(e){}
 })();
-window.GH_VER = "v1.39.0";
+window.GH_VER = "v1.40.0";
 </script>
 <!-- v1.34.1：把 /index.html 归一成 /（同一个首页两个入口，统计报表被劈成两半） -->
 <script>
@@ -235,6 +235,20 @@ table.cmp a{color:var(--accent);text-decoration:none}
 .daily-pick .dp-name{font-size:14px;font-weight:700;color:var(--text);display:inline-flex;align-items:baseline;gap:4px}
 .daily-pick:active .go-ico{opacity:1;color:var(--accent)}
 .daily-pick .dp-desc{font-size:11.5px;color:var(--text2);margin-top:3px;line-height:1.5}
+/* v1.40.0：本周涨星 Top 5（数据每天变，首页天天有新东西） */
+.weekgrow{margin-bottom:10px}
+.weekgrow:empty{display:none}
+.weekgrow .wg-head{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
+  color:var(--text2);margin-bottom:6px}
+.weekgrow .wg-upd{margin-left:auto;font-weight:400;font-size:11px;color:var(--text2);opacity:.75}
+.weekgrow .wg-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;
+  background:var(--card2);border:1px solid var(--border);margin-bottom:5px;
+  text-decoration:none;color:var(--text);transition:border-color .2s}
+.weekgrow .wg-row:hover{border-color:var(--accent)}
+.weekgrow .wg-rank{flex:0 0 16px;font-size:12px;font-weight:700;color:var(--accent)}
+.weekgrow .wg-name{flex:1;min-width:0;font-size:12.5px;font-weight:600;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.weekgrow .wg-delta{flex:0 0 auto;font-size:11.5px;font-weight:700;color:#3fb950}
 /* 排序切换 */
 .sort-tabs{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;scrollbar-width:none}
 .sort-tabs::-webkit-scrollbar{display:none}
@@ -554,6 +568,7 @@ a.nav-item{text-decoration:none;color:inherit}
       <a href="list.html">📋 全部项目</a>
     </div>
     <div id="dailyPick"></div>
+    <div id="weekGrow" class="weekgrow"></div>
     <div class="recent-adds" id="recentAdds"></div>
     <div class="filter-row">
       <div class="sort-tabs" id="sortTabs">
@@ -596,7 +611,7 @@ a.nav-item{text-decoration:none;color:inherit}
     <div class="sec-title">ℹ️ 关于</div>
     <div class="about-box">
       <b>GitHub 中文发现器</b><span class="ver" id="appVer"></span> 是一个纯前端的单页小应用，帮中文用户发现 GitHub 上的优质开源项目。<br>
-      · 内置 <b><span id="repoCount">152</span> 个精选项目</b>，每条都有大白话中文简介，专为英文小白翻译<br>
+      · 内置 <b><span id="repoCount">172</span> 个精选项目</b>，每条都有大白话中文简介，专为英文小白翻译<br>
       · 📂 <a class="repo-link" href="list.html" target="_blank" rel="noopener">全部精选项目（网页版）</a>——每页都有中文介绍和国内镜像直达<br>
       · 星标等数据由 GitHub Actions <b>定时自动抓取真实值</b>（间隔约数小时，页面会显示数据时间），不靠手填数字<br>
       · 搜索时会同时查询 <b>GitHub 官方接口</b>，网络不通时自动只展示本地精选<br>
@@ -1568,6 +1583,38 @@ function renderDailyPick(){
     else { window.open(href, "_blank", "noopener"); }
   });
 }
+/* v1.40.0：首页「涨星 Top 5」——数据每天变，让首页看起来一直在更新。
+   有周快照（weekly.json ≥2 期）就按本周涨星；否则退回近 24 小时（hist 是逐小时快照）。 */
+function weekTopList(){
+  /* 口径校准（v1.40.0）：hist 是 24 个采集点，总跨度约 7 天（用 weekly 周增量反推过：
+     openclaw 540 vs 517、REA 11884 vs 13426），所以这是「本周」不是「24 小时」。
+     hist 每个采集点都会追加，首页隔几小时刷新就有变化。 */
+  const arr = REPOS.map(r=>({ n:r.n, g:growth24(r) }))
+    .filter(o=>typeof o.g === "number" && o.g > 0)
+    .sort((a,b)=>b.g-a.g).slice(0,5);
+  if(arr.length) return { label: "本周涨星", list: arr };
+  if(WEEKLY_TOP && WEEKLY_TOP.length){
+    return { label: "本周涨星", list: WEEKLY_TOP.slice(0,5).map(o=>({ n:o.n, g:o.delta })) };
+  }
+  return { label: "", list: [] };
+}
+function renderWeekGrow(){
+  const el = $("#weekGrow");
+  if(!el) return;
+  const { label, list } = weekTopList();
+  if(!list.length){ el.innerHTML = ""; return; }
+  el.innerHTML = `<div class="wg-head">📈 ${label} Top 5${DATA_UPDATED?`<span class="wg-upd">数据 ${fmtLocalU(DATA_UPDATED)}</span>`:""}</div>` +
+    list.map((o,i)=>{
+      const hasPage = PAGEMAP.has((o.n||"").toLowerCase());
+      const owner = (o.n||"").split("/")[0], repo = (o.n||"").split("/")[1];
+      const href = hasPage ? `p/${esc(owner)}-${esc(repo)}.html` : `https://github.com/${esc(o.n)}`;
+      return `<a class="wg-row" href="${href}"${hasPage?"":' target="_blank" rel="noopener"'}>
+        <span class="wg-rank">${i+1}</span>
+        <span class="wg-name">${esc(repoZh(o.n))}</span>
+        <span class="wg-delta">+${o.g.toLocaleString()} ⭐</span>
+      </a>`;
+    }).join("");
+}
 /* v1.29.0：把"这站一直在更新"摆到第一屏——状态条 + 最近上新横排 */
 function renderWeekNext(){
   const el = $("#weekNext");
@@ -2075,6 +2122,7 @@ fetch("./repos.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{
     }
   }
   renderDailyPick();
+  renderWeekGrow();
   const active = document.querySelector(".nav-item.active");
   if(active && active.dataset.page==="home") renderHome(true);
   if(active && active.dataset.page==="me") renderFavs();
@@ -2096,6 +2144,7 @@ fetch("./weekly.json", {cache:"no-cache"}).then(r=>r.ok?r.json():null).then(w=>{
   arr.sort((a,b)=>b.delta-a.delta);
   WEEKLY_TOP = arr.slice(0, 20);
   renderDailyPick();
+  renderWeekGrow();
 }).catch(()=>{ /* 没有周快照就退回 24 小时口径 */ });
 
 /* 版本号动态显示（单源：head 里的 GH_VER，发版只改一处） */
@@ -2251,7 +2300,7 @@ if (typeof REPOS !== "undefined" && Array.isArray(REPOS) && REPOS.length){
     const initialFrom = new URLSearchParams(location.search).get("from");
     const restoredQ = applyURLState();
     document.querySelectorAll("#sortTabs .sort-tab").forEach(b=>b.classList.toggle("active", b.dataset.sort===curSort));
-    renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs(); renderCmpTray(); renderUpdates(); renderWeekNext(); initFromWelcome(initialFrom);
+    renderCats(); renderUsages(); renderHome(false); renderMirrorStats(); renderDailyPick(); renderFavs(); renderCmpTray(); renderUpdates(); renderWeekNext(); renderWeekGrow(); initFromWelcome(initialFrom);
     if(restoredQ){ clearTimeout(searchTimer); doSearch(); }
     if(initialTab && ["home","rank","me"].includes(initialTab)) switchPage(initialTab);
   }catch(err){
