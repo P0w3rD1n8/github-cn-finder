@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -16,7 +16,8 @@
 
   <nav class="tabs" id="tabs">
     <button class="tab is-on" id="tab-check" type="button">自己判一个</button>
-    <button class="tab" id="tab-lib" type="button">看内置 172 个</button>
+    <button class="tab" id="tab-lib" type="button">内置 172 个</button>
+    <button class="tab" id="tab-fav" type="button">收藏</button>
   </nav>
 
   <!-- 自己判：问答 -->
@@ -34,12 +35,23 @@
     <div class="search">
       <input id="q" class="inp" type="search" placeholder="搜项目名或中文说明" autocomplete="off" />
     </div>
+    <p class="chips-t">按用途看</p>
+    <div class="uses" id="uses"></div>
+    <p class="chips-t">按分类看</p>
     <div class="cats" id="cats"></div>
+    <p class="list-note" id="listNote"></p>
     <div class="list" id="list"></div>
     <p class="empty is-hide" id="empty">没找到，换个词试试</p>
     <div class="bar is-hide" id="moreBar">
       <button class="btn btn-ghost" id="btnMore" type="button">加载更多</button>
     </div>
+  </section>
+
+  <!-- 收藏 -->
+  <section class="view is-hide" id="view-fav">
+    <p class="lead" id="favLead">收藏是存在你手机本地的，换设备不会同步。</p>
+    <div class="list" id="favList"></div>
+    <p class="empty is-hide" id="favEmpty">还没有收藏。在项目详情里点「收藏」就会出现在这里。</p>
   </section>
 
   <!-- 详情 / 结果 -->
@@ -48,7 +60,7 @@
     <div id="detailBody"></div>
   </section>
 
-  <footer class="ft">数据截至 2026-11-24，来自公开的星标变化。判的是「现在能不能放心用」，不是项目好坏的全部。</footer>
+  <footer class="ft">数据截至 2026-11-24；用途标签与四段详情来自项目说明整理。判的是「现在能不能放心用」，不是项目好坏的全部。</footer>
 </div>
 <script src="./tool-data.js"></script>
 <script src="./app.js"></script>

@@ -1,4 +1,4 @@
-﻿*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
@@ -127,3 +127,44 @@ body {
 .todo-x { font-size: 13px; color: #666; margin-top: 5px; }
 
 .ft { margin-top: 26px; font-size: 11px; color: #bdbdbd; line-height: 1.6; }
+
+/* v1.1：用途筛选 */
+.uses { display: flex; overflow-x: auto; padding: 0 0 8px; -webkit-overflow-scrolling: touch; }
+.uses .use + .use { margin-left: 8px; }
+.uses::-webkit-scrollbar { display: none; }
+.chips-t { font-size: 11px; color: #b0b0b0; padding: 0 2px 6px; }
+.use {
+  -webkit-appearance: none; appearance: none; font-family: inherit; white-space: nowrap;
+  border: 1px solid #f0f0f0; background: #fff; color: #666; border-radius: 999px;
+  padding: 6px 12px; font-size: 12px;
+}
+.use.is-on { background: #ff2442; border-color: #ff2442; color: #fff; font-weight: 600; }
+.list-note { font-size: 11px; color: #b0b0b0; padding: 0 2px 8px; }
+
+/* v1.1：列表行（div 行 + 收藏按钮） */
+.row { cursor: pointer; }
+.row-fav {
+  -webkit-appearance: none; appearance: none; font-family: inherit;
+  flex: 0 0 auto; border: 0; background: transparent; color: #cfcfcf;
+  font-size: 19px; line-height: 1; padding: 8px 2px 8px 10px;
+}
+.row-fav.is-on { color: #ff2442; }
+.row-t { font-size: 11px; color: #b7b7b7; margin-top: 4px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* v1.1：收藏按钮 */
+.favbar { padding: 12px 0 2px; }
+.favbtn {
+  -webkit-appearance: none; appearance: none; font-family: inherit; width: 100%;
+  border: 1px solid #ececec; background: #fafafa; color: #666; border-radius: 12px;
+  padding: 11px; font-size: 14px;
+}
+.favbtn.is-on { border-color: #ffd6dc; background: #fff2f4; color: #d81e37; font-weight: 600; }
+
+/* v1.1：四段详情 */
+.secs { margin-top: 16px; }
+.secs-t { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 4px; }
+.sec { padding: 10px 0; border-bottom: 1px solid #f4f4f4; }
+.sec:last-child { border-bottom: 0; }
+.sec-t { font-size: 13px; font-weight: 600; color: #d81e37; margin-bottom: 3px; }
+.sec-b { font-size: 13px; color: #555; line-height: 1.65; }

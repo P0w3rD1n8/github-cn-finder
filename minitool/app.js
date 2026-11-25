@@ -1,5 +1,6 @@
-﻿/* 开源项目速判器 · 离线小工具
+/* 开源项目速查 · 离线小工具 v1.1
  * 纯前端、无网络请求；数据来自内置 tool-data.js（截至 2026-11-24）。
+ * v1.1 新增：用途筛选、收藏（本地缓存）、四段详情。
  */
 (function () {
   'use strict';
@@ -7,6 +8,7 @@
   var NOW = Date.parse('2026-11-24T00:00:00+08:00');
   var DAY = 86400000;
   var PAGE = 20;
+  var STORE_KEY = 'fav:v1';
 
   /* ---------------- 工具函数 ---------------- */
 
@@ -41,9 +43,59 @@
   var ITEMS = RAW.map(function (r) {
     return {
       name: r[0], desc: r[1], stars: r[2], lang: r[3], cat: r[4],
-      pushed: r[5], growth: r[6], forks: r[7], issues: r[8], archived: r[9]
+      pushed: r[5], growth: r[6], forks: r[7], issues: r[8], archived: r[9],
+      usage: r[10] || [], detail: r[11] || ''
     };
   });
+
+  var BY_NAME = {};
+  ITEMS.forEach(function (it) { BY_NAME[it.name] = it; });
+
+  /* ---------------- 收藏（本地缓存） ---------------- */
+
+  // 容器内用平台 Storage（客户端 9.46+）；浏览器预览时退化为内存，不读写任何浏览器存储。
+  var memStore = '';
+
+  function storeGet() {
+    try {
+      if (window.xhs && window.xhs.miniTool && window.xhs.miniTool.getStorage) {
+        var r = window.xhs.miniTool.getStorage({ key: STORE_KEY });
+        if (r && typeof r.data === 'string') return r.data;
+        return '';
+      }
+    } catch (e) {}
+    return memStore;
+  }
+
+  function storeSet(value) {
+    try {
+      if (window.xhs && window.xhs.miniTool && window.xhs.miniTool.setStorage) {
+        window.xhs.miniTool.setStorage({ key: STORE_KEY, data: value });
+        return;
+      }
+    } catch (e) {}
+    memStore = value;
+  }
+
+  var favs = [];
+  (function loadFavs() {
+    try {
+      var arr = JSON.parse(storeGet() || '[]');
+      if (arr && arr.length) {
+        for (var i = 0; i < arr.length; i++) {
+          if (BY_NAME[arr[i]]) favs.push(arr[i]);
+        }
+      }
+    } catch (e) { favs = []; }
+  })();
+
+  function isFav(name) { return favs.indexOf(name) >= 0; }
+
+  function toggleFav(name) {
+    var i = favs.indexOf(name);
+    if (i >= 0) favs.splice(i, 1); else favs.push(name);
+    storeSet(JSON.stringify(favs));
+  }
 
   /* ---------------- 判断规则 ---------------- */
 
@@ -127,7 +179,7 @@
     { min: 0, lv: 0, t: '暂时别用', tx: '风险大于收益。同样的事，找个还在维护的替代品更省心。' }
   ];
 
-  function levelOf(score, dims) {
+  function levelOf(dims) {
     var sum = 0;
     for (var i = 0; i < dims.length; i++) {
       sum += dims[i].cls === 'g' ? 2 : (dims[i].cls === 'y' ? 1 : 0);
@@ -189,7 +241,7 @@
 
   /* ---------------- 视图切换 ---------------- */
 
-  var views = { check: $('view-check'), lib: $('view-lib'), detail: $('view-detail') };
+  var views = { check: $('view-check'), lib: $('view-lib'), fav: $('view-fav'), detail: $('view-detail') };
   var backTo = 'check';
 
   function show(name) {
@@ -200,8 +252,10 @@
   }
 
   function tabOn(which) {
-    $('tab-check').className = 'tab' + (which === 'check' ? ' is-on' : '');
-    $('tab-lib').className = 'tab' + (which === 'lib' ? ' is-on' : '');
+    var ids = { check: 'tab-check', lib: 'tab-lib', fav: 'tab-fav' };
+    for (var k in ids) {
+      if (ids.hasOwnProperty(k)) $(ids[k]).className = 'tab' + (k === which ? ' is-on' : '');
+    }
   }
 
   /* ---------------- 问答渲染 ---------------- */
@@ -289,8 +343,7 @@
     box.appendChild(el('div', 'd-desc', '按你选的 5 个情况，加总 ' + total + ' 分（满分 10）。'));
 
     var v = el('div', 'verdict');
-    var lv = el('div', 'verdict-lv lv' + lvl.lv, lvl.t);
-    v.appendChild(lv);
+    v.appendChild(el('div', 'verdict-lv lv' + lvl.lv, lvl.t));
     v.appendChild(el('div', 'verdict-tx', lvl.tx));
     box.appendChild(v);
 
@@ -327,12 +380,47 @@
     box.appendChild(bar);
   }
 
-  /* ---------------- 内置库 ---------------- */
+  /* ---------------- 用途 / 分类 ---------------- */
 
+  var USES = [];
+  (function buildUses() {
+    var seen = {};
+    ITEMS.forEach(function (it) {
+      it.usage.forEach(function (u) { seen[u] = (seen[u] || 0) + 1; });
+    });
+    var order = ['普通用户', '程序员', '学编程', '自媒体创作者', '设计师', '视频剪辑', '游戏玩家', '自托管/运维'];
+    order.forEach(function (u) { if (seen[u]) USES.push(u); });
+    for (var u in seen) {
+      if (seen.hasOwnProperty(u) && order.indexOf(u) < 0) USES.push(u);
+    }
+  })();
+
+  var curUse = '全部';
   var curCat = '全部';
   var curQuery = '';
   var shown = 0;
   var filtered = [];
+
+  function renderUses() {
+    var box = $('uses');
+    clear(box);
+    var all = ['全部'].concat(USES);
+    all.forEach(function (u) {
+      var b = el('button', 'use' + (u === curUse ? ' is-on' : ''), u);
+      b.type = 'button';
+      b.setAttribute('data-use', u);
+      box.appendChild(b);
+    });
+  }
+
+  $('uses').addEventListener('click', function (ev) {
+    var node = ev.target;
+    while (node && node !== this && !node.getAttribute('data-use')) node = node.parentNode;
+    if (!node || node === this) return;
+    curUse = node.getAttribute('data-use');
+    renderUses();
+    applyFilter();
+  });
 
   function categories() {
     var seen = {};
@@ -363,42 +451,59 @@
     applyFilter();
   });
 
+  function matches(it, q) {
+    if (curUse !== '全部' && it.usage.indexOf(curUse) < 0) return false;
+    if (curCat !== '全部' && it.cat !== curCat) return false;
+    if (!q) return true;
+    return it.name.toLowerCase().indexOf(q) >= 0 ||
+      it.desc.toLowerCase().indexOf(q) >= 0 ||
+      it.cat.toLowerCase().indexOf(q) >= 0;
+  }
+
   function applyFilter() {
     var q = curQuery.toLowerCase();
-    filtered = ITEMS.filter(function (it) {
-      if (curCat !== '全部' && it.cat !== curCat) return false;
-      if (!q) return true;
-      return it.name.toLowerCase().indexOf(q) >= 0 || it.desc.toLowerCase().indexOf(q) >= 0;
-    });
+    filtered = ITEMS.filter(function (it) { return matches(it, q); });
     filtered.sort(function (a, b) { return b.stars - a.stars; });
     shown = 0;
     var list = $('list');
     clear(list);
     appendRows();
     $('empty').className = filtered.length ? 'empty is-hide' : 'empty';
+    $('listNote').textContent = '共 ' + filtered.length + ' 个' +
+      (curUse === '全部' ? '' : ' · 用途：' + curUse) +
+      (curCat === '全部' ? '' : ' · 分类：' + curCat);
     $('moreBar').className = filtered.length > shown ? 'bar' : 'bar is-hide';
+  }
+
+  function rowOf(it) {
+    var row = el('div', 'row');
+    row.setAttribute('data-name', it.name);
+
+    var left = el('div', 'row-l');
+    left.appendChild(el('div', 'row-n', it.name));
+    left.appendChild(el('div', 'row-d', it.desc));
+    var tags = el('div', 'row-t');
+    tags.textContent = it.usage.join(' · ') || it.cat;
+    left.appendChild(tags);
+    row.appendChild(left);
+
+    var right = el('div', 'row-r');
+    right.appendChild(el('div', 'row-s', fmtStars(it.stars)));
+    right.appendChild(el('div', 'row-g', it.cat));
+    row.appendChild(right);
+
+    var fav = el('button', 'row-fav' + (isFav(it.name) ? ' is-on' : ''), isFav(it.name) ? '★' : '☆');
+    fav.type = 'button';
+    fav.setAttribute('data-fav', it.name);
+    row.appendChild(fav);
+    return row;
   }
 
   function appendRows() {
     var list = $('list');
     var end = Math.min(shown + PAGE, filtered.length);
     for (var i = shown; i < end; i++) {
-      var it = filtered[i];
-      var row = el('button', 'row');
-      row.type = 'button';
-      row.setAttribute('data-name', it.name);
-
-      var left = el('div', 'row-l');
-      left.appendChild(el('div', 'row-n', it.name));
-      left.appendChild(el('div', 'row-d', it.desc));
-      row.appendChild(left);
-
-      var right = el('div', 'row-r');
-      right.appendChild(el('div', 'row-s', fmtStars(it.stars)));
-      right.appendChild(el('div', 'row-g', it.cat));
-      row.appendChild(right);
-
-      list.appendChild(row);
+      list.appendChild(rowOf(filtered[i]));
     }
     shown = end;
     $('moreBar').className = filtered.length > shown ? 'bar' : 'bar is-hide';
@@ -409,9 +514,17 @@
     while (node && node !== this && !node.getAttribute('data-name')) node = node.parentNode;
     if (!node || node === this) return;
     var name = node.getAttribute('data-name');
-    for (var i = 0; i < ITEMS.length; i++) {
-      if (ITEMS[i].name === name) { openDetail(ITEMS[i]); return; }
+
+    var hit = ev.target;
+    while (hit && hit !== node && !hit.getAttribute('data-fav')) hit = hit.parentNode;
+    if (hit && hit !== node && hit.getAttribute('data-fav')) {
+      toggleFav(name);
+      var on = isFav(name);
+      hit.className = 'row-fav' + (on ? ' is-on' : '');
+      hit.textContent = on ? '★' : '☆';
+      return;
     }
+    if (BY_NAME[name]) openDetail(BY_NAME[name], 'lib');
   });
 
   $('btnMore').addEventListener('click', appendRows);
@@ -426,27 +539,100 @@
     }, 120);
   });
 
+  /* ---------------- 收藏视图 ---------------- */
+
+  function renderFavs() {
+    var list = $('favList');
+    clear(list);
+    var items = favs.map(function (n) { return BY_NAME[n]; }).filter(Boolean);
+    items.sort(function (a, b) { return b.stars - a.stars; });
+    items.forEach(function (it) { list.appendChild(rowOf(it)); });
+    $('favEmpty').className = items.length ? 'empty is-hide' : 'empty';
+    $('favLead').textContent = items.length
+      ? '已收藏 ' + items.length + ' 个。收藏存在手机本地，换设备不会同步。'
+      : '收藏是存在你手机本地的，换设备不会同步。';
+  }
+
+  $('favList').addEventListener('click', function (ev) {
+    var node = ev.target;
+    while (node && node !== this && !node.getAttribute('data-name')) node = node.parentNode;
+    if (!node || node === this) return;
+    var name = node.getAttribute('data-name');
+
+    var hit = ev.target;
+    while (hit && hit !== node && !hit.getAttribute('data-fav')) hit = hit.parentNode;
+    if (hit && hit !== node && hit.getAttribute('data-fav')) {
+      toggleFav(name);
+      renderFavs();
+      return;
+    }
+    if (BY_NAME[name]) openDetail(BY_NAME[name], 'fav');
+  });
+
   /* ---------------- 详情 ---------------- */
 
-  function openDetail(it) {
-    backTo = 'lib';
+  function parseDetail(str) {
+    if (!str) return [];
+    var out = [];
+    var lines = str.split('\n');
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].replace(/^\s+|\s+$/g, '');
+      if (!line) continue;
+      var p = line.indexOf('：');
+      if (p < 0) out.push({ t: '', b: line });
+      else out.push({ t: line.slice(0, p), b: line.slice(p + 1) });
+    }
+    return out;
+  }
+
+  function openDetail(it, from) {
+    backTo = from || 'lib';
     var box = $('detailBody');
     clear(box);
 
     box.appendChild(el('div', 'd-name', it.name));
     box.appendChild(el('div', 'd-desc', it.desc));
     box.appendChild(el('div', 'd-meta',
-      it.cat + ' · ' + it.lang + ' · ' + fmtStars(it.stars) + ' 星标'));
+      it.cat + ' · ' + it.lang + ' · ' + fmtStars(it.stars) + ' 星标' +
+      (it.usage.length ? ' · ' + it.usage.join(' / ') : '')));
+
+    var favBar = el('div', 'favbar');
+    var fb = el('button', 'favbtn' + (isFav(it.name) ? ' is-on' : ''),
+      isFav(it.name) ? '★ 已收藏，点一下取消' : '☆ 收藏这个项目');
+    fb.type = 'button';
+    fb.addEventListener('click', function () {
+      toggleFav(it.name);
+      var on = isFav(it.name);
+      fb.className = 'favbtn' + (on ? ' is-on' : '');
+      fb.textContent = on ? '★ 已收藏，点一下取消' : '☆ 收藏这个项目';
+      renderFavs();
+    });
+    favBar.appendChild(fb);
+    box.appendChild(favBar);
 
     var dims = dimsOf(it);
-    var res = levelOf(0, dims);
+    var res = levelOf(dims);
 
     var v = el('div', 'verdict');
     v.appendChild(el('div', 'verdict-lv lv' + res.level.lv, res.level.t));
     v.appendChild(el('div', 'verdict-tx', res.level.tx));
     box.appendChild(v);
 
+    var secs = parseDetail(it.detail);
+    if (secs.length) {
+      var wrap = el('div', 'secs');
+      wrap.appendChild(el('div', 'secs-t', '这是什么、能干什么'));
+      secs.forEach(function (s) {
+        var row = el('div', 'sec');
+        if (s.t) row.appendChild(el('div', 'sec-t', s.t));
+        row.appendChild(el('div', 'sec-b', s.b));
+        wrap.appendChild(row);
+      });
+      box.appendChild(wrap);
+    }
+
     var list = el('div', 'dims');
+    list.appendChild(el('div', 'secs-t', '现在能不能放心用'));
     dims.forEach(function (d) {
       var row = el('div', 'dim');
       row.appendChild(el('span', 'dot ' + d.cls));
@@ -469,7 +655,8 @@
   }
 
   $('btnBack').addEventListener('click', function () {
-    if (backTo === 'lib') { tabOn('lib'); show('lib'); }
+    if (backTo === 'fav') { tabOn('fav'); renderFavs(); show('fav'); }
+    else if (backTo === 'lib') { tabOn('lib'); show('lib'); }
     else { tabOn('check'); show('check'); }
   });
 
@@ -486,10 +673,18 @@
     show('lib');
   });
 
+  $('tab-fav').addEventListener('click', function () {
+    tabOn('fav');
+    renderFavs();
+    show('fav');
+  });
+
   /* ---------------- 启动 ---------------- */
 
   renderQuestions();
+  renderUses();
   renderCats();
+  renderFavs();
   applyFilter();
   show('check');
   tabOn('check');
