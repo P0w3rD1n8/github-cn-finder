@@ -44,7 +44,7 @@
     return {
       name: r[0], desc: r[1], stars: r[2], lang: r[3], cat: r[4],
       pushed: r[5], growth: r[6], forks: r[7], issues: r[8], archived: r[9],
-      usage: r[10] || [], detail: r[11] || ''
+      usage: r[10] || [], detail: r[11] || '', zh: r[12] || ''
     };
   });
 
@@ -480,7 +480,7 @@
     row.setAttribute('data-name', it.name);
 
     var left = el('div', 'row-l');
-    left.appendChild(el('div', 'row-n', it.name));
+    left.appendChild(el('div', 'row-n', it.zh || it.name));
     left.appendChild(el('div', 'row-d', it.desc));
     var tags = el('div', 'row-t');
     tags.textContent = it.usage.join(' · ') || it.cat;
@@ -590,10 +590,10 @@
     var box = $('detailBody');
     clear(box);
 
-    box.appendChild(el('div', 'd-name', it.name));
+    box.appendChild(el('div', 'd-name', it.zh || it.name));
     box.appendChild(el('div', 'd-desc', it.desc));
     box.appendChild(el('div', 'd-meta',
-      it.cat + ' · ' + it.lang + ' · ' + fmtStars(it.stars) + ' 星标' +
+      it.name + ' · ' + it.cat + ' · ' + it.lang + ' · ' + fmtStars(it.stars) + ' 星标' +
       (it.usage.length ? ' · ' + it.usage.join(' / ') : '')));
 
     var favBar = el('div', 'favbar');

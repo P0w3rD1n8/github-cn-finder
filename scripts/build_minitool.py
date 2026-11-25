@@ -72,6 +72,10 @@ def parse_source() -> list[list]:
     for m in re.finditer(r'"([^"]+)"\s*:\s*"((?:[^"\\]|\\.)*)"', js_block(js, "DETAIL")):
         detail[m.group(1)] = json.loads('"' + m.group(2) + '"')
 
+    zh = {}
+    for m in re.finditer(r'"([^"]+)"\s*:\s*"((?:[^"\\]|\\.)*)"', js_block(js, "REPO_ZH")):
+        zh[m.group(1)] = json.loads('"' + m.group(2) + '"')
+
     rows = []
     for r in repos:
         meta = repos_meta.get(r["name"], {})
@@ -84,6 +88,7 @@ def parse_source() -> list[list]:
             1 if meta.get("ar") else 0,
             usage.get(r["name"], []),
             detail.get(r["name"], ""),
+            zh.get(r["name"], ""),
         ])
     rows.sort(key=lambda x: -x[2])
     return rows
@@ -92,7 +97,7 @@ def parse_source() -> list[list]:
 def render(rows: list[list]) -> str:
     out = [
         "/* 离线数据集：开源项目速查 · 数据截至 " + max(r[5] for r in rows if r[5]),
-        " * 字段: [仓库名, 中文说明, star, 语言, 分类, 最近推送日, 24期涨幅%, fork, 未解决issue, 是否归档, 用途标签, 四段详情]",
+        " * 字段: [仓库名, 中文说明, star, 语言, 分类, 最近推送日, 24期涨幅%, fork, 未解决issue, 是否归档, 用途标签, 四段详情, 中文名]",
         " * 由 scripts/build_minitool.py 生成，不要手改。 */",
         "var TOOL_DATA = [",
     ]
