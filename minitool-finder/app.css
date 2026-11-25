@@ -1,0 +1,185 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  background: #fff;
+  color: #1f1f1f;
+  line-height: 1.55;
+}
+.app {
+  min-height: 100%;
+  padding: 16px 16px 24px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  max-width: 560px;
+  margin: 0 auto;
+}
+.hd { padding: 4px 2px 12px; }
+.hd-t { font-size: 22px; font-weight: 700; letter-spacing: .3px; }
+.hd-s { margin-top: 6px; font-size: 13px; color: #8a8a8a; }
+
+.tabs { display: flex; padding: 2px 0 12px; }
+.tabs .tab + .tab { margin-left: 8px; }
+.tab {
+  -webkit-appearance: none; appearance: none;
+  border: 1px solid #ececec; background: #fafafa; color: #666;
+  border-radius: 999px; padding: 7px 14px; font-size: 13px; font-family: inherit;
+}
+.tab.is-on { background: #ff2442; border-color: #ff2442; color: #fff; font-weight: 600; }
+
+.view { padding-top: 2px; }
+.is-hide { display: none !important; }
+.lead { font-size: 13px; color: #7a7a7a; margin-bottom: 14px; }
+.hint { font-size: 12px; color: #a0a0a0; text-align: center; margin-top: 8px; }
+
+/* 问答 */
+.q { padding: 14px 0; border-bottom: 1px solid #f2f2f2; }
+.q:last-child { border-bottom: 0; }
+.q-t { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+.q-t em { font-style: normal; color: #ff2442; }
+.opts { display: flex; flex-direction: column; }
+.opts .opt + .opt { margin-top: 8px; }
+.opt {
+  -webkit-appearance: none; appearance: none; font-family: inherit; text-align: left;
+  border: 1px solid #ececec; background: #fff; color: #333;
+  border-radius: 12px; padding: 11px 14px; font-size: 14px; line-height: 1.4;
+}
+.opt.is-on { border-color: #ff2442; background: #fff6f7; color: #d81e37; font-weight: 600; }
+
+/* 按钮 */
+.bar { padding-top: 16px; display: flex; }
+.btn {
+  -webkit-appearance: none; appearance: none; font-family: inherit;
+  flex: 1; border: 0; border-radius: 12px; padding: 13px; font-size: 15px; font-weight: 600;
+}
+.btn-main { background: #ff2442; color: #fff; }
+.btn-main[disabled] { background: #f5c3ca; color: #fff; }
+.btn-ghost { background: #fafafa; color: #555; border: 1px solid #ececec; font-weight: 500; }
+
+/* 搜索与分类 */
+.search { padding-bottom: 10px; }
+.inp {
+  width: 100%; font-family: inherit; font-size: 14px; color: #222;
+  background: #f7f7f7; border: 1px solid transparent; border-radius: 12px; padding: 11px 13px;
+  -webkit-appearance: none; appearance: none;
+}
+.inp:focus { outline: none; border-color: #ffd0d7; background: #fff; }
+.cats { display: flex; overflow-x: auto; padding: 2px 0 12px; -webkit-overflow-scrolling: touch; }
+.cats .cat + .cat { margin-left: 8px; }
+.cats::-webkit-scrollbar { display: none; }
+.cat {
+  -webkit-appearance: none; appearance: none; font-family: inherit; white-space: nowrap;
+  border: 1px solid #f0f0f0; background: #fff; color: #666; border-radius: 999px;
+  padding: 6px 11px; font-size: 12px;
+}
+.cat.is-on { background: #fff2f4; border-color: #ffd6dc; color: #d81e37; }
+
+/* 列表 */
+.list { display: flex; flex-direction: column; }
+.row {
+  -webkit-appearance: none; appearance: none; font-family: inherit; text-align: left; width: 100%;
+  border: 0; border-bottom: 1px solid #f4f4f4; background: #fff; padding: 13px 2px;
+  display: flex; align-items: center;
+}
+.row:last-child { border-bottom: 0; }
+.row-l { flex: 1; min-width: 0; }
+.row-n { font-size: 14px; font-weight: 600; color: #222; }
+.row-d { font-size: 12px; color: #9a9a9a; margin-top: 3px;
+  overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+.row-r { flex: 0 0 auto; text-align: right; margin-left: 10px; }
+.row-s { font-size: 12px; color: #ff2442; font-weight: 700; }
+.row-g { font-size: 11px; color: #b0b0b0; margin-top: 2px; }
+.empty { text-align: center; color: #b0b0b0; font-size: 13px; padding: 30px 0; }
+
+/* 详情 */
+.back {
+  -webkit-appearance: none; appearance: none; font-family: inherit;
+  background: transparent; border: 0; color: #888; font-size: 14px; padding: 4px 0 12px;
+}
+.d-name { font-size: 18px; font-weight: 700; word-break: break-all; }
+.d-desc { font-size: 14px; color: #555; margin-top: 6px; }
+.d-meta { font-size: 12px; color: #a3a3a3; margin-top: 8px; }
+.verdict {
+  margin: 16px 0 6px; padding: 14px; border-radius: 14px; background: #fafafa;
+}
+.verdict-lv { font-size: 17px; font-weight: 700; }
+.verdict-lv.lv0 { color: #d81e37; }
+.verdict-lv.lv1 { color: #c67a00; }
+.verdict-lv.lv2 { color: #1a8c4a; }
+.verdict-lv.lv3 { color: #1a8c4a; }
+.verdict-tx { font-size: 13px; color: #666; margin-top: 6px; }
+.dims { margin-top: 14px; }
+.dim { display: flex; padding: 11px 0; border-bottom: 1px solid #f4f4f4; }
+.dim:last-child { border-bottom: 0; }
+.dot { flex: 0 0 8px; width: 8px; height: 8px; border-radius: 50%; margin: 7px 10px 0 0; }
+.dot.g { background: #1a8c4a; }
+.dot.y { background: #e8a33d; }
+.dot.r { background: #ff2442; }
+.dim-l { flex: 1; min-width: 0; }
+.dim-k { font-size: 13px; font-weight: 600; color: #333; }
+.dim-v { font-size: 13px; color: #777; margin-top: 2px; }
+.dim-x { font-size: 12px; color: #a8a8a8; margin-top: 3px; }
+.todo {
+  margin-top: 16px; padding: 14px; border-radius: 14px; background: #fff6f7; border: 1px solid #ffe1e5;
+}
+.todo-t { font-size: 13px; font-weight: 700; color: #d81e37; }
+.todo-x { font-size: 13px; color: #666; margin-top: 5px; }
+
+.ft { margin-top: 26px; font-size: 11px; color: #bdbdbd; line-height: 1.6; }
+
+/* v1.1：用途筛选 */
+.uses { display: flex; overflow-x: auto; padding: 0 0 8px; -webkit-overflow-scrolling: touch; }
+.uses .use + .use { margin-left: 8px; }
+.uses::-webkit-scrollbar { display: none; }
+.chips-t { font-size: 11px; color: #b0b0b0; padding: 0 2px 6px; }
+.use {
+  -webkit-appearance: none; appearance: none; font-family: inherit; white-space: nowrap;
+  border: 1px solid #f0f0f0; background: #fff; color: #666; border-radius: 999px;
+  padding: 6px 12px; font-size: 12px;
+}
+.use.is-on { background: #ff2442; border-color: #ff2442; color: #fff; font-weight: 600; }
+.list-note { font-size: 11px; color: #b0b0b0; padding: 0 2px 8px; }
+
+/* v1.1：列表行（div 行 + 收藏按钮） */
+.row { cursor: pointer; }
+.row-fav {
+  -webkit-appearance: none; appearance: none; font-family: inherit;
+  flex: 0 0 auto; border: 0; background: transparent; color: #cfcfcf;
+  font-size: 19px; line-height: 1; padding: 8px 2px 8px 10px;
+}
+.row-fav.is-on { color: #ff2442; }
+.row-t { font-size: 11px; color: #b7b7b7; margin-top: 4px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* v1.1：收藏按钮 */
+.favbar { padding: 12px 0 2px; }
+.favbtn {
+  -webkit-appearance: none; appearance: none; font-family: inherit; width: 100%;
+  border: 1px solid #ececec; background: #fafafa; color: #666; border-radius: 12px;
+  padding: 11px; font-size: 14px;
+}
+.favbtn.is-on { border-color: #ffd6dc; background: #fff2f4; color: #d81e37; font-weight: 600; }
+
+/* v1.1：四段详情 */
+.secs { margin-top: 16px; }
+.secs-t { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 4px; }
+.sec { padding: 10px 0; border-bottom: 1px solid #f4f4f4; }
+.sec:last-child { border-bottom: 0; }
+.sec-t { font-size: 13px; font-weight: 600; color: #d81e37; margin-bottom: 3px; }
+.sec-b { font-size: 13px; color: #555; line-height: 1.65; }
+
+/* 发现器：榜单 */
+#boards { margin: 0 0 4px; }
+.board { margin: 0 0 12px; }
+.board-t { font-size: 12px; font-weight: 700; color: #333; margin: 0 2px 6px; }
+.brow {
+  -webkit-appearance: none; appearance: none; font-family: inherit; text-align: left;
+  display: flex; align-items: center; width: 100%;
+  border: 0; background: #fafafa; border-radius: 10px;
+  padding: 9px 11px; margin-bottom: 6px;
+}
+.brank { flex: 0 0 18px; font-size: 12px; font-weight: 700; color: #ff2442; }
+.bname { flex: 1; min-width: 0; font-size: 12px; color: #333;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bval { flex: 0 0 auto; font-size: 11px; color: #999; margin-left: 8px; }

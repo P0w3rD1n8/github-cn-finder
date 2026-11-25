@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>GitHub 中文发现器</title>
+<link rel="stylesheet" href="./app.css" />
+</head>
+<body>
+<div class="app" id="app">
+
+  <header class="hd">
+    <h1 class="hd-t">GitHub 中文发现器</h1>
+    <p class="hd-s">172 个中文介绍的开源项目。按用途挑，看完四段详情再决定装不装。</p>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab is-on" id="tab-discover" type="button">发现</button>
+    <button class="tab" id="tab-fav" type="button">收藏</button>
+  </nav>
+
+  <!-- 发现 -->
+  <section class="view" id="view-discover">
+    <div id="boards"></div>
+
+    <div class="search">
+      <input id="q" class="inp" type="search" placeholder="搜项目名、说明或分类" autocomplete="off" />
+    </div>
+    <p class="chips-t">按分类看</p>
+    <div class="cats" id="cats"></div>
+    <p class="chips-t">按用途看</p>
+    <div class="uses" id="uses"></div>
+    <p class="list-note" id="listNote"></p>
+    <div class="list" id="list"></div>
+    <p class="empty is-hide" id="empty">没找到，换个词试试</p>
+    <div class="bar is-hide" id="moreBar">
+      <button class="btn btn-ghost" id="btnMore" type="button">加载更多</button>
+    </div>
+  </section>
+
+  <!-- 收藏 -->
+  <section class="view is-hide" id="view-fav">
+    <p class="lead" id="favLead">收藏是存在你手机本地的，换设备不会同步。</p>
+    <div class="list" id="favList"></div>
+    <p class="empty is-hide" id="favEmpty">还没有收藏。在项目详情里点「收藏」就会出现在这里。</p>
+  </section>
+
+  <!-- 详情 -->
+  <section class="view is-hide" id="view-detail">
+    <button class="back" id="btnBack" type="button">‹ 返回</button>
+    <div id="detailBody"></div>
+  </section>
+
+  <footer class="ft">数据截至 2026-11-25，来自公开星标变化；中文说明与四段详情由人工整理。星星多不等于好用，先看它还在不在维护。</footer>
+</div>
+<script src="./tool-data.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
