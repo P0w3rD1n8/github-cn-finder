@@ -177,6 +177,11 @@ const USAGE = {
 "maotoumao/MusicFree":["普通用户"],
 "GhostenEditor/Ghosten-Player":["普通用户"],
 
+  "hiroi-sora/Umi-OCR":["普通用户","自媒体创作者","设计师"],
+  "CherryHQ/cherry-studio":["普通用户","程序员"],
+  "excalidraw/excalidraw":["普通用户","设计师"],
+  "zhongyang219/TrafficMonitor":["普通用户"],
+  "KDE/krita":["设计师","普通用户"],
 };
 
 const REPOS = [
@@ -370,6 +375,12 @@ const REPOS = [
 {n:"jub0t/Concat",d:"完全免费的本机视频剪辑，不用订阅、不用联网（Beta）",s:18868,l:"Rust",c:"影音与直播"},
 {n:"maotoumao/MusicFree",d:"插件化、无广告、免费的音乐播放器，安卓和电脑都有",s:28701,l:"TypeScript",c:"影音与直播"},
 {n:"GhostenEditor/Ghosten-Player",d:"网盘直连的视频播放器：自动刮削海报，还能看直播",s:3451,l:"Dart",c:"影音与直播"},
+// 2026-11-26 新增（5 个，普通用户向）
+{n:"hiroi-sora/Umi-OCR",d:"解压即用的离线 OCR：截图、批量图片、PDF 都能把文字提出来",s:48990,l:"Python",c:"实用工具"},
+{n:"CherryHQ/cherry-studio",d:"一个桌面客户端里用上十几种大模型，还能建知识库、画图",s:53886,l:"TypeScript",c:"AI 人工智能"},
+{n:"excalidraw/excalidraw",d:"手绘风格白板，画流程图和示意图，不用注册登录",s:136327,l:"TypeScript",c:"网页界面"},
+{n:"zhongyang219/TrafficMonitor",d:"在任务栏或悬浮窗实时看网速、CPU 和内存占用",s:47064,l:"C++",c:"实用工具"},
+{n:"KDE/krita",d:"免费的电脑数字绘画软件，插画、漫画、修图都能画",s:10811,l:"C++",c:"实用工具"},
 ];
 /* 国内镜像直达表（2026-10-27 第三方核实报告提取）：owner/repo(小写) -> 镜像URL */
 /* GitCode：GitHub 官方合作镜像平台（gitcode.com/GitHub_Trending 或 gh_mirrors），114 个可用 */
@@ -778,6 +789,11 @@ const REPO_ZH = {
 "maotoumao/MusicFree":"MusicFree 音乐播放器",
 "GhostenEditor/Ghosten-Player":"Ghosten Player 网盘播放器",
 
+  "hiroi-sora/Umi-OCR":"Umi-OCR 截图识字",
+  "CherryHQ/cherry-studio":"Cherry Studio AI 工作台",
+  "excalidraw/excalidraw":"Excalidraw 手绘白板",
+  "zhongyang219/TrafficMonitor":"TrafficMonitor 网速悬浮窗",
+  "KDE/krita":"Krita 数字绘画",
 };
 
 /* 实测组织名单：精选库作者里已知的组织（GitHub API 逐位实测），弥补正则猜测不可靠 */
@@ -957,6 +973,11 @@ const DETAIL = {
 "maotoumao/MusicFree":"🎯应用场景：想听歌，又不想被开屏广告、会员墙和推荐算法包围。\n✨主要功能：插件化音源（按需订阅插件）、无广告、支持歌单歌词与下载、本地音乐和在线音乐统一播放。\n💻适用平台：Android / Windows / macOS / Linux。\n🛠怎么用起来：装 App → 进「插件」页面订阅音源插件 → 搜索播放。插件由社区维护，音源可用性会随第三方站点变动，失效时更新插件即可。\n⚠️注意：音源来自第三方插件，能否使用、能否下载由插件决定，请自行判断使用场景与版权。",
 "GhostenEditor/Ghosten-Player":"🎯应用场景：电影存在网盘里想直接看，还想要海报墙，而不是面对一堆看不懂的文件名。\n✨主要功能：直连网盘播放（阿里云盘等）、自动刮削元数据生成海报墙、支持 IPTV 直播、文件管理，手机和电视通用。\n💻适用平台：Android / Android TV。\n🛠怎么用起来：装 APK → 添加网盘账号或本地/局域网目录 → 让它自动刮削 → 按海报点开播放。适合已经有网盘影视库的人，空盘用户价值不大。",
 
+"hiroi-sora/Umi-OCR":"🎯应用场景：截图里、扫描件里、PDF 里的文字，想复制出来又不想手动敲。\n✨主要功能：截图识别、批量识别（一次几百张图）、PDF 扫描件转可搜索 PDF、二维码识别与生成；排版解析能把多栏文字按正确顺序输出，还能框选忽略水印区域。\n💻适用平台：Windows 7 x64 及以上、Linux x64；解压即用，完全离线，不联网也能识别。\n🛠怎么用起来：下载 7z 包解压，双击 Umi-OCR.exe；按快捷键截图，或把图片拖进批量页，结果可直接复制或导出 txt/csv/md。",
+"CherryHQ/cherry-studio":"🎯应用场景：想在一个软件里同时用 GPT、Claude、Gemini 和本地模型，不想开一堆网页、到处贴 API Key。\n✨主要功能：多模型对话与对比、AI 助手与 Agent、本地知识库（文件向量检索）、AI 画图、翻译、Mermaid/公式渲染、对话导出；支持 Ollama、LM Studio 本地模型。\n💻适用平台：Windows / macOS / Linux，另有 iOS / Android 客户端。\n🛠怎么用起来：官网下载安装，填入模型商的 API Key（或接本地 Ollama），新建对话即可；知识库把文件直接拖进去。",
+"excalidraw/excalidraw":"🎯应用场景：临时要画个流程图、架构图、示意图，想打开就画，不想注册也不想装桌面软件。\n✨主要功能：手绘风格白板，矩形/箭头/文字/自由绘制，支持多人协作、导出 PNG/SVG、可嵌入其他网页；数据默认只存在你浏览器本地。\n💻适用平台：浏览器（excalidraw.com）即可；也提供 Docker 自托管和 VS Code 插件。\n🛠怎么用起来：打开网页直接画，左侧工具栏选形状，选中元素后在面板里改颜色和连线；画完点右上角导出 PNG/SVG。",
+"zhongyang219/TrafficMonitor":"🎯应用场景：想知道现在网速多少、CPU 和内存吃不吃紧，又不想一直开着任务管理器。\n✨主要功能：在任务栏或桌面悬浮窗里实时显示网速、CPU、内存、温度；支持多网卡、换皮肤、迷你模式、开机自启。\n💻适用平台：Windows，解压即用，不需要安装。\n🛠怎么用起来：下载解压运行 TrafficMonitor.exe，右键菜单里选要显示的项目；设置里可切换「任务栏显示」或悬浮窗样式。",
+"KDE/krita":"🎯应用场景：想画插画、漫画，或者给照片做手绘效果，但不想买订阅制的绘画软件。\n✨主要功能：笔刷引擎丰富、图层与图层组、矢量与栅格混用、逐帧动画、调色板、对称绘制、绘画辅助线，能打开 PSD。\n💻适用平台：Windows / macOS / Linux，支持数位板压感。\n🛠怎么用起来：官网下载安装，新建画布后从左栏选笔刷开画；要压感就在设置里接数位板，保存为 .kra 可以保留图层。",
 };
 /* 分类圆标配色 */
 const CAT_COLORS = {"AI 人工智能":"#a371f7","实用工具":"#f78166","手机 App":"#3fb950","学编程":"#58a6ff","游戏娱乐":"#f778ba","网页界面":"#d29922","后台服务":"#39c5cf","开发者工具":"#8250df","影音与直播":"#ffb86c"};
