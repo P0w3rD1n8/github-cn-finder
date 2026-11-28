@@ -71,6 +71,12 @@ def load_zh_names():
     return dict(re.findall(JSON_MAP % r"[^\"\s]+/[^\"\s]+", m.group(1)))
 
 
+def load_repo_count():
+    """从 data.js 数项目数，避免图上的「XX 个项目」写死后过期。"""
+    src = open(DATA, encoding="utf-8").read()
+    return len(re.findall(r'\{n:"', src))
+
+
 def fit(draw, text, f, max_w):
     if draw.textlength(text, font=f) <= max_w:
         return text
@@ -156,7 +162,7 @@ def render(date_prev, date_cur, rows, with_qr, out_path):
         # 直接限制推荐和搜索展示（粉丝可见 = 没流量）。手册 §5.7 有完整红线。
         ty = 1226
         lines = [("GitHub 中文发现器", 30, ACCENT),
-                 ("每周六更新一期 · 172 个开源项目中文说明", 24, (201, 209, 217)),
+                 ("每周六更新一期 · %d 个开源项目中文说明" % load_repo_count(), 24, (201, 209, 217)),
                  ("每个项目都写清了：干什么用 / 支持哪些平台 / 会踩什么坑", 22, DIM)]
         for s, size, color in lines:
             d.text((56, ty), s, font=font(size), fill=color)
