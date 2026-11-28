@@ -23,3 +23,6 @@ _shots/
 _archive/
 
 .tmp-*
+
+# 极空间版本库目录
+.stversions/
